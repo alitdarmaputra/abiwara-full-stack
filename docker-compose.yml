@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  api:
+    image: alitdarmaputra/abiwarabe_image:latest
+    container_name: abiwarabe_container
+    ports:
+      - '4002:4002'
+  backoffice:
+    image: alitdarmaputra/abiwarafe_image:latest
+    container_name: abiwarafe_container
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+  nginx:
+    image: nginx:1.15-alpine
+    container_name: nginx_container
+    ports:
+        - "80:80"
+        - "443:443"
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot

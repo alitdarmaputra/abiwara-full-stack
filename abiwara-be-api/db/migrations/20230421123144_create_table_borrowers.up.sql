@@ -1,0 +1,14 @@
+CREATE TABLE borrowers (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    member_id INT NOT NULL,
+    book_id INT NOT NULL,
+    status TINYINT NOT NULL,
+    return_date DATETIME NOT NULL,
+    CONSTRAINT FK_borrower_member FOREIGN KEY (member_id)
+    REFERENCES members(id),
+    CONSTRAINT FK_borrower_book FOREIGN KEY (book_id)
+    REFERENCES books(id),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    deleted_at DATETIME
+)ENGINE=InnoDB;
