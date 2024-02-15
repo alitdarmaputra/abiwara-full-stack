@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { Link, Navigate, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import httpRequest from "../../config/http-request";
 import {
     Chart as ChartJS,

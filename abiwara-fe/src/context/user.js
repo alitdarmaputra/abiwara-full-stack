@@ -10,7 +10,6 @@ export const UserProvider = ({ children  }) => {
 	const [user, setUser] = useState();
 	const auth = useAuth();	
 	const token = parseJWT(auth.authToken);
-	const [isLoading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const getUserData = async() => {
@@ -19,7 +18,6 @@ export const UserProvider = ({ children  }) => {
 					const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/member/me`).then(res => res.data);
 					let userData = res.data;
 					setUser({ role: token.role, ...userData });
-					setLoading(false);
 				}
 			} catch(err) {
 				console.log(err);
@@ -28,10 +26,6 @@ export const UserProvider = ({ children  }) => {
 		getUserData();
 	}, [])
 	
-	if (isLoading) {
-		return;
-	}
-
 	return (
 		<UserContext.Provider value={{ user, setUser }}>
 			{ children }

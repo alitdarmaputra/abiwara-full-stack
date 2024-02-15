@@ -16,7 +16,7 @@ export default function Login() {
 
 	// get redirect path if user is redirected after authenticated 
 	const location = useLocation();
-    const redirectPath = location.state?.path || '/dashboard';
+    const redirectPath = location.state?.path || '/';
 
 	const email = useRef('')
     const password = useRef('')
@@ -59,7 +59,7 @@ export default function Login() {
     }
 	
 	if (auth.authToken) {
-        return <Navigate replace to="/dashboard"></Navigate>
+        return <Navigate replace to={redirectPath}></Navigate>
 	}
 
     return (

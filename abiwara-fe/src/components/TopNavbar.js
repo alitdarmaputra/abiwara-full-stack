@@ -1,7 +1,6 @@
 import { useAuth } from "../context/auth"
 import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom";
-import { parseJWT } from "../utils/jwt";
 import { UserContext } from "../context/user";
 
 export default function TopNavbar({ title, path }) {

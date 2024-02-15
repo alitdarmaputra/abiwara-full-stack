@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import httpRequest from "../../config/http-request";
 import { BsFillPencilFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -13,7 +12,7 @@ export default function BookDetail() {
     const [bookDetail, setBookDetail] = useState({});
     const { id } = useParams();
 	const { user } = useContext(UserContext);
-    const { authToken, setAuthToken } = useAuth();
+    const { setAuthToken } = useAuth();
 
     useEffect(() => {
         async function getBookDetail() {
@@ -29,11 +28,7 @@ export default function BookDetail() {
         }
 
         getBookDetail()
-    }, [id])
-
-    if (!authToken) {
-        return <Navigate replace to="/login"></Navigate>
-    }
+    }, [id, setAuthToken])
 
     if (isLoading) {
         return (
