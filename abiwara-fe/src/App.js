@@ -27,6 +27,7 @@ import Home from "./pages/Home";
 import Information from "./pages/Information";
 import Catalogue from "./pages/Catalogue";
 import Help from "./pages/Help";
+import BorrowStep from "./pages/Help/BorrowStep";
 
 const router = createBrowserRouter([
 	{
@@ -44,11 +45,18 @@ const router = createBrowserRouter([
 			}, { 
 				path: "/help",
 				element: <Help />
+			}, {
+				path: "/help/borrow-step",
+				element: <BorrowStep />
 			}
 		]
 	}, {
 		path: "/",
-		element: <DashboardLayout />,
+		element: (
+			<RouteGuard>
+				<DashboardLayout />
+			</RouteGuard>
+		),
 		children: [
 			{ 
 				path: "/dashboard",
@@ -96,7 +104,7 @@ const router = createBrowserRouter([
 		element: <Verification />
 	}, {
 		path: "/register/verification/:token",
-		element: <Verification />
+		element: <ProcessVerification />
 	}, {
 		path: "/forget-password",
 		element: <ForgetPassword />

@@ -4,8 +4,8 @@ import SearchBox from "../../components/SearchBox";
 
 export default function Information() {
 	const items = [{
-		label: "Siapa yang dapat menjadi anggota perpustakaan?",
-		children: (<p>Anggota perpustakaan terdiri dari siswa, guru, dan pegawai di SMP N 3 Kediri</p>)
+		label: "Siapa yang dapat melakukan peminjaman buku?",
+		children: (<p>Peminjaman buku dapat dilakukan oleh anggota perpustakaan yang terdiri dari siswa, guru, dan pegawai di SMP N 3 Kediri serta telah memiliki akun pada aplikasi Abiwara.</p>)
 	}, 
 	{
 		label: "Berapa lama buku di perpustakaan dapat dipinjam?",

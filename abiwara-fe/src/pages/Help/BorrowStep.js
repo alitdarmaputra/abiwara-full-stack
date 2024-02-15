@@ -1,3 +1,4 @@
+import { ScrollRestoration } from "react-router-dom";
 import SearchBox from "../../components/SearchBox";
 
 export default function BorrowStep() {
@@ -12,6 +13,7 @@ export default function BorrowStep() {
 					</div>
 				</div>
 			</section>
+			<ScrollRestoration />
 		</div>
 	)
 }

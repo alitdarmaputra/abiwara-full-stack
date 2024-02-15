@@ -13,7 +13,7 @@ export default function Navbar() {
     const [theme, setTheme] = useState(localStorage.getItem("theme"));
     const [translateNavbar, setTranslateNavbar] = useState(0);
     const [transparantNavbar, setTransparantNavbar] = useState(true);
-	const { authToken } = useAuth();
+	const { authToken, setAuthToken } = useAuth();
 	const { user } = useContext(UserContext);
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -41,6 +41,12 @@ export default function Navbar() {
             setTransparantNavbar(true);
         }
     }
+	
+	function handleLogout(e) {
+		e.preventDefault()
+		setAuthToken();
+		navigate(location.pathname);
+	}
 
     window.addEventListener("scroll", updateNavbar);
 
@@ -64,7 +70,7 @@ export default function Navbar() {
             const hamburgerBtn = document.getElementById("navbar__hamburger");
 			const hamburgetNavigation = document.getElementById("hamburger__navigation");	
 			
-            if ((!hamburgerMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) || hamburgetNavigation.contains(e.target))
+            if ((!hamburgerMenu?.contains(e.target) && !hamburgerBtn?.contains(e.target)) || hamburgetNavigation?.contains(e.target))
                 setOpenMenu(false);
 
             if (authToken) {
@@ -75,13 +81,13 @@ export default function Navbar() {
                     setOpenProfile(false);
             }
         }
-    }, [])
+    }, [user])
 
     return (
         <>
             <div id="navbar" className={`fixed top-0 w-full flex justify-between items-center px-8 lg:px-12 py-4 transition-all ease-in ${transparantNavbar ? "" : "bg-white dark:text-gray-200 dark:bg-[#1A202C] shadow-sm"} z-30`} style={{ transform: `translateY(${translateNavbar}px)` }}>
                 <div id="navbar__left" className="mr-auto lg:mr-36 flex gap-4 items-center text-2xl text-white">
-                    <button id="navbar__hamburger" className="block lg:hidden opacity-50" onClick={() => setOpenMenu(true)}><AiOutlineMenu /></button>
+                    <button id="navbar__hamburger" className="block lg:hidden text-gray-500" onClick={() => setOpenMenu(true)}><AiOutlineMenu /></button>
 					<Link className="flex items-center gap-2" to="/">
 						<Logo width="44" height="44" fill="white" />
 						<h3 className={`hidden lg:block poppins-semibold dark:text-gray-200 ${transparantNavbar ? 'text-gray-200' : 'text-black' }`}>Abiwara</h3>
@@ -96,11 +102,13 @@ export default function Navbar() {
                 {
                     authToken ? (
                         <div id="navbar__profile" className="w-11 h-11 lg:ml-56  flex justify-center items-center bg-blue-200/[.0] hover:bg-blue-200/[.3] rounded-full hover:cursor-pointer" onClick={() => setOpenProfile(!openProfile)}>
-                            <div className="w-8 h-8 rounded-full bg-gray-300"></div>
+                            <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+								<img className="object-cover w-full h-full" src={user?.profile_img}/>
+							</div>
                         </div>
                     ) : (
                         <div id="navbar__profile" className="flex gap-x-4 justify-center">
-                            <button className={`hidden lg:block px-10 py-2.5 rounded-md font-semibold poppins-semibold hover:opacity-75 transition-all dark:text-gray-200 ${transparantNavbar ? 'text-gray-200' : 'text-black'}`}>Daftar</button>
+                            <button onClick={() => navigate("/register")}className={`hidden lg:block px-10 py-2.5 rounded-md font-semibold poppins-semibold hover:opacity-75 transition-all dark:text-gray-200 ${transparantNavbar ? 'text-gray-200' : 'text-black'}`}>Daftar</button>
                             <button onClick={() => navigate("/login", { state: { path: location.pathname } })} className="px-10 py-2.5 rounded-md font-semibold text-white bg-[#473BF0] hover:bg-[#392ed3] poppins-semibold transition-all">Masuk</button>
                         </div>
                     )
@@ -112,20 +120,20 @@ export default function Navbar() {
             </div>
 
             {
-                authToken && (
+                authToken && user && (
                     <div id="profile-menu" className={`${openProfile ? "opacity-1 translate-y-0" : "opacity-0 translate-y-10 h-0 overflow-hidden"} fixed top-16 lg:right-8 overflow-hidden w-screen lg:w-auto p-2.5 transition-all z-10`}>
                         <div id="profile__wrapper" className="flex flex-col rounded-md p-2 text-start shadow-md bg-white border border-gray-200 dark:bg-[#161B26] dark:border-none dark:text-gray-200">
                             <a className="flex flex-col text-start py-2 px-2 rounded-md hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">
-                                <p className="w-full pr-16">Alit Darma Putra</p>
-                                <p className="text-sm w-full pr-16 text-slate-500">@alitdarmaputra</p>
+                                <p className="w-full pr-16">{ user?.name }</p>
+                                <p className="text-sm w-full pr-16 text-slate-500">{ user?.role == 1 ? "admin" : user?.role == 2 ? "operator" : "anggota" }</p>
                             </a>
                             <hr className="my-2"></hr>
                             <div id="profile__navigation" className="flex flex-col">
-                                <a className="rounded-md py-2.5 pl-2 pr-16 hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">Dashboard</a>
-                                <a className="rounded-md py-2.5 pl-2 pr-16 hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">Bookmark</a>
+                                <Link to="/dashboard" className="rounded-md py-2.5 pl-2 pr-16 hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">Dashboard</Link>
+                                <a className="hidden rounded-md py-2.5 pl-2 pr-16 hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">Bookmark</a>
                             </div>
                             <hr className="my-2"></hr>
-                            <button className="rounded-md py-2.5 text-start pl-2 pr-16 hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">Keluar</button>
+                            <button onClick={handleLogout} className="rounded-md py-2.5 text-start pl-2 pr-16 hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">Keluar</button>
                         </div>
                     </div>
                 )

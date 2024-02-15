@@ -19,7 +19,7 @@ export default function Book({ book }) {
     }
 
     return (
-        <Link to="/catalogue/1" id="book" key={book.id} className="max-w-44 md:max-w-52 hover:shadow-lg transition-all hover:cursor-pointer">
+        <Link to="/catalogue/1" id="book" key={book.id} className="max-w-40 md:max-w-52 md:hover:shadow-lg transition-all hover:cursor-pointer">
             <div id="book__img" className="flex justify-center pt-4 bg-[#F4F7FA] rounded-t-lg dark:bg-[#2D3748]">
                 <div className="w-[140px] h-[224px] md:w-[170px] md:h-[272px]">
                     <img className="object-cover w-full h-full" alt="book cover" src={book.img} />
