@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useRef, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import AbiwaraLogoText from '../../assets/logo_text.svg';
 import httpRequest from '../../config/http-request';
+import { ReactComponent as Logo } from "../../assets/logo.svg";
 import { notifyError } from '../../utils/toast';
 import SuccessSentEmail from '../../assets/success_sent_email.gif'
 
@@ -48,20 +48,23 @@ export default function ForgetPassword() {
     }
 
     return (
-        <div className="w-full flex justify-center bg-white">
+        <div className="w-full flex justify-center bg-white dark:bg-[#1A202C] h-screen text-gray-200">
             <ToastContainer />
             <div className="register_container max-w-sm">
                 <div className="register_header">
-                    <img src={AbiwaraLogoText} alt="Abiwara logo" className="m-auto mt-10 w-40"></img>
+					<div className="flex justify-center items-center gap-2 mb-10 mt-10">
+						<Logo width="40" height="40" fill="white" />
+						<h3 className={`poppins-semibold dark:text-gray-200 text-2xl`}>Abiwara</h3>
+					</div>
                     <h1 className="title mt-8 text-3xl">Reset Password</h1>
-                    <p className="mt-3 text-slate-700" >Kami akan mengirimkan tautan untuk melakukan reset password.</p>
+                    <p className="mt-3 text-slate-700 dark:text-gray-500" >Kami akan mengirimkan tautan untuk melakukan reset password.</p>
                 </div>
 
                 <div className="register_form">
                     <form className="mt-6">
                         <div className="email_form">
                             <label className="font-bold text-sm" htmlFor="email_input">Email <span className="text-red-500">*</span></label>
-                            <input ref={email} id="email_input" placeholder="Email" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 border-2 mt-2 w-full h-10 rounded-md p-2" type="email"></input>
+                            <input ref={email} id="email_input" placeholder="Email" className="dark:bg-[#2D3748] font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2" type="email"></input>
                         </div>
                         {isLoading ?
                             <button disabled type="button" className="mt-10 w-full h-10 bg-blue-700 text-white font-bold rounded-lg hover:bg-blue-900">

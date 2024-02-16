@@ -84,6 +84,27 @@ export default function BookCreate() {
         e.target.value = numToIDR(e.target.value);
     }
 
+	const customStyles = {
+		control: (provided) => ({
+		...provided,
+			padding: '8px',
+			border: '2px solid #6B7280',
+			backgroundColor: 'transparent',
+			color: '#fff',
+		}),
+		option: (provided, state) => ({
+			...provided,
+			padding: '8px',
+			backgroundColor: '#1A202C',
+			color: '#fff',
+		}),
+		noOptionsMessage: () => ({
+			padding: '8px',
+			backgroundColor: '#1A202C',
+			color: '#fff',
+		}),
+	};
+
     const loadCategory = async search => {
         const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/category?search=${search}`)
         const options = res.data?.data?.map(option => {
@@ -96,80 +117,74 @@ export default function BookCreate() {
     }
 
     return (
-        <div className="flex-grow w-full px-3 md:px-6 pt-10 md:mt-0 md:ml-64 pb-5">
+        <div className="flex-grow w-full">
             <ToastContainer />
-            <TopNavbar path=" Buku / Buat Buku" title="Buat Buku" className="bg-slate-50"></TopNavbar>
 
-            <div className="book__container bg-white rounded-lg mb-10 shadow-lg p-5">
+            <div className="book__container bg-white rounded-lg mb-10 p-5 dark:bg-[#2D3748] dark:text-gray-200">
                 <form onSubmit={handleSubmitBook}>
                     <div className="title_form mb-3">
                         <label className="font-bold text-sm" htmlFor="title_input">Judul <span className="text-red-500">*</span></label>
-                        <input id="title_input" placeholder="Ketik judul" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input id="title_input" placeholder="Ketik judul" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="price_form mb-3">
                         <label className="font-bold text-sm" htmlFor="price_input">Harga</label>
-                        <input onChange={formatValue} id="price_input" placeholder="Ketik harga" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input onChange={formatValue} id="price_input" placeholder="Ketik harga" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="authors_form mb-3">
                         <label className="font-bold text-sm" htmlFor="authors_input">Pengarang <span className="text-red-500">*</span></label>
-                        <input id="authors_input" placeholder="Ketik pengarang" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input id="authors_input" placeholder="Ketik pengarang" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="publisher_form mb-3">
                         <label className="font-bold text-sm" htmlFor="publisher_input">Penerbit <span className="text-red-500">*</span></label>
-                        <input id="publisher_input" placeholder="Ketik penerbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input id="publisher_input" placeholder="Ketik penerbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="published_form mb-3">
                         <label className="font-bold text-sm" htmlFor="published_input">Tahun Terbit <span className="text-red-500">*</span></label>
-                        <input id="published_input" placeholder="Ketik tahun terbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input id="published_input" placeholder="Ketik tahun terbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="page_form mb-3">
                         <label className="font-bold text-sm" htmlFor="page_input">Jumlah Halaman</label>
-                        <input id="page_input" placeholder="Ketik jumlah halaman" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input id="page_input" placeholder="Ketik jumlah halaman" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="quantity_form mb-3">
                         <label className="font-bold text-sm" htmlFor="quantity_input">Jumlah Buku <span className="text-red-500">*</span></label>
-                        <input id="quantity_input" placeholder="Ketik jumlah buku" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input id="quantity_input" placeholder="Ketik jumlah buku" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="buy_date_form mb-3">
                         <label className="font-bold text-sm" htmlFor="buy_date_input">Tanggal Pembelian <span className="text-red-500">*</span></label>
-                        <input id="buy_date_input" placeholder="Tanggal pembelian" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="date"></input>
+                        <input id="buy_date_input" placeholder="Tanggal pembelian" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="date"></input>
                     </div>
 
                     <div className="summary_form mb-3">
                         <label className="font-bold text-sm" htmlFor="summary_input">Ringkasan</label>
-                        <textarea id="summary_input" placeholder="Ketik ringkasan" className="font-sans focus:outline-black border-2 mt-2 w-full h-72 rounded-md p-2"></textarea>
+                        <textarea id="summary_input" placeholder="Ketik ringkasan" className="font-sans focus:outline-black border-2 mt-2 w-full h-72 rounded-md p-2 dark:bg-transparent dark:border-gray-500"></textarea>
                     </div>
 
                     <div className="category_form mb-3">
                         <label className="font-bold text-sm" htmlFor="category_input">Kategori <span className="text-red-500">*</span></label>
-                        <AsyncSelect
-                            styles={{
-                                control: (baseStyles, state) => ({
-                                    ...baseStyles,
-                                    borderColor: state.isFocused ? '#E5E7EB' : '#E5E7EB',
-                                    borderWidth: state.isFocused ? '2px' : '2px',
-                                }),
-                            }}
-                            classNames={{
-                                control: (state) => state.isFocused ? 'mt-2 rounded-md' : 'mt-2 rounded-md',
-                            }}
-                            id="category_input"
-                            cacheOptions
-                            loadOptions={loadCategory}
-                            placeholder="Pilih kategori"
-                            noOptionsMessage={() => "Kategori tidak ditemukan"}
-                            onChange={choice => setCategory(choice.value)}
-                        >
-                        </AsyncSelect>
+						<AsyncSelect
+							unstyled
+							classNames={{
+								control: () => 'mt-2 rounded-md bg-transparent dark:text-gray-200 border-2 dark:border-gray-500 p-2',
+								option: () => 'bg-white dark:bg-[#1A202C] dark:text-gray-200 p-2',
+								noOptionsMessage: () => 'bg-white dark:bg-[#1A202C] dark:text-gray-200 p-2',
+							}}
+							id="category_input"
+							cacheOptions
+							loadOptions={loadCategory}
+							placeholder="Pilih kategori"
+							noOptionsMessage={() => "Kategori tidak ditemukan"}
+							onChange={choice => setCategory(choice.value)}
+						>
+						</AsyncSelect>
                     </div>
-
 
                     {isLoading ?
                         <button disabled type="button" className="mt-10 w-full h-10 bg-blue-700 text-white font-bold rounded-lg hover:bg-blue-900">

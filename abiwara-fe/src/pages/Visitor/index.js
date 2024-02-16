@@ -55,12 +55,12 @@ export default function Visitor() {
     }
 
     return (
-        <div className="flex-grow w-full px-3 md:px-6 pt-10 md:mt-0 md:ml-64 pb-5">
-            <div className="visitor__container bg-white rounded-lg shadow-lg">
+        <div className="flex-grow w-full">
+            <div className="visitor__container bg-white dark:bg-[#2D3748] rounded-lg dark:text-gray-200">
                 <div className="table_head__container flex justify-between p-5 box-border items-center">
                     <div className="flex w-72 h-full">
-                        <input id="keyword__input" placeholder="Ketik nama pengunjung" onInput={handleSearch} className="font-sans focus:outline-none border-l-2 border-y-2 w-full h-5 rounded-l-full p-5 " type="text"></input>
-                        <div className='bg-white border-y-2 border-r-2 rounded-r-full pr-3 flex items-center text-slate-300'>
+                        <input id="keyword__input" placeholder="Ketik nama pengunjung" onInput={handleSearch} className="font-sans focus:outline-none border-l-2 border-y-2 w-full h-5 rounded-l-full p-5 dark:bg-transparent dark:border-gray-500" type="text"></input>
+                        <div className='bg-white border-y-2 border-r-2 rounded-r-full pr-3 flex items-center text-slate-300 dark:bg-gray-700 dark:border-gray-500'>
                             <AiOutlineSearch size="20px" />
                         </div>
                     </div>
@@ -73,7 +73,7 @@ export default function Visitor() {
                 <div className="table__container shadow-sm w-full overflow-x-scroll sm:rounded-md mb-9 text-sm">
                     <table className="w-full">
                         <thead className="text-slate-500 font-bold">
-                            <tr>
+                            <tr className="border-b dark:border-b dark:border-b-gray-500">
                                 <th className="px-10 py-5 w-96">Nama</th>
                                 <th>Kelas</th>
                                 <th className="px-10 md:px-2 w-18">Waktu</th>
@@ -97,7 +97,7 @@ export default function Visitor() {
                     </table>
                 </div>
 
-                <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 mb-10">
+                <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 dark:text-gray-200">
                     <div className="pagination flex w-60 justify-evenly items-center">
                         <Link to={`/visitor?page=1`}><BsChevronDoubleLeft /></Link>
 

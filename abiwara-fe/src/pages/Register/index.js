@@ -1,8 +1,8 @@
 import axios from 'axios';
+import { ReactComponent as Logo } from "../../assets/logo.svg";
 import { useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import AbiwaraLogoText from '../../assets/logo_text.svg';
 import httpRequest from '../../config/http-request';
 import { notifyError } from '../../utils/toast';
 import { AiFillCheckCircle } from 'react-icons/ai';
@@ -93,11 +93,14 @@ export default function Register() {
     }
 
     return (
-        <div className="w-full flex justify-center h-screen">
+        <div className="w-full flex justify-center dark:bg-[#1A202C] dark:text-gray-200">
             <ToastContainer />
             <div className="register_container px-5">
                 <div className="register_header">
-                    <img src={AbiwaraLogoText} alt="Abiwara logo" className="m-auto mt-10 w-40"></img>
+					<div className="flex justify-center items-center gap-2 mb-10 mt-10">
+						<Logo width="40" height="40" fill="white" />
+						<h3 className={`poppins-semibold dark:text-gray-200 text-2xl`}>Abiwara</h3>
+					</div>
                     <h1 className="title mt-8 text-3xl">Daftar</h1>
                     <p className="sub_title mt-3 text-sm text-slate-500">Mulai dengan membuat akun baru.</p>
                 </div>
@@ -106,15 +109,15 @@ export default function Register() {
                     <form className="mt-6" action="">
                         <div className="email_form">
                             <label className="font-bold text-sm" htmlFor="email_input">Email <span className="text-red-500">*</span></label>
-                            <input ref={email} id="email_input" placeholder="Email" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 border-2 mt-2 w-full h-10 rounded-md p-2" type="email"></input>
+                            <input ref={email} id="email_input" placeholder="Email" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none dark:bg-[#2D3748] mt-2 w-full h-10 rounded-md p-2" type="email"></input>
                         </div>
                         <div className="name_form mt-5">
                             <label className="font-bold text-sm" htmlFor="name_input">Nama Lengkap <span className="text-red-500">*</span></label>
-                            <input ref={name} id="name_input" placeholder="Nama lengkap" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                            <input ref={name} id="name_input" placeholder="Nama lengkap" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none dark:bg-[#2D3748] mt-2 w-full h-10 rounded-md p-2" type="text"></input>
                         </div>
                         <div className="class_form mt-5">
                             <label className="font-bold text-sm" htmlFor="class_input">Kelas <span className="text-red-500">*</span></label>
-                            <select ref={className} className='block w-full h-10 font-sans bg-white rounded-md border-2 p-2' id="class_input" name="class">
+                            <select ref={className} className='block w-full h-10 font-sans bg-white rounded-md p-2 dark:bg-[#2D3748] mt-2' id="class_input" name="class">
                                 <optgroup label='Kelas VII'>
                                     <option value="VIIA">VIIA</option>
                                     <option value="VIIB">VIIB</option>
@@ -143,7 +146,7 @@ export default function Register() {
                         </div>
                         <div className="password_form mt-5">
                             <label className="font-bold text-sm" htmlFor="password_input">Password <span className="text-red-500">*</span></label>
-                            <input ref={password} id="password_input" placeholder="Password" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 border-2 mt-2 w-full h-10 rounded-md p-2" type="password"
+                            <input ref={password} id="password_input" placeholder="Password" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:bg-[#2D3748] dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2" type="password"
                                 onChange={() => {
                                     if (password.current.value.length >= 8) {
                                         setLen(true);
@@ -179,7 +182,7 @@ export default function Register() {
                         </div>
                         <div className="confirm_password_form mt-5">
                             <label className="font-bold text-sm" htmlFor="confirm_password_input">Konfirmasi Password <span className="text-red-500">*</span></label>
-                            <input ref={confirmPassword} id="confirm_password_input" placeholder="Konfirmasi password" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 border-2 mt-2 w-full h-10 rounded-md p-2" type="password"></input>
+                            <input ref={confirmPassword} id="confirm_password_input" placeholder="Konfirmasi password" className="font-sans dark:bg-[#2D3748] dark:focus:shadow-none focus:outline-none focus:shadow-md focus:shadow-blue-200 mt-2 w-full h-10 rounded-md p-2 " type="password"></input>
                         </div>
 
                         <div className="view_password_form mt-5">

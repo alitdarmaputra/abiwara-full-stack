@@ -73,24 +73,20 @@ export default function BorrowerCreate() {
     }
 
     return (
-        <div className="flex-grow w-full px-3 md:px-6 pt-10 md:mt-0 md:ml-64 pb-5">
+        <div className="flex-grow w-full">
             <ToastContainer />
 
-            <div className="book__container bg-white rounded-lg mb-10 shadow-lg p-5">
+            <div className="book__container bg-white dark:bg-[#2D3748] dark:text-gray-200 rounded-lg mb-10 p-5">
                 <form>
                     <div className="member_form mb-3">
                         <label className="font-bold text-sm" htmlFor="category_input">Nama Peminjam <span className="text-red-500">*</span></label>
                         <AsyncSelect
-                            styles={{
-                                control: (baseStyles, state) => ({
-                                    ...baseStyles,
-                                    borderColor: state.isFocused ? '#E5E7EB' : '#E5E7EB',
-                                    borderWidth: state.isFocused ? '2px' : '2px',
-                                }),
-                            }}
-                            classNames={{
-                                control: (state) => state.isFocused ? 'mt-2 rounded-md' : 'mt-2 rounded-md',
-                            }}
+							unstyled
+							classNames={{
+								control: () => 'mt-2 rounded-md bg-transparent dark:text-gray-200 border-2 dark:border-gray-500 p-2',
+								option: () => 'bg-white dark:bg-[#1A202C] dark:text-gray-200 p-2',
+								noOptionsMessage: () => 'bg-white dark:bg-[#1A202C] dark:text-gray-200 p-2',
+							}}
                             id="member_input"
                             cacheOptions
                             loadOptions={loadMember}
@@ -104,16 +100,12 @@ export default function BorrowerCreate() {
                     <div className="book_form mb-3">
                         <label className="font-bold text-sm" htmlFor="category_input">Judul Buku <span className="text-red-500">*</span></label>
                         <AsyncSelect
-                            styles={{
-                                control: (baseStyles, state) => ({
-                                    ...baseStyles,
-                                    borderColor: state.isFocused ? '#E5E7EB' : '#E5E7EB',
-                                    borderWidth: state.isFocused ? '2px' : '2px',
-                                }),
-                            }}
-                            classNames={{
-                                control: (state) => state.isFocused ? 'mt-2 rounded-md' : 'mt-2 rounded-md',
-                            }}
+							unstyled
+							classNames={{
+								control: () => 'mt-2 rounded-md bg-transparent dark:text-gray-200 border-2 dark:border-gray-500 p-2',
+								option: () => 'bg-white dark:bg-[#1A202C] dark:text-gray-200 p-2',
+								noOptionsMessage: () => 'bg-white dark:bg-[#1A202C] dark:text-gray-200 p-2',
+							}}
                             id="member_input"
                             cacheOptions
                             loadOptions={loadBook}
@@ -126,7 +118,7 @@ export default function BorrowerCreate() {
 
                     <div className="due_date_form mb-3">
                         <label className="font-bold text-sm" htmlFor="due_date_input">Tanggal Pengembalian <span className="text-red-500">*</span></label>
-                        <input id="due_date_input" placeholder="Tanggal pengembalian" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="date"></input>
+                        <input id="due_date_input" placeholder="Tanggal pengembalian" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="date"></input>
                     </div>
 
                     {isLoading ?

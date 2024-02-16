@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsCloudDownloadFill, BsFillTrashFill } from "react-icons/bs";
 import httpRequest from "../../config/http-request";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, ScrollRestoration, useSearchParams } from "react-router-dom";
 import { AiFillEye } from "react-icons/ai";
 import { useAuth } from "../../context/auth";
 import Modal from "../../components/Modal";
@@ -97,14 +97,14 @@ export default function Book() {
     }
 
     return (
-        <div className="flex-grow w-full px-3 md:px-6 pt-10 md:mt-0 md:ml-64 pb-5">
+        <div className="flex-grow w-full">
             <Modal active={active} setActive={setActive} title="Hapus Buku" children={bookDetail} action={action}></Modal>
 
-            <div className="book__container bg-white rounded-lg shadow-lg">
+            <div className="book__container bg-white dark:bg-[#2D3748] rounded-lg mb-10 dark:text-gray-200">
                 <div className="table_head__container flex justify-between p-5 box-border items-center">
                     <div className="flex w-72 h-full">
-                        <input id="keyword__input" placeholder="Ketik judul atau pengarang" onInput={handleSearch} className="font-sans focus:outline-none border-l-2 border-y-2 w-full h-5 rounded-l-full p-5 " type="text"></input>
-                        <div className='bg-white border-y-2 border-r-2 rounded-r-full pr-3 flex items-center text-slate-300'>
+                        <input id="keyword__input" placeholder="Ketik judul atau pengarang" onInput={handleSearch} className="font-sans focus:outline-none border-l-2 border-y-2 w-full h-5 rounded-l-full p-5 dark:bg-transparent dark:border-gray-500" type="text"></input>
+                        <div className='bg-white border-y-2 border-r-2 rounded-r-full pr-3 flex items-center text-slate-300 dark:bg-gray-700 dark:border-gray-500'>
                             <AiOutlineSearch size="20px" />
                         </div>
                     </div>
@@ -124,7 +124,7 @@ export default function Book() {
                 <div className="table__container shadow-sm w-full overflow-x-scroll sm:rounded-md mb-9 text-sm">
                     <table className="w-full">
                         <thead className="text-slate-500 font-bold">
-                            <tr>
+                            <tr className="border-b dark:border-b dark:border-b-gray-500">
                                 <th className="px-10 py-5 w-96">JUDUL</th>
                                 <th>TAHUN</th>
                                 <th className="px-10 md:px-2 w-18">PENGARANG</th>
@@ -138,7 +138,7 @@ export default function Book() {
                                     <tr><td colSpan="5" className="text-center py-6">Tidak ada buku yang ditemukan</td></tr>
                                     : books.map(book => {
                                         return (
-                                            <tr key={book.id} className="border text-left hover:bg-slate-50">
+                                            <tr key={book.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
                                                 <td className="py-5 box-border pl-5">{book.title}</td>
                                                 <td className="text-center">{book.published}</td>
                                                 <td className="text-center">{book.authors}</td>
@@ -190,7 +190,7 @@ export default function Book() {
                     </table>
                 </div>
 
-                <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 mb-10">
+                <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 dark:text-gray-200">
                     <div className="pagination flex w-60 justify-evenly items-center">
                         <Link to={`/book?page=1`}><BsChevronDoubleLeft /></Link>
 
@@ -226,6 +226,7 @@ export default function Book() {
                     </div>
                 </div>
             </div>
+			<ScrollRestoration />
         </div>
     )
 }

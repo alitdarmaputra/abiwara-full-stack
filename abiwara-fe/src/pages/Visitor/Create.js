@@ -51,19 +51,19 @@ export default function VisitorCreate() {
     }
 
     return (
-        <div className="flex-grow w-full px-3 md:px-6 pt-10 md:mt-0 md:ml-64 pb-5">
+        <div className="flex-grow w-full">
             <ToastContainer />
 
-            <div className="book__container bg-white rounded-lg mb-10 shadow-lg p-5">
+            <div className="bg-white dark:bg-[#2D3748] rounded-lg mb-10 p-5 dark:text-gray-200">
                 <form onSubmit={handleSubmitBook}>
                     <div className="name_form mb-3">
                         <label className="font-bold text-sm" htmlFor="name_input">Nama <span className="text-red-500">*</span></label>
-                        <input id="name_input" placeholder="Ketik nama" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input id="name_input" placeholder="Ketik nama" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="class_form mb-3">
                         <label className="font-bold text-sm" htmlFor="class_input">Kelas <span className="text-red-500">*</span></label>
-                        <select className='block w-full h-10 font-sans bg-white rounded-md border-2 p-2 mt-2' id="class_input" name="class">
+                        <select className='block w-full h-10 font-sans bg-white rounded-md border-2 p-2 mt-2 dark:bg-transparent dark:border-gray-500' id="class_input" name="class">
                             <optgroup label='Kelas VII'>
                                 <option value="VIIA">VIIA</option>
                                 <option value="VIIB">VIIB</option>
@@ -90,12 +90,12 @@ export default function VisitorCreate() {
 
                     <div className="pic_form mb-3">
                         <label className="font-bold text-sm" htmlFor="pic_input">Nama Penanggung Jawab</label>
-                        <input id="pic_input" placeholder="Ketik nama penanggung jawab" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input id="pic_input" placeholder="Ketik nama penanggung jawab" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="description_form mb-3">
                         <label className="font-bold text-sm" htmlFor="description_input">Deskripsi</label>
-                        <textarea id="description_input" placeholder="Ketik deskripsi" className="font-sans focus:outline-black border-2 mt-2 w-full h-72 rounded-md p-2"></textarea>
+                        <textarea id="description_input" placeholder="Ketik deskripsi" className="font-sans focus:outline-black border-2 mt-2 w-full h-72 rounded-md p-2 dark:bg-transparent dark:border-gray-500"></textarea>
                     </div>
 
                     {isLoading ?

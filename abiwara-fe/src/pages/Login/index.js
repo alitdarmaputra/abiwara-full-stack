@@ -1,9 +1,8 @@
 import { useRef, useState } from 'react'
 import { AiOutlineEyeInvisible, AiOutlineEye, AiOutlineMail, AiOutlineKey } from 'react-icons/ai'
-import AbiwaraLogoText from '../../assets/logo_text.svg';
+import { ReactComponent as Logo } from "../../assets/logo.svg";
 import { Navigate, NavLink, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/auth'
-
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { notifyError } from '../../utils/toast'
@@ -75,9 +74,12 @@ export default function Login() {
                 <div className="login_img bg-[url('/src/assets/login-image.jpg')] bg-cover h-full w-full"></div>
             </div>
 
-            <div className="login_form_container flex grow justify-center items-center">
+            <div className="login_form_container flex grow justify-center items-center dark:bg-[#1A202C] dark:text-gray-200">
                 <div className="box-border login_form">
-                    <img src={AbiwaraLogoText} alt="Abiwara logo" className='h-28 items-center w-full md:-ml-5 -mt-11'></img>
+					<div className="flex justify-center items-center gap-2 mb-10">
+						<Logo width="40" height="40" fill="white" />
+						<h3 className={`poppins-semibold dark:text-gray-200 text-2xl`}>Abiwara</h3>
+					</div>
 
                     <h1 className="title text-3xl">Selamat Datang</h1>
                     <p className="sub_title mt-3 text-sm text-slate-500">Silahkan masukkan email dan password anda.</p>
@@ -85,17 +87,17 @@ export default function Login() {
                     <form className="mt-8 md:w-96">
                         <div className="email_form">
                             <label className="font-bold text-sm" htmlFor="email_input">Email <span className="text-red-500">*</span></label>
-                            <div className="email_input_button flex mt-2 focus-within:shadow-md focus-within:shadow-blue-200 rounded-md items-center">
-                                <div className='h-10 bg-blue-50 rounded-l-md flex items-center p-1'><AiOutlineMail className='shadow-sm text-3xl bg-white p-1 rounded-md text-blue-500'></AiOutlineMail></div>
-                                <input id="email_input" ref={email} placeholder="Email" className="font-sans bg-blue-50 focus:outline-none w-full h-10 rounded-r-lg p-2" type="email"></input>
+                            <div className="email_input_button flex mt-2 focus-within:shadow-md focus-within:shadow-blue-200 dark:focus-within:shadow-none rounded-md items-center">
+                                <div className='h-10 bg-blue-50 rounded-l-md flex items-center p-1 dark:bg-[#2D3748]'><AiOutlineMail className='shadow-sm text-3xl bg-white p-1 rounded-md text-blue-500 dark:bg-[#2D3748]'></AiOutlineMail></div>
+                                <input id="email_input" ref={email} placeholder="Email" className="font-sans bg-blue-50 focus:outline-none w-full h-10 rounded-r-lg p-2 dark:bg-[#2D3748]" type="email"></input>
                             </div>
                         </div>
                         <div className="mt-5 password-form">
                             <label className="font-bold text-sm" htmlFor="password_input">Password <span className="text-red-500">*</span></label>
-                            <div className="password_input_button flex mt-2 focus-within:shadow-md focus-within:shadow-blue-200 rounded-md">
-                                <div className='h-10 bg-blue-50 rounded-l-md flex items-center p-1'><AiOutlineKey className='shadow-sm text-3xl bg-white p-1 rounded-md text-blue-500'></AiOutlineKey></div>
-                                <input id="password_input" ref={password} placeholder="Password" className="font-sans bg-blue-50 focus:outline-none w-full h-10 rounded-l-lg p-2" type="password"></input>
-                                <button className='bg-blue-50 rounded-r-md px-1 text-slate-300' onClick={e => updatePasswordView(e)} type='button'>
+                            <div className="password_input_button flex mt-2 focus-within:shadow-md focus-within:shadow-blue-200 dark:focus-within:shadow-none rounded-md">
+                                <div className='h-10 bg-blue-50 rounded-l-md flex items-center p-1 dark:bg-[#2D3748]'><AiOutlineKey className='shadow-sm text-3xl bg-white p-1 rounded-md text-blue-500 dark:bg-[#2D3748]'></AiOutlineKey></div>
+                                <input id="password_input" ref={password} placeholder="Password" className="font-sans bg-blue-50 focus:outline-none w-full h-10 p-2 dark:bg-[#2D3748]" type="password"></input>
+                                <button className='bg-blue-50 rounded-r-md px-1 text-slate-300 dark:bg-[#2D3748]' onClick={e => updatePasswordView(e)} type='button'>
                                     {
                                         isHide ? <AiOutlineEyeInvisible size='30px' /> : <AiOutlineEye size='30px' />
                                     }

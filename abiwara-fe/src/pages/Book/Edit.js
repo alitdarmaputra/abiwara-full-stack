@@ -16,7 +16,8 @@ export default function BookEdit() {
     const { id } = useParams();
     const [submitLoading, setSubmitLoading] = useState(false);
 	const { setAuthToken } = useAuth();
-
+	const theme = localStorage.getItem('theme');
+	
     useEffect(() => {
         async function getBooks() {
             const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book/${id}`);
@@ -124,79 +125,74 @@ export default function BookEdit() {
     }
 
     return (
-        <div className="flex-grow w-full px-3 md:px-6 pt-10 md:mt-0 md:ml-64 pb-5">
+        <div className="flex-grow w-full">
             <ToastContainer />
 
-            <div className="book__container bg-white rounded-lg shadow-lg p-5 mb-10">
+            <div className="book__container bg-white rounded-lg p-5 mb-10 dark:bg-[#2D3748] dark:text-gray-200">
                 <form>
                     <div className="title_form mb-3">
                         <label className="font-bold text-sm" htmlFor="title_input">Judul <span className="text-red-500">*</span></label>
-                        <input defaultValue={book.title} id="title_input" placeholder="ketik judul" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input defaultValue={book.title} id="title_input" placeholder="ketik judul" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="price_form mb-3">
                         <label className="font-bold text-sm" htmlFor="price_input">Harga</label>
-                        <input defaultValue={numToIDR(book.price.toString())} onChange={formatValue} id="price_input" placeholder="ketik harga" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input defaultValue={numToIDR(book.price.toString())} onChange={formatValue} id="price_input" placeholder="ketik harga" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="authors_form mb-3">
                         <label className="font-bold text-sm" htmlFor="authors_input">Pengarang <span className="text-red-500">*</span></label>
-                        <input defaultValue={book.authors} id="authors_input" placeholder="ketik pengarang" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input defaultValue={book.authors} id="authors_input" placeholder="ketik pengarang" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="publisher_form mb-3">
                         <label className="font-bold text-sm" htmlFor="publisher_input">Penerbit <span className="text-red-500">*</span></label>
-                        <input defaultValue={book.publisher} id="publisher_input" placeholder="ketik penerbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input defaultValue={book.publisher} id="publisher_input" placeholder="ketik penerbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
 
                     </div>
 
                     <div className="published_form mb-3">
                         <label className="font-bold text-sm" htmlFor="published_input">Tahun Terbit <span className="text-red-500">*</span></label>
-                        <input defaultValue={book.published} id="published_input" placeholder="ketik tahun terbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input defaultValue={book.published} id="published_input" placeholder="ketik tahun terbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="page_form mb-3">
                         <label className="font-bold text-sm" htmlFor="page_input">Jumlah Halaman</label>
-                        <input defaultValue={book.page} id="page_input" placeholder="ketik jumlah halaman" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input defaultValue={book.page} id="page_input" placeholder="ketik jumlah halaman" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="quantity_form mb-3">
                         <label className="font-bold text-sm" htmlFor="quantity_input">Jumlah Buku <span className="text-red-500">*</span></label>
-                        <input defaultValue={book.quantity} id="quantity_input" placeholder="ketik jumlah buku" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        <input defaultValue={book.quantity} id="quantity_input" placeholder="ketik jumlah buku" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="buy_date_form mb-3">
                         <label className="font-bold text-sm" htmlFor="buy_date_input">Tanggal Pembelian <span className="text-red-500">*</span></label>
-                        <input defaultValue={new Date(book.buy_date).toISOString().slice(0, 10)} id="buy_date_input" placeholder="tanggal pembelian" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2" type="date"></input>
+                        <input defaultValue={new Date(book.buy_date).toISOString().slice(0, 10)} id="buy_date_input" placeholder="tanggal pembelian" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="date"></input>
                     </div>
 
                     <div className="summary_form mb-3">
                         <label className="font-bold text-sm" htmlFor="summary_input">Ringkasan</label>
-                        <textarea defaultValue={book.summary} id="summary_input" placeholder="ketik ringkasan" className="font-sans focus:outline-black border-2 mt-2 w-full h-72 rounded-md p-2"></textarea>
+                        <textarea defaultValue={book.summary} id="summary_input" placeholder="ketik ringkasan" className="font-sans focus:outline-black border-2 mt-2 w-full h-72 rounded-md p-2 dark:bg-transparent dark:border-gray-500"></textarea>
                     </div>
 
                     <div className="category_form mb-3">
                         <label className="font-bold text-sm" htmlFor="category_input">Kategori <span className="text-red-500">*</span></label>
-                        <AsyncSelect
-                            styles={{
-                                control: (baseStyles, state) => ({
-                                    ...baseStyles,
-                                    borderColor: state.isFocused ? '#E5E7EB' : '#E5E7EB',
-                                    borderWidth: state.isFocused ? '2px' : '2px',
-                                }),
-                            }}
-                            classNames={{
-                                control: (state) => state.isFocused ? 'mt-2 rounded-md' : 'mt-2 rounded-md',
-                            }}
-                            id="category_input"
-                            cacheOptions
-                            loadOptions={loadCategory}
-                            placeholder="Pilih kategori"
-                            noOptionsMessage={() => "Kategori tidak ditemukan"}
-                            onChange={choice => setCategory(choice)}
-                            defaultValue={category}
-                        >
-                        </AsyncSelect>
+						<AsyncSelect
+							unstyled
+							classNames={{
+								control: () => 'mt-2 rounded-md bg-transparent dark:text-gray-200 border-2 dark:border-gray-500 p-2',
+								option: () => 'bg-white dark:bg-[#1A202C] dark:text-gray-200 p-2',
+								noOptionsMessage: () => 'bg-white dark:bg-[#1A202C] dark:text-gray-200 p-2',
+							}}
+							id="category_input"
+							cacheOptions
+							loadOptions={loadCategory}
+							placeholder="Pilih kategori"
+							noOptionsMessage={() => "Kategori tidak ditemukan"}
+							onChange={choice => setCategory(choice.value)}
+						>
+						</AsyncSelect>
                     </div>
 
                     {submitLoading ?

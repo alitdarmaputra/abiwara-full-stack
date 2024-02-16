@@ -42,8 +42,8 @@ export default function BookDetail() {
     }
 
     return (
-        <div className="flex-grow w-full px-3 md:px-6 pt-10 md:mt-0 md:ml-64 pb-5">
-            <div className="book__container bg-white rounded-lg shadow-lg p-5 mb-10">
+        <div className="flex-grow w-full">
+            <div className="book__container bg-white rounded-lg p-5 mb-10 dark:bg-[#2D3748] dark:text-gray-200">
                 <div className="detail_head__container flex justify-between p-5 box-border items-center">
                     <p className="text-slate-500 mt-2 font-semibold">{bookDetail.category && bookDetail.category["Name"]}</p>
 
