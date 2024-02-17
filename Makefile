@@ -5,7 +5,7 @@ run:
 	cd ./abiwara-be-api && go run ./cmd/api/injector.go ./cmd/api/main.go
 
 start:
-	cd ./backoffice && npm start
+	cd ./abiwara-fe && npm start
 
 seed:
 	cd ./abiwara-be-api && go run ./db/seeds/main/seed.go seed 
