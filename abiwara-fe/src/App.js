@@ -1,5 +1,5 @@
 import React from "react";
-import { createBrowserRouter, Route, RouterProvider, Routes } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from "./context/auth";
 import Book from "./pages/Book";
 import BookCreate from "./pages/Book/Create";
@@ -28,6 +28,7 @@ import Information from "./pages/Information";
 import Catalogue from "./pages/Catalogue";
 import Help from "./pages/Help";
 import BorrowStep from "./pages/Help/BorrowStep";
+import CatalogueDetail from "./pages/Catalogue/CatalogueDetail";
 
 const router = createBrowserRouter([
 	{
@@ -39,7 +40,10 @@ const router = createBrowserRouter([
 			}, {
 				path: "/catalogue",
 				element: <Catalogue />
-			}, {
+			},{
+				path: "/catalogue/:id",
+				element: <CatalogueDetail />
+			},{
 				path: "/information",
 				element: <Information />
 			}, { 

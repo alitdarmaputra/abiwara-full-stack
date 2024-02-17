@@ -1,16 +1,16 @@
-import axios from 'axios';
-import { useRef, useState } from 'react';
+import axios, { HttpStatusCode } from 'axios';
+import { useEffect, useRef, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import AbiwaraLogoText from '../../assets/logo_text.svg'
 import httpRequest from '../../config/http-request';
 import { notifyError } from '../../utils/toast';
 import Success from '../../assets/success.gif';
 import { useParams } from 'react-router-dom';
+import { ReactComponent as Logo } from "../../assets/logo.svg";
 
 export default function ResetPassword() {
     const newPassword = useRef()
     const confirmPassword = useRef()
-
+	const [theme, _] = useState(localStorage.getItem('theme'));
     const { token } = useParams()
 
     const [isSuccess, setSuccess] = useState(false)
@@ -20,6 +20,7 @@ export default function ResetPassword() {
         e.preventDefault();
         if (newPassword.current.value !== confirmPassword.current.value) {
             notifyError("Password dan Konfirmasi Password tidak sama")
+			return;
         }
 
         const data = {
@@ -41,16 +42,28 @@ export default function ResetPassword() {
                 setLoading(false);
             }
         } catch (err) {
-            notifyError("Reset password gagal");
+			if (err.response?.status == HttpStatusCode.Unauthorized) {
+				notifyError("Token sudah tidak valid");
+			} else {
+				notifyError("Reset password gagal");
+			}
             setLoading(false);
         }
     }
+	
+    useEffect(() => {
+        if (theme === "dark") {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    }, [theme]);
 
     if (isSuccess) {
         return (
-            <div className="flex w-full justify-center px-10">
-                <div className="verifikasi_message_container mt-12">
-                    <img className="w-1/5 m-auto mt-20" src={Success} alt="login-animation"></img>
+            <div className="flex w-full h-screen justify-center px-10 dark:bg-[#1A202C] dark:text-gray-200 items-center">
+                <div className="verifikasi_message_container">
+                    <img className="w-1/5 m-auto" src={Success} alt="login-animation"></img>
                     <h1 className="mt-5 text-center text-3xl font-semibold">Reset Password Sukses</h1>
                     <p className="text-center mt-5">Password telah diperbarui.</p>
                 </div>
@@ -59,11 +72,14 @@ export default function ResetPassword() {
     }
 
     return (
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center h-screen items-center dark:bg-[#1A202C] dark:text-gray-200">
             <ToastContainer />
             <div className="register_container">
                 <div className="register_header">
-                    <img src={AbiwaraLogoText} alt="Abiwara logo" className="m-auto mt-10 w-40"></img>
+					<div className="flex justify-center items-center gap-2 mb-10">
+						<Logo width="40" height="40" fill="white" />
+						<h3 className={`poppins-semibold dark:text-gray-200 text-2xl`}>Abiwara</h3>
+					</div>
                     <h1 className="title mt-8 text-3xl">Reset Password</h1>
                 </div>
 
@@ -71,11 +87,11 @@ export default function ResetPassword() {
                     <form className="mt-6 " action="">
                         <div className="new_password_form">
                             <label className="font-bold text-sm" htmlFor="new_password_input">Password Baru <span className="text-red-500">*</span></label>
-                            <input ref={newPassword} id="new_password_input" placeholder="Password baru" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 border-2 mt-2 w-full h-10 rounded-md p-2" type="password"></input>
+                            <input ref={newPassword} id="new_password_input" placeholder="Password baru" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2 dark:bg-[#2D3748]" type="password"></input>
                         </div>
                         <div className="mt-5 confirm_password_form">
                             <label className="font-bold text-sm" htmlFor="konfirmasi_password">Konfirmasi Password <span className="text-red-500">*</span></label>
-                            <input ref={confirmPassword} id="konfirmasi_password" placeholder="Konfirmasi password" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 border-2 mt-2 w-full h-10 rounded-md p-2" type="password"></input>
+                            <input ref={confirmPassword} id="konfirmasi_password" placeholder="Konfirmasi password" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2 dark:bg-[#2D3748]" type="password"></input>
                         </div>
 
                         {isLoading ?

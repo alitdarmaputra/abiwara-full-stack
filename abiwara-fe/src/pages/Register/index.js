@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ReactComponent as Logo } from "../../assets/logo.svg";
-import { useRef, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import httpRequest from '../../config/http-request';
 import { notifyError } from '../../utils/toast';
@@ -10,6 +10,7 @@ import { AiFillCheckCircle } from 'react-icons/ai';
 export default function Register() {
     const [isHide, setHide] = useState(true);
     const [isLoading, setLoading] = useState(false);
+	const [theme, _] = useState(localStorage.getItem("theme"));
     const navigate = useNavigate()
     const [isLen, setLen] = useState(false);
     const [isCase, setCase] = useState(false);
@@ -20,7 +21,6 @@ export default function Register() {
     const className = useRef()
     const password = useRef()
     const confirmPassword = useRef()
-
 
     const casePattern = /^(?=.*[a-z])(?=.*[A-Z]).+$/;
     const charPattern = /[!@#$%^&*(),.?":{}|<>]/
@@ -92,15 +92,23 @@ export default function Register() {
         }
     }
 
+    useEffect(() => {
+        if (theme === "dark") {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    }, [theme]);
+
     return (
         <div className="w-full flex justify-center dark:bg-[#1A202C] dark:text-gray-200">
             <ToastContainer />
             <div className="register_container px-5">
                 <div className="register_header">
-					<div className="flex justify-center items-center gap-2 mb-10 mt-10">
+					<Link to="/" className="flex justify-center items-center gap-2 mb-10 mt-10">
 						<Logo width="40" height="40" fill="white" />
 						<h3 className={`poppins-semibold dark:text-gray-200 text-2xl`}>Abiwara</h3>
-					</div>
+					</Link>
                     <h1 className="title mt-8 text-3xl">Daftar</h1>
                     <p className="sub_title mt-3 text-sm text-slate-500">Mulai dengan membuat akun baru.</p>
                 </div>

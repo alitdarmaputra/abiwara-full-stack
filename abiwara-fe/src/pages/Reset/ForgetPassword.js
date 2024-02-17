@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import httpRequest from '../../config/http-request';
 import { ReactComponent as Logo } from "../../assets/logo.svg";
@@ -10,6 +10,7 @@ export default function ForgetPassword() {
     const email = useRef()
     const [isSuccess, setSuccess] = useState(false)
     const [isLoading, setLoading] = useState(false)
+	const [theme, _] = useState(localStorage.getItem('theme'));
 
     const handleRequestToken = async e => {
         e.preventDefault();
@@ -32,13 +33,22 @@ export default function ForgetPassword() {
             }
         } catch (err) {
             notifyError("Gagal mengirim permintaan reset password")
+			setLoading(false);
         }
     }
 
+    useEffect(() => {
+        if (theme === "dark") {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    }, [theme]);
+
     if (isSuccess) {
         return (
-            <div className="flex w-full justify-center px-10 bg-white">
-                <div className="verifikasi_message_container mt-12">
+            <div className="flex w-full justify-center items-center px-10 bg-white dark:bg-[#1A202C] dark:text-gray-200 h-screen">
+                <div className="verifikasi_message_container">
                     <img className="w-1/5 m-auto" src={SuccessSentEmail} alt="success sent email"></img>
                     <h1 className="text-center text-3xl font-semibold">Berhasil Meminta Reset Password</h1>
                     <p className="text-center mt-5">Periksa email kamu secara berkala. Kami telah mengirimkan tautan untuk melakukan reset password akun.</p>
@@ -48,7 +58,7 @@ export default function ForgetPassword() {
     }
 
     return (
-        <div className="w-full flex justify-center bg-white dark:bg-[#1A202C] h-screen text-gray-200">
+        <div className="w-full flex justify-center bg-white dark:bg-[#1A202C] h-screen dark:text-gray-200">
             <ToastContainer />
             <div className="register_container max-w-sm">
                 <div className="register_header">

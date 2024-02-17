@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AiOutlineEyeInvisible, AiOutlineEye, AiOutlineMail, AiOutlineKey } from 'react-icons/ai'
 import { ReactComponent as Logo } from "../../assets/logo.svg";
-import { Navigate, NavLink, useLocation } from 'react-router-dom'
+import { Link, Navigate, NavLink, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/auth'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,7 +12,8 @@ import axios from 'axios';
 export default function Login() {
     const [isHide, setHide] = useState(true);
     const auth = useAuth()
-
+	const [theme, _] = useState(localStorage.getItem('theme'));
+	
 	// get redirect path if user is redirected after authenticated 
 	const location = useLocation();
     const redirectPath = location.state?.path || '/';
@@ -57,6 +58,14 @@ export default function Login() {
         input.type = input.type === "password" ? "text" : "password";
     }
 	
+    useEffect(() => {
+        if (theme === "dark") {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    }, [theme]);
+
 	if (auth.authToken) {
         return <Navigate replace to={redirectPath}></Navigate>
 	}
@@ -76,10 +85,10 @@ export default function Login() {
 
             <div className="login_form_container flex grow justify-center items-center dark:bg-[#1A202C] dark:text-gray-200">
                 <div className="box-border login_form">
-					<div className="flex justify-center items-center gap-2 mb-10">
+					<Link to="/" className="flex justify-center items-center gap-2 mb-10">
 						<Logo width="40" height="40" fill="white" />
 						<h3 className={`poppins-semibold dark:text-gray-200 text-2xl`}>Abiwara</h3>
-					</div>
+					</Link>
 
                     <h1 className="title text-3xl">Selamat Datang</h1>
                     <p className="sub_title mt-3 text-sm text-slate-500">Silahkan masukkan email dan password anda.</p>
