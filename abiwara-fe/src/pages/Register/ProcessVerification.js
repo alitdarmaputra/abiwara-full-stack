@@ -12,6 +12,16 @@ export default function ProcessVerification() {
     const navigate = useNavigate()
     const { token } = useParams()
 
+	const [theme, _] = useState(localStorage.getItem('theme'));
+
+    useEffect(() => {
+        if (theme === "dark") {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    }, [theme]);
+
     useEffect(() => {
         const verifyEmail = async () => {
             try {
@@ -31,7 +41,7 @@ export default function ProcessVerification() {
 
     if (isLoading) {
         return (
-            <div className="flex w-full justify-center px-10">
+            <div className="flex w-full justify-center px-10 h-screen items-center dark:bg-[#1A202C] dark:text-gray-200">
                 <img src={Loading} alt="loading-animation" width='500'></img>
             </div>
         )
@@ -44,9 +54,9 @@ export default function ProcessVerification() {
 
     if (isSuccess) {
         return (
-            <div className="flex w-full justify-center px-10">
-                <div className="verifikasi_message_container mt-12">
-                    <img className="w-1/5 m-auto mt-20" src={Success} alt="login-animation"></img>
+            <div className="flex w-full justify-center px-10 h-screen items-center dark:bg-[#1A202C] dark:text-gray-200">
+                <div className="verifikasi_message_container">
+                    <img className="w-1/5 m-auto" src={Success} alt="login-animation"></img>
                     <h1 className="mt-5 text-center text-3xl font-semibold">Verifikasi Sukses</h1>
                     <p className="text-center mt-5">Akun kamu telah terverifikasi. Silahkan login untuk mulai menggunakan aplikasi.</p>
                     <div className="login_btn_container w-full flex justify-center">

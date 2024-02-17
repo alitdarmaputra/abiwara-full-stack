@@ -2,9 +2,11 @@ import SearchBox from "../../components/SearchBox";
 import { FaBookmark, FaRegBookmark, FaStar, FaStarHalf } from "react-icons/fa";
 import { stringToColor } from "../../utils/color";
 import { ScrollRestoration } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 export default function CatalogueDetail({ book = {} }) {
     book.category = "";
+
     const Stars = ({ rating }) => {
         let ratingElements = [];
         while (ratingElements.length < 5) {
@@ -22,6 +24,9 @@ export default function CatalogueDetail({ book = {} }) {
 
     return (
         <div id="catalogue-detail">
+			<Helmet>
+				<title>{book.title}</title>
+			</Helmet>
             <SearchBox />
 
             <section id="book" className="flex justify-center bg-white py-16 md:pt-20 px-4 md:px-0 dark:bg-[#161B26]">

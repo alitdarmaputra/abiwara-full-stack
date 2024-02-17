@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { UserContext } from "../../context/user";
 import axiosInstance from "../../config";
+import { Helmet } from "react-helmet";
 
 export default function BookDetail() {
     const [isLoading, setLoading] = useState(false);
@@ -43,6 +44,9 @@ export default function BookDetail() {
 
     return (
         <div className="flex-grow w-full">
+			<Helmet>
+				<title>{bookDetail.title}</title>
+			</Helmet>
             <div className="book__container bg-white rounded-lg p-5 mb-10 dark:bg-[#2D3748] dark:text-gray-200">
                 <div className="detail_head__container flex justify-between p-5 box-border items-center">
                     <p className="text-slate-500 mt-2 font-semibold">{bookDetail.category && bookDetail.category["Name"]}</p>

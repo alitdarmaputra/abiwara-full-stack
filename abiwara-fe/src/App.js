@@ -29,6 +29,7 @@ import Catalogue from "./pages/Catalogue";
 import Help from "./pages/Help";
 import BorrowStep from "./pages/Help/BorrowStep";
 import CatalogueDetail from "./pages/Catalogue/CatalogueDetail";
+import RouteWithTitle from "./components/RouteWithTitle";
 
 const router = createBrowserRouter([
 	{
@@ -36,22 +37,22 @@ const router = createBrowserRouter([
 		element: <RootLayout />,
 		children: [{
 				path: "/",
-				element: <Home /> 
+				element: <RouteWithTitle title="Abiwara"><Home /></RouteWithTitle> 
 			}, {
 				path: "/catalogue",
-				element: <Catalogue />
+				element: <RouteWithTitle title="Katalog Buku"><Catalogue /></RouteWithTitle> 
 			},{
 				path: "/catalogue/:id",
 				element: <CatalogueDetail />
 			},{
 				path: "/information",
-				element: <Information />
+				element: <RouteWithTitle title="Informasi"><Information /></RouteWithTitle> 
 			}, { 
 				path: "/help",
-				element: <Help />
+				element: <RouteWithTitle title="Bantuan"><Help /></RouteWithTitle> 
 			}, {
 				path: "/help/borrow-step",
-				element: <BorrowStep />
+				element: <RouteWithTitle title="Alur Peminjaman"><BorrowStep /></RouteWithTitle> 
 			}
 		]
 	}, {
@@ -64,60 +65,60 @@ const router = createBrowserRouter([
 		children: [
 			{ 
 				path: "/dashboard",
-				element: <Dashboard />
+				element: <RouteWithTitle title="Dashboard"><Dashboard /></RouteWithTitle> 
 			}, { 
 				path: "/book",
-				element: <Book />
+				element: <RouteWithTitle title="Buku"><Book /></RouteWithTitle> 
 			}, { 
 				path: "/book/:id",
 				element: <BookDetail />
 			}, { 
 				path: "/book/create",
-				element: <BookCreate />
+				element: <RouteWithTitle title="Tambah Buku"><BookCreate /></RouteWithTitle> 
 			}, { 
 				path: "/book/:id/edit",
-				element: <BookEdit />
+				element: <RouteWithTitle title="Edit Buku"><BookEdit /></RouteWithTitle> 
 			}, { 
 				path: "/visitor",
-				element: <Visitor />
+				element: <RouteWithTitle title="Kunjungan"><Visitor /></RouteWithTitle> 
 			}, { 
 				path: "/visitor/create",
-				element: <VisitorCreate />
+				element: <RouteWithTitle title="Tambah Kunjungan"><VisitorCreate /></RouteWithTitle> 
 			}, { 
 				path: "/member",
-				element: <Member />
+				element: <RouteWithTitle title="Anggota"><Member /></RouteWithTitle> 
 			}, { 
 				path: "/borrow",
-				element: <Borrower />
+				element: <RouteWithTitle title="Pinjaman"><Borrower /></RouteWithTitle> 
 			}, { 
 				path: "/borrow/create",
-				element: <BorrowerCreate />
+				element: <RouteWithTitle title="Tambah Pinjaman"><BorrowerCreate /></RouteWithTitle> 
 			}, { 
 				path: "/update-profile",
-				element: <UpdateProfile />
+				element: <RouteWithTitle title="Edit Profile"><UpdateProfile /></RouteWithTitle> 
 			},
 		]
 	}, {
 		path: "/login",
-		element: <Login />
+		element: <RouteWithTitle title="Login"><Login /></RouteWithTitle> 
 	}, {
 		path: "/register",
-		element: <Register />
+		element: <RouteWithTitle title="Daftar"><Register /></RouteWithTitle> 
 	}, {
 		path: "/register/verification",
-		element: <Verification />
+		element: <RouteWithTitle title="Verifikasi"><Verification /></RouteWithTitle> 
 	}, {
 		path: "/register/verification/:token",
-		element: <ProcessVerification />
+		element: <RouteWithTitle title="Verifikasi"><ProcessVerification /></RouteWithTitle> 
 	}, {
 		path: "/forget-password",
-		element: <ForgetPassword />
+		element: <RouteWithTitle title="Lupa Password"><ForgetPassword /></RouteWithTitle> 
 	}, {
 		path: "/reset-password/:token",
-		element: <ResetPassword />
+		element: <RouteWithTitle title="Reset Password"><ResetPassword /></RouteWithTitle> 
 	}, {
 		path: "*",
-		element: <Notfound />
+		element: <RouteWithTitle title="Halaman tidak ditemukan"><Notfound /></RouteWithTitle> 
 	}
 ])
 
