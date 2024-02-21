@@ -1,9 +1,35 @@
-from flask import Flask, abort
+from flask import Flask, request, abort
 from predict import get_recs
 from response import Response, ErrorResponse
 import pandas as pd
+import os
+import jwt
+
+pass_key = os.environ['PASS_KEY']
+secret_key = os.environ['JWT_SECRET_KEY']
 
 app = Flask(__name__)
+
+@app.before_request
+def authenticate():
+    if request.path == '/health-check':
+        return
+
+    auth = request.headers.get('Authorization')
+
+    if not auth:
+        abort(401)
+
+    try:
+        token = auth.split(' ')[1]
+        decoded = jwt.decode(token, secret_key, algorithms=['HS256'])
+
+        if decoded['pass_key'] != pass_key:
+            abort(401)
+        
+        pass
+    except:
+        abort(401)
 
 @app.route('/health-check')
 def health_check():
@@ -28,6 +54,20 @@ def not_found_handler(error):
     return errRes.__dict__, 404 
 
 @app.errorhandler(500)
-def not_found_handler(error):
+def internal_server_error_handler(error):
     errRes = ErrorResponse(500, 'Internal server error', 'Internal server error') 
     return errRes.__dict__, 500 
+
+@app.errorhandler(401)
+def unauthorized_handler(error):
+    errRes = ErrorResponse(401, 'Unauthorized', 'Unauthorized') 
+    return errRes.__dict__, 401
+
+if __name__ == '__main__':
+    debug = False 
+    environment = os.getenv('ENV', 'development')
+
+    if environment == 'development':
+        debug = True
+
+    app.run(debug=debug)

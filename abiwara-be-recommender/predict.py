@@ -36,6 +36,6 @@ def get_recs(book_id, model=model) -> pd.DataFrame:
             similarity_table.append((similarity_score, other_raw_id))
 
     # sort books by ascending similarity
-    recs = pd.DataFrame(sorted(similarity_table), columns=["vector cosine distance", "book id"])
+    recs = pd.DataFrame(sorted(similarity_table), columns=["vector_cosine_distance", "book_id"])
 
     return recs.head(25)
