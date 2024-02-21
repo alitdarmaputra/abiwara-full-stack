@@ -1,10 +1,17 @@
 version: '3.9'
 services:
+  recommender:
+    image: alitdarmaputra/abiwara_recommender_image:latest
+    container_name: abiwara_recommender_container
+    ports:
+      - '5000:5000'
   api:
     image: alitdarmaputra/abiwarabe_image:latest
     container_name: abiwarabe_container
     ports:
       - '4002:4002'
+    depends_on:
+      - recommender
   backoffice:
     image: alitdarmaputra/abiwarafe_image:latest
     container_name: abiwarafe_container

@@ -6,7 +6,7 @@ import os
 import jwt
 
 pass_key = os.environ['PASS_KEY']
-secret_key = os.environ['JWT_SECRET_KEY']
+secret_key = os.environ['SECRET_KEY']
 
 app = Flask(__name__)
 
