@@ -1,11 +1,12 @@
 CREATE TABLE borrowers (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    member_id INT NOT NULL,
+    user_id VARCHAR(50) NOT NULL,
     book_id INT NOT NULL,
     status TINYINT NOT NULL,
     return_date DATETIME NOT NULL,
-    CONSTRAINT FK_borrower_member FOREIGN KEY (member_id)
-    REFERENCES members(id),
+    rating INT DEFAULT 0,
+    CONSTRAINT FK_borrower_user FOREIGN KEY (user_id)
+    REFERENCES users(id),
     CONSTRAINT FK_borrower_book FOREIGN KEY (book_id)
     REFERENCES books(id),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,

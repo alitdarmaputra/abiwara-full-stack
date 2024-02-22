@@ -1,14 +1,14 @@
 CREATE TABLE visitors (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    class VARCHAR(255) NOT NULL,
+    class VARCHAR(50) NOT NULL,
     pic VARCHAR(255),
-    description VARCHAR(255),
+    description TEXT,
     visit_time DATETIME NOT NULL,
-    member_id INT NOT NULL,
+    user_id VARCHAR(50) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
     deleted_at DATETIME,
-    CONSTRAINT FK_member FOREIGN KEY (member_id) 
-    REFERENCES members(id)
+    CONSTRAINT FK_users FOREIGN KEY (user_id) 
+    REFERENCES users(id)
 ) ENGINE=InnoDB;

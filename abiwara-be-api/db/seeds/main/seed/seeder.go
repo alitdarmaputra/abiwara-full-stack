@@ -1,4 +1,4 @@
-package seeds
+package seed
 
 import (
 	"log"
@@ -25,16 +25,6 @@ func seed(s Seed, seedMethodName string) {
 
 func Execute(db *gorm.DB, seedMethodName ...string) {
 	s := Seed{db}
-
-	seedType := reflect.TypeOf(s)
-
-	if len(seedMethodName) == 0 {
-		log.Println("Running all seeder...")
-		for i := 0; i < seedType.NumMethod(); i++ {
-			method := seedType.Method(i)
-			seed(s, method.Name)
-		}
-	}
 
 	for _, item := range seedMethodName {
 		seed(s, item)

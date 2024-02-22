@@ -6,6 +6,5 @@ import (
 
 type Permission struct {
 	gorm.Model
-	Key  string
 	Name string
 }

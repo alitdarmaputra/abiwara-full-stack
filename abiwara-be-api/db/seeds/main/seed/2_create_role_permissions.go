@@ -1,4 +1,4 @@
-package seeds
+package seed
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ func (s Seed) RolePermissionSeed() {
 	temp := [][]uint{
 		{1, 1},
 		{1, 2},
-		{1, 3},
+		{1, 2},
 		{1, 4},
 		{1, 5},
 		{1, 6},
@@ -21,21 +21,20 @@ func (s Seed) RolePermissionSeed() {
 		{1, 11},
 		{1, 12},
 		{2, 1},
+		{2, 2},
+		{2, 3},
+		{2, 4},
 		{2, 5},
 		{2, 6},
+		{2, 7},
+		{2, 8},
+		{2, 9},
+		{2, 10},
 		{2, 11},
 		{3, 1},
-		{3, 2},
-		{3, 3},
-		{3, 4},
 		{3, 5},
 		{3, 6},
-		{3, 7},
-		{3, 8},
-		{3, 9},
-		{3, 10},
 		{3, 11},
-		{3, 12},
 	}
 
 	rolePermissions := []role_permission_repository.RolePermission{}

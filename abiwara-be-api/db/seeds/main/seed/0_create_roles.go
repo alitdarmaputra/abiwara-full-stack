@@ -1,4 +1,4 @@
-package seeds
+package seed
 
 import (
 	"fmt"
@@ -13,10 +13,10 @@ func (s Seed) RoleSeed() {
 			Name: constant.ADMIN,
 		},
 		{
-			Name: constant.MEMBER,
+			Name: constant.OPERATOR,
 		},
 		{
-			Name: constant.OPERATOR,
+			Name: constant.MEMBER,
 		},
 	}
 
