@@ -5,6 +5,8 @@ services:
     container_name: abiwara_recommender_container
     ports:
       - '5000:5000'
+    env_file:
+      - ./.env
   api:
     image: alitdarmaputra/abiwarabe_image:latest
     container_name: abiwarabe_container
@@ -12,6 +14,8 @@ services:
       - '4002:4002'
     depends_on:
       - recommender
+    env_file:
+      - ./.env
   backoffice:
     image: alitdarmaputra/abiwarafe_image:latest
     container_name: abiwarafe_container
@@ -19,6 +23,8 @@ services:
       - '3000:3000'
     depends_on:
       - api
+    env_file:
+      - ./.env
   nginx:
     image: nginx:1.15-alpine
     container_name: nginx_container
