@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"reflect"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -36,25 +37,72 @@ type SMTP struct {
 	Password     string `json:"smtp_password" mapstructure:"SMTP_PASSWORD"`
 }
 
+func structToMap(input interface{}) map[string]interface{} {
+	result := make(map[string]interface{})
+
+	// Convert interface to reflect.Value
+	val := reflect.ValueOf(input)
+
+	// Ensure the input is a struct
+	if val.Kind() != reflect.Struct {
+		panic("input must be a struct")
+	}
+
+	// Get the type of the struct
+	typ := val.Type()
+
+	// Iterate over the fields of the struct
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Field(i)
+		fieldType := typ.Field(i)
+
+		// Use mapstructure tag if available, otherwise use field name
+		tag := fieldType.Tag.Get("mapstructure")
+
+		// If the field is a struct, recursively convert it to a map
+		if fieldType.Type.Kind() == reflect.Struct {
+			result[tag] = structToMap(field.Interface())
+		} else {
+			result[tag] = field.Interface()
+		}
+	}
+
+	return result
+}
+
+func iterateMap(prefix string, m map[string]interface{}) {
+	for key, value := range m {
+		switch v := value.(type) {
+		case map[string]interface{}:
+			iterateMap(prefix+key+".", v) // Recursively iterate nested map
+		default:
+			viper.BindEnv(key)
+		}
+	}
+}
+
 func LoadConfigAPI(path string) *Api {
+	viper.SetDefault("ENV", "development")
+	viper.SetDefault("APP_PORT", 4001)
+	viper.SetDefault("APP_HOST", "127.0.0.1")
+
 	if path := strings.TrimSpace(path); path == "" {
 		path = "."
 	}
+
+	api := &Api{}
+	mapApi := structToMap(Api{})
+	iterateMap("", mapApi)
 
 	viper.AddConfigPath(path)
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
 
 	viper.AutomaticEnv()
+
 	if err := viper.ReadInConfig(); err != nil {
 		log.Println("read config failed:", err.Error())
 	}
-
-	viper.SetDefault("ENV", "development")
-	viper.SetDefault("APP_PORT", 4001)
-	viper.SetDefault("APP_HOST", "127.0.0.1")
-
-	api := &Api{}
 
 	viper.Unmarshal(api)
 	viper.Unmarshal(&api.Database)
