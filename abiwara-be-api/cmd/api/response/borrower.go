@@ -23,8 +23,8 @@ func ToBorrowerResponse(borrower borrower_repository.Borrower) BorrowerResponse 
 	return BorrowerResponse{
 		Id:         borrower.ID,
 		BookId:     borrower.BookId,
-		Name:       borrower.Member.Name,
-		Class:      borrower.Member.Class,
+		Name:       borrower.User.Name,
+		Class:      borrower.User.Class,
 		Title:      borrower.Book.Title,
 		Status:     borrower.Status,
 		Rating:     borrower.Rating.Rating,

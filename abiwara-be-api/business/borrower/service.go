@@ -14,8 +14,8 @@ type BorrowerService interface {
 		ctx context.Context,
 		page, perPage int,
 		querySearch string,
-		roleId,
-		memberId uint,
+		roleId uint,
+		userId string,
 	) ([]response.BorrowerResponse, common_response.Meta)
 	Update(ctx context.Context, borrowerId uint)
 	GetTotal(ctx context.Context) response.TotalBorrowerResponse

@@ -2,17 +2,17 @@ package rating_repository
 
 import (
 	book_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/book"
-	member_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/member"
+	user_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/user"
 	"gorm.io/gorm"
 )
 
 type Rating struct {
 	gorm.Model
-	MemberId uint `gorm:"column:member_id"`
-	BookId   uint `gorm:"column:book_id"`
-	Rating   int  `gorm:"column:rating"`
-	Member   member_repository.Member
-	Book     book_repository.Book
+	UserId string `gorm:"column:user_id"`
+	BookId uint   `gorm:"column:book_id"`
+	Rating int    `gorm:"column:rating"`
+	User   user_repository.User
+	Book   book_repository.Book
 }
 
 type TotalRating struct {

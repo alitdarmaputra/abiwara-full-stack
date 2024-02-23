@@ -1,8 +1,8 @@
-package member_controller
+package user_controller
 
 import "github.com/gin-gonic/gin"
 
-type MemberController interface {
+type UserController interface {
 	Register(ctx *gin.Context)
 	Update(ctx *gin.Context)
 	Delete(ctx *gin.Context)

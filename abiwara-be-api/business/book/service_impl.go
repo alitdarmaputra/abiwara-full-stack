@@ -29,17 +29,28 @@ func (service *BookServiceImpl) Create(
 	request request.BookCreateUpdateRequest,
 ) {
 	book := book_repository.Book{
-		Price:      request.Price,
-		Title:      request.Title,
-		Authors:    request.Authors,
-		Publisher:  request.Publisher,
-		Published:  request.Published,
-		Quantity:   request.Quantity,
-		Remain:     request.Quantity,
-		Page:       request.Page,
-		BuyDate:    request.BuyDate,
-		Summary:    request.Summary,
-		CategoryId: request.CategoryId,
+		CoverImg:         request.CoverImg,
+		InventoryNumber:  request.InventoryNumber,
+		Author:           request.Author,
+		CallNumberAuthor: request.CallNumberAuthor,
+		Title:            request.Title,
+		CallNumberTitle:  request.CallNumberTitle,
+		Price:            request.Price,
+		Publisher:        request.Publisher,
+		Year:             request.Year,
+		City:             request.City,
+		Quantity:         request.Quantity,
+		Remain:           request.Quantity,
+		TotalPage:        request.TotalPage,
+		EntryDate:        request.EntryDate,
+		FundingSource:    request.FundingSource,
+		Status:           request.Status,
+		Summary:          request.Summary,
+		CategoryId:       request.CategoryId,
+	}
+
+	if book.CoverImg == "" {
+		book.CoverImg = "https://ik.imagekit.io/pohfq3xvx/book-cover_7yiR3zQdQ.png?updatedAt=1708666722422"
 	}
 
 	tx := service.DB.Begin()
@@ -62,14 +73,23 @@ func (service *BookServiceImpl) Update(
 	book, err := service.BookRepository.FindById(ctx, tx, bookId)
 	utils.PanicIfError(err)
 
-	book.Price = request.Price
+	book.CoverImg = request.CoverImg
+	book.InventoryNumber = request.InventoryNumber
+	book.Author = request.Author
+	book.CallNumberAuthor = request.CallNumberAuthor
 	book.Title = request.Title
-	book.Authors = request.Authors
+	book.CallNumberTitle = request.CallNumberTitle
 	book.Publisher = request.Publisher
-	book.Published = request.Published
-	book.Page = request.Page
-	book.BuyDate = request.BuyDate
+	book.Year = request.Year
+	book.City = request.City
+	book.Remain = book.Remain + (book.Quantity - request.Quantity)
+	book.Quantity = request.Quantity
+	book.Price = request.Price
+	book.TotalPage = request.TotalPage
+	book.EntryDate = request.EntryDate
+	book.FundingSource = request.FundingSource
 	book.Summary = request.Summary
+	book.Status = request.Status
 	book.CategoryId = request.CategoryId
 	book.Category.ID = request.CategoryId
 
@@ -131,14 +151,22 @@ func (service *BookServiceImpl) GetFile(ctx context.Context) [][]string {
 	data = append(
 		data,
 		[]string{
-			"ID",
+			"Id",
+			"Tanggal Masuk",
+			"No Inventaris",
+			"Penyusun",
 			"Judul Buku",
-			"Pengarang",
 			"Penerbit",
+			"Kota Terbit",
 			"Tahun Terbit",
-			"Jumlah",
+			"Call Number Klasifikasi",
+			"Call Number Pengarang",
+			"Call Number Klasifikasi Judul",
+			"Subyek",
+			"Asal",
+			"Eks",
+			"Status",
 			"Tanggal Pembelian",
-			"Kategori",
 		},
 	)
 
@@ -147,13 +175,21 @@ func (service *BookServiceImpl) GetFile(ctx context.Context) [][]string {
 			data,
 			[]string{
 				fmt.Sprintf("%d", book.ID),
+				book.EntryDate.String(),
+				string(book.InventoryNumber),
+				string(book.Author),
 				string(book.Title),
-				string(book.Authors),
 				string(book.Publisher),
-				fmt.Sprintf("%d", book.Published),
-				fmt.Sprintf("%d", book.Quantity),
-				book.BuyDate.String(),
+				string(book.City),
+				fmt.Sprintf("%d", book.Year),
 				string(book.CategoryId),
+				string(book.CallNumberAuthor),
+				string(book.CallNumberTitle),
+				string(book.Category.Name),
+				string(book.FundingSource),
+				fmt.Sprintf("%d", book.Quantity),
+				string(book.Status),
+				book.EntryDate.String(),
 			},
 		)
 	}

@@ -41,11 +41,12 @@ func (repository *RatingRepositoryImpl) FindTotal(
 func (repository *RatingRepositoryImpl) FindByParam(
 	ctx context.Context,
 	tx *gorm.DB,
-	bookId, memberId uint,
+	bookId uint,
+	userId string,
 ) (Rating, error) {
 	rating := Rating{}
 	result := tx.Model(&Rating{}).
-		Where("book_id = ? AND member_id = ?", bookId, memberId).
+		Where("book_id = ? AND user_id = ?", bookId, userId).
 		First(&rating)
 	return rating, database.WrapError(result.Error)
 }

@@ -8,54 +8,66 @@ import (
 )
 
 type BookResponse struct {
-	ID        uint   `json:"id"`
-	Title     string `json:"title"`
-	Authors   string `json:"authors"`
-	Published int    `json:"published"`
-	Remain    int    `json:"remain"`
-	Quantity  int    `json:"quantity"`
+	ID         uint   `json:"id"`
+	CoverImage string `json:"cover_img"`
+	Title      string `json:"title"`
+	Author     string `json:"author"`
+	Year       int    `json:"year"`
+	Remain     int    `json:"remain"`
+	Quantity   int    `json:"quantity"`
 }
 
 type DetailBookResponse struct {
-	ID        uint                         `json:"id"`
-	Title     string                       `json:"title"`
-	Price     int                          `json:"price"`
-	Authors   string                       `json:"authors"`
-	Publisher string                       `json:"publisher"`
-	Published int                          `json:"published"`
-	Quantity  int                          `json:"quantity"`
-	Remain    int                          `json:"remain"`
-	Page      int                          `json:"page"`
-	BuyDate   time.Time                    `json:"buy_date"`
-	Summary   string                       `json:"summary"`
-	Cateogry  category_repository.Category `json:"category"`
+	ID               uint                         `json:"id"`
+	CoverImage       string                       `json:"cover_img"`
+	Title            string                       `json:"title"`
+	InventoryNumber  string                       `json:"inventory_number"`
+	CallNumberTitle  string                       `json:"call_number_title"`
+	Price            int                          `json:"price"`
+	Author           string                       `json:"author"`
+	CallNumberAuthor string                       `json:"call_number_author"`
+	Publisher        string                       `json:"publisher"`
+	Year             int                          `json:"year"`
+	City             string                       `json:"city"`
+	Quantity         int                          `json:"quantity"`
+	Remain           int                          `json:"remain"`
+	TotalPage        int                          `json:"total_page"`
+	EntryDate        time.Time                    `json:"entry_date"`
+	Summary          string                       `json:"summary"`
+	Cateogry         category_repository.Category `json:"category"`
 }
 
 func ToBookResponse(book book_repository.Book) BookResponse {
 	return BookResponse{
-		ID:        book.ID,
-		Title:     book.Title,
-		Authors:   book.Authors,
-		Published: book.Published,
-		Remain:    book.Remain,
-		Quantity:  book.Quantity,
+		ID:         book.ID,
+		CoverImage: book.CoverImg,
+		Title:      book.Title,
+		Author:     book.Author,
+		Year:       book.Year,
+		Remain:     book.Remain,
+		Quantity:   book.Quantity,
 	}
 }
 
 func ToDetailBookResponse(book book_repository.Book) DetailBookResponse {
 	return DetailBookResponse{
-		ID:        book.ID,
-		Title:     book.Title,
-		Price:     book.Page,
-		Authors:   book.Authors,
-		Publisher: book.Publisher,
-		Published: book.Published,
-		Quantity:  book.Quantity,
-		Remain:    book.Remain,
-		Page:      book.Page,
-		BuyDate:   book.BuyDate,
-		Summary:   book.Summary,
-		Cateogry:  book.Category,
+		ID:               book.ID,
+		InventoryNumber:  book.InventoryNumber,
+		CoverImage:       book.CoverImg,
+		Title:            book.Title,
+		CallNumberTitle:  book.CallNumberTitle,
+		City:             book.City,
+		Price:            book.Price,
+		Author:           book.Author,
+		CallNumberAuthor: book.CallNumberAuthor,
+		Publisher:        book.Publisher,
+		Year:             book.Year,
+		Quantity:         book.Quantity,
+		Remain:           book.Remain,
+		TotalPage:        book.TotalPage,
+		EntryDate:        book.EntryDate,
+		Summary:          book.Summary,
+		Cateogry:         book.Category,
 	}
 }
 

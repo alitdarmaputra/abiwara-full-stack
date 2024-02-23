@@ -3,7 +3,7 @@ package visitor_repository
 import (
 	"time"
 
-	member_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/member"
+	user_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/user"
 	"gorm.io/gorm"
 )
 
@@ -15,8 +15,8 @@ type Visitor struct {
 	Description string    `gorm:"column:description"`
 	VisitTime   time.Time `gorm:"column:visit_time"`
 	VisitDate   time.Time `gorm:"column:visit_date"`
-	MemberId    uint      `gorm:"column:member_id"`
-	Member      member_repository.Member
+	UserId      string    `gorm:"column:user_id"`
+	User        user_repository.User
 }
 
 type TotalVisitor struct {

@@ -7,7 +7,7 @@ import (
 
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/config"
-	member_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/member"
+	user_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/user"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/utils"
 	"github.com/k3a/html2text"
 	"gopkg.in/gomail.v2"
@@ -23,11 +23,11 @@ func NewSMTPService(cfg config.SMTP) SmtpService {
 	}
 }
 
-func (service *SMTPServiceImpl) SendMail(member *member_repository.Member, data *EmailData) {
+func (service *SMTPServiceImpl) SendMail(user *user_repository.User, data *EmailData) {
 	from := service.cfg.EmailFrom
 	smtpPass := service.cfg.Password
 	smtpUser := service.cfg.Username
-	to := member.Email
+	to := user.Email
 	smtpHost := service.cfg.Host
 	smtpPort := service.cfg.Port
 
@@ -52,11 +52,11 @@ func (service *SMTPServiceImpl) SendMail(member *member_repository.Member, data 
 	}
 }
 
-func (service *SMTPServiceImpl) SendResetToken(member *member_repository.Member, data *EmailData) {
+func (service *SMTPServiceImpl) SendResetToken(user *user_repository.User, data *EmailData) {
 	from := service.cfg.EmailFrom
 	smtpPass := service.cfg.Password
 	smtpUser := service.cfg.Username
-	to := member.Email
+	to := user.Email
 	smtpHost := service.cfg.Host
 	smtpPort := service.cfg.Port
 

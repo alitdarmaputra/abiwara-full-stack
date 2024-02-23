@@ -10,13 +10,13 @@ import (
 )
 
 type VisitorService interface {
-	Create(ctx context.Context, request request.VisitorCreateRequest, memberId uint)
+	Create(ctx context.Context, request request.VisitorCreateRequest, userId string)
 	FindAll(
 		ctx context.Context,
 		page, perPage int,
 		querySearch string,
-		roleId,
-		memberId uint,
+		roleId uint,
+		userId string,
 	) ([]response.VisitorResponse, common_response.Meta)
 	GetTotal(
 		ctx context.Context,

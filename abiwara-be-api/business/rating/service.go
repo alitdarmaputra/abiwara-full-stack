@@ -8,7 +8,7 @@ import (
 )
 
 type RatingService interface {
-	CreateOrUpdate(ctx context.Context, memberId uint, request request.RatingCreateOrUpdateRequest)
+	CreateOrUpdate(ctx context.Context, userId string, request request.RatingCreateOrUpdateRequest)
 	FindTotal(ctx context.Context) []response.RatingResponse
 	FindTotalByBookId(ctx context.Context, bookId uint) response.RatingResponse
 }

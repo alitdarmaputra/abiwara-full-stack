@@ -1,6 +1,6 @@
 package request
 
-type MemberCreateRequest struct {
+type UserCreateRequest struct {
 	Email           string `json:"email"            binding:"required,email"`
 	Password        string `json:"password"         binding:"required,min=8"`
 	ConfirmPassword string `json:"confirm_password" binding:"required,eqfield=Password"`
@@ -8,13 +8,13 @@ type MemberCreateRequest struct {
 	Class           string `json:"class"            binding:"required"`
 }
 
-type MemberUpdateRequest struct {
+type UserUpdateRequest struct {
 	Name       string `json:"name"        binding:"required"`
 	Class      string `json:"class"       binding:"required"`
 	ProfileImg string `json:"profile_img"`
 }
 
-type MemberLoginRequest struct {
+type UserLoginRequest struct {
 	Email    string `json:"email"    binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }

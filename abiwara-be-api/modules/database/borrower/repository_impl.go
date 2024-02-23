@@ -51,16 +51,16 @@ func (repository *BorrowerRepositoryImpl) FindAll(
 			Joins("LEFT JOIN books ON borrowers.book_id = books.id").
 			Where("books.title LIKE ?", search)
 
-		subqueryMember := tx.Model(&Borrower{}).
-			Select("member_id").
-			Joins("LEFT JOIN members ON members.id = borrowers.member_id").
-			Where("members.name LIKE ?", search)
+		subqueryUser := tx.Model(&Borrower{}).
+			Select("user_id").
+			Joins("LEFT JOIN users ON users.id = borrowers.user_id").
+			Where("users.name LIKE ?", search)
 
 		_ = tx.
 			Preload("Book").
-			Preload("Member").
+			Preload("User").
 			Preload("Rating").
-			Where("book_id IN (?) OR member_id IN (?)", subqueryBook, subqueryMember).
+			Where("book_id IN (?) OR user_id IN (?)", subqueryBook, subqueryUser).
 			Where(param).
 			Limit(limit).
 			Offset(offset).
@@ -72,7 +72,7 @@ func (repository *BorrowerRepositoryImpl) FindAll(
 
 	_ = tx.
 		Preload("Book").
-		Preload("Member").
+		Preload("User").
 		Preload("Rating").
 		Limit(limit).
 		Offset(offset).

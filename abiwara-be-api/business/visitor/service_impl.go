@@ -31,7 +31,7 @@ func NewVisitorService(
 func (service *VisitorServiceImpl) Create(
 	ctx context.Context,
 	request request.VisitorCreateRequest,
-	memberId uint,
+	userId string,
 ) {
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
@@ -45,7 +45,7 @@ func (service *VisitorServiceImpl) Create(
 
 	visitor, err := service.VisitorRepository.FindOne(ctx, tx, param)
 	if err != nil {
-		// Create if member still not check in at the same day
+		// Create if user still not check in at the same day
 		_, ok := err.(*business.NotFoundError)
 
 		if ok {
@@ -56,7 +56,7 @@ func (service *VisitorServiceImpl) Create(
 			visitor.Class = request.Class
 			visitor.PIC = request.PIC
 			visitor.Description = request.Description
-			visitor.MemberId = memberId
+			visitor.UserId = userId
 
 			visitor, err = service.VisitorRepository.Save(ctx, tx, visitor)
 			utils.PanicIfError(err)
@@ -70,8 +70,8 @@ func (service *VisitorServiceImpl) FindAll(
 	ctx context.Context,
 	page, perPage int,
 	querySearch string,
-	roleId,
-	memberId uint,
+	roleId uint,
+	userId string,
 ) ([]response.VisitorResponse, common_response.Meta) {
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
@@ -80,7 +80,7 @@ func (service *VisitorServiceImpl) FindAll(
 	visitors := []visitor_repository.Visitor{}
 	total := 0
 
-	if roleId == 1 || roleId == 3 {
+	if roleId == 1 || roleId == 2 {
 		visitors, total = service.VisitorRepository.FindAll(
 			ctx,
 			tx,
@@ -90,7 +90,7 @@ func (service *VisitorServiceImpl) FindAll(
 			param,
 		)
 	} else {
-		param.MemberId = memberId
+		param.UserId = userId
 		visitors, total = service.VisitorRepository.FindAll(ctx, tx, utils.CountOffset(page, perPage), perPage, querySearch, param)
 	}
 

@@ -15,6 +15,7 @@ CREATE TABLE books (
     total_page INT,
     entry_date DATETIME,
 	funding_source VARCHAR(20),
+	status ENUM('baik', 'tidak baik'),
     summary TEXT,
     category_id VARCHAR(20),
     CONSTRAINT FK_category FOREIGN KEY(category_id)

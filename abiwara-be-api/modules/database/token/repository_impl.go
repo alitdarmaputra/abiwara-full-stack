@@ -34,7 +34,7 @@ func (repository *TokenRepositoryImpl) FindByToken(
 func (repository *TokenRepositoryImpl) DeleteAllByUserId(
 	ctx context.Context,
 	tx *gorm.DB,
-	memberId uint,
+	userId string,
 ) {
-	tx.Delete(&[]Token{}, "member_id", memberId)
+	tx.Delete(&[]Token{}, "user_id", userId)
 }

@@ -1,0 +1,15 @@
+CREATE TABLE ratings (    
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    book_id INT NOT NULL,
+    user_id VARCHAR(50) NOT NULL,
+    rating INT,
+    CONSTRAINT FK_book FOREIGN KEY (book_id)
+    REFERENCES books(id),
+    CONSTRAINT FK_users_ratings FOREIGN KEY (user_id)
+    REFERENCES users(id),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    deleted_at DATETIME
+)ENGINE=InnoDB; 
+
+

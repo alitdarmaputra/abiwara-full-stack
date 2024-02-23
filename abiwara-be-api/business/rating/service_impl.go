@@ -31,16 +31,16 @@ func NewRatingService(
 
 func (service *RatingServiceImpl) CreateOrUpdate(
 	ctx context.Context,
-	memberId uint,
+	userId string,
 	request request.RatingCreateOrUpdateRequest,
 ) {
 	rating := rating_repository.Rating{}
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
 
-	rating, err := service.RatingRepository.FindByParam(ctx, tx, request.BookId, memberId)
+	rating, err := service.RatingRepository.FindByParam(ctx, tx, request.BookId, userId)
 
-	rating.MemberId = memberId
+	rating.UserId = userId
 	rating.BookId = request.BookId
 	rating.Rating = request.Rating
 

@@ -1,8 +1,8 @@
 package smtp_service
 
-import member_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/member"
+import user_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/user"
 
 type SmtpService interface {
-	SendMail(member *member_repository.Member, data *EmailData)
-	SendResetToken(member *member_repository.Member, data *EmailData)
+	SendMail(user *user_repository.User, data *EmailData)
+	SendResetToken(user *user_repository.User, data *EmailData)
 }

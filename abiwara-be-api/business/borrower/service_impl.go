@@ -52,14 +52,14 @@ func (service *BorrowerServiceImpl) Create(
 	}
 
 	rating, err := service.RatingRepository.SaveOrUpdate(ctx, tx, rating_repository.Rating{
-		MemberId: request.MemberId,
-		BookId:   request.BookId,
-		Rating:   0,
+		UserId: request.UserId,
+		BookId: request.BookId,
+		Rating: 0,
 	})
 	utils.PanicIfError(err)
 
 	borrower := borrower_repository.Borrower{}
-	borrower.MemberId = request.MemberId
+	borrower.UserId = request.UserId
 	borrower.BookId = request.BookId
 	borrower.Status = false
 	borrower.DueDate = request.DueDate
@@ -78,8 +78,8 @@ func (service *BorrowerServiceImpl) FindAll(
 	ctx context.Context,
 	page, perPage int,
 	querySearch string,
-	roleId,
-	memberId uint,
+	roleId uint,
+	userId string,
 ) ([]response.BorrowerResponse, common_response.Meta) {
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
@@ -88,7 +88,7 @@ func (service *BorrowerServiceImpl) FindAll(
 	borrowers := []borrower_repository.Borrower{}
 	total := 0
 
-	if roleId == 1 || roleId == 3 {
+	if roleId == 1 || roleId == 2 {
 		borrowers, total = service.BorrowerRepository.FindAll(
 			ctx,
 			tx,
@@ -98,7 +98,7 @@ func (service *BorrowerServiceImpl) FindAll(
 			param,
 		)
 	} else {
-		param.MemberId = memberId
+		param.UserId = userId
 		borrowers, total = service.BorrowerRepository.FindAll(ctx, tx, utils.CountOffset(page, perPage), perPage, querySearch, param)
 	}
 

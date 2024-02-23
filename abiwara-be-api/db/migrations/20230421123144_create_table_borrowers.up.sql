@@ -4,7 +4,6 @@ CREATE TABLE borrowers (
     book_id INT NOT NULL,
     status TINYINT NOT NULL,
     return_date DATETIME NOT NULL,
-    rating INT DEFAULT 0,
     CONSTRAINT FK_borrower_user FOREIGN KEY (user_id)
     REFERENCES users(id),
     CONSTRAINT FK_borrower_book FOREIGN KEY (book_id)

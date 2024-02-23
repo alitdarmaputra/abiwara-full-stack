@@ -4,8 +4,8 @@ import (
 	book_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/book"
 	borrower_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/borrower"
 	category_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/category"
-	member_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/member"
 	rating_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/rating"
+	user_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/user"
 	visitor_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/visitor"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/middleware"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/config"
@@ -15,7 +15,7 @@ import (
 func NewRouter(
 	cfg *config.Api,
 	permissionMiddleware middleware.Authorization,
-	memberController member_controller.MemberController,
+	userController user_controller.UserController,
 	bookController book_controller.BookController,
 	categoryController category_controller.CategoryController,
 	visitorController visitor_controller.VisitorController,
@@ -29,11 +29,17 @@ func NewRouter(
 
 	api := r.Group("/api")
 	v1 := api.Group("/v1")
-	AuthRouter(v1, memberController)
+	AuthRouter(v1, userController)
+
+	v1.GET("/health-check", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"message": "ok",
+		})
+	})
 
 	v1JWTAuth := v1.Use(middleware.JWTMiddlewareAuth(cfg.JWTSecretKey))
 
-	MemberRouter(v1JWTAuth, permissionMiddleware, memberController)
+	UserRouter(v1JWTAuth, permissionMiddleware, userController)
 	BookRouter(v1JWTAuth, permissionMiddleware, bookController)
 	CategoryRouter(v1JWTAuth, categoryController)
 	VisitorRouter(v1JWTAuth, permissionMiddleware, visitorController)

@@ -78,7 +78,7 @@ func (controller *BorrowerControllerImpl) FindAll(ctx *gin.Context) {
 		perPage,
 		querySearch,
 		uint(claims.RoleId),
-		uint(claims.Id),
+		claims.Id,
 	)
 	response.JsonPageData(ctx, http.StatusOK, "OK", borrowerResponses, meta)
 }
