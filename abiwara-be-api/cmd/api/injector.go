@@ -9,12 +9,14 @@ import (
 	book_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/book"
 	borrower_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/borrower"
 	category_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/category"
+	image_upload_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/image-upload"
 	rating_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/rating"
 	user_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/user"
 	visitor_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/visitor"
 	book_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/book"
 	borrower_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/borrower"
 	category_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/category"
+	image_upload_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/image-upload"
 	rating_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/rating"
 	user_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/user"
 	visitor_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/visitor"
@@ -22,6 +24,7 @@ import (
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/router"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/config"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/config/db"
+	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/config/imgkit"
 	book_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/book"
 	borrower_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/borrower"
 	category_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/category"
@@ -30,6 +33,7 @@ import (
 	token_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/token"
 	user_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/user"
 	visitor_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/visitor"
+	upload_image_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/image-upload"
 	smtp_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/smtp"
 	"github.com/gin-gonic/gin"
 )
@@ -46,6 +50,8 @@ func InitializeServer() *http.Server {
 		log.Fatalln(err.Error())
 	}
 
+	ik := imgkit.NewImgKit(&cfg.ImgKit)
+
 	if cfg.Env == production {
 		gin.SetMode(gin.ReleaseMode)
 	}
@@ -60,6 +66,7 @@ func InitializeServer() *http.Server {
 	ratingRepository := rating_repository.NewRatingRepository()
 
 	smtpService := smtp_service.NewSMTPService(cfg.SMTP)
+	imageUploader := upload_image_service.NewImageUploader(ik)
 
 	authMiddleware := middleware.NewAuthentication(cfg.JWTSecretKey)
 	permissionMiddleware := middleware.NewAuthorizationMiddleware(
@@ -87,6 +94,7 @@ func InitializeServer() *http.Server {
 		ratingRepository,
 	)
 	ratingService := rating_service.NewRatingService(ratingRepository, borrowerRepository, db)
+	imageUploadService := image_upload_service.NewImageUploadService(imageUploader)
 
 	bookController := book_controller.NewBookController(bookService)
 	userController := user_controller.NewUserController(userService, authMiddleware)
@@ -94,6 +102,7 @@ func InitializeServer() *http.Server {
 	visitorController := visitor_controller.NewVisitorController(visitorService, authMiddleware)
 	borrowerController := borrower_controller.NewBorrowerController(borrowerService, authMiddleware)
 	ratingController := rating_controller.NewRatingController(ratingService, authMiddleware)
+	imageUploadController := image_upload_controller.NewImageUploadController(imageUploadService)
 
 	handler := router.NewRouter(
 		cfg,
@@ -104,6 +113,7 @@ func InitializeServer() *http.Server {
 		visitorController,
 		borrowerController,
 		ratingController,
+		imageUploadController,
 	)
 
 	server := http.Server{

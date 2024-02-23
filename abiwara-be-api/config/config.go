@@ -17,6 +17,7 @@ type Api struct {
 	ResetTokenExpiredTime int      `json:"reset_token_expiredbali_time" mapstructure:"RESET_TOKEN_EXPIRED"`
 	Database              Database `json:"database"`
 	SMTP                  SMTP     `json:"smtp"`
+	ImgKit                ImgKit   `json:"imgkit"`
 }
 
 type Database struct {
@@ -35,6 +36,12 @@ type SMTP struct {
 	Port         int    `json:"smtp_port"     mapstructure:"SMTP_PORT"`
 	Username     string `json:"smtp_username" mapstructure:"SMTP_USERNAME"`
 	Password     string `json:"smtp_password" mapstructure:"SMTP_PASSWORD"`
+}
+
+type ImgKit struct {
+	ImgKitPublicKey   string `mapstructure:"IMGKIT_PUBLIC_KEY"`
+	ImgKitPrivateKey  string `mapstructure:"IMGKIT_PRIVATE_KEY"`
+	ImgKitUrlEndpoint string `mapstructure:"IMGKIT_URL_ENDPOINT"`
 }
 
 func structToMap(input interface{}) map[string]interface{} {
@@ -107,6 +114,7 @@ func LoadConfigAPI(path string) *Api {
 	viper.Unmarshal(api)
 	viper.Unmarshal(&api.Database)
 	viper.Unmarshal(&api.SMTP)
+	viper.Unmarshal(&api.ImgKit)
 
 	return api
 }

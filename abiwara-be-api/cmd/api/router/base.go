@@ -4,6 +4,7 @@ import (
 	book_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/book"
 	borrower_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/borrower"
 	category_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/category"
+	image_upload_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/image-upload"
 	rating_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/rating"
 	user_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/user"
 	visitor_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/visitor"
@@ -21,6 +22,7 @@ func NewRouter(
 	visitorController visitor_controller.VisitorController,
 	borrowerController borrower_controller.BorrowerController,
 	ratingController rating_controller.RatingController,
+	imageUploadController image_upload_controller.ImageUploadController,
 ) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.CustomRecovery(middleware.ErrorHandler))
@@ -45,6 +47,7 @@ func NewRouter(
 	VisitorRouter(v1JWTAuth, permissionMiddleware, visitorController)
 	BorrowerRouter(v1JWTAuth, permissionMiddleware, borrowerController)
 	RatingRouter(v1JWTAuth, ratingController)
+	ImageUploadRouter(v1JWTAuth, imageUploadController)
 
 	return r
 }
