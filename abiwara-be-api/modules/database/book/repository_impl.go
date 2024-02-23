@@ -88,3 +88,14 @@ func (repository *BookRepositoryImpl) FindAllWithoutParameter(
 	tx.Find(&books)
 	return books
 }
+
+func (repository *BookRepositoryImpl) FindIn(
+	ctx context.Context,
+	tx *gorm.DB,
+	bookIds []uint,
+) []Book {
+	var books []Book = []Book{}
+	tx.Where("(id) IN ?", bookIds).Find(&books)
+
+	return books
+}

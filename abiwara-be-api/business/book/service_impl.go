@@ -8,6 +8,7 @@ import (
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/request"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/response"
 	book_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/book"
+	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/recommender"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/utils"
 	"gorm.io/gorm"
 )
@@ -15,12 +16,14 @@ import (
 type BookServiceImpl struct {
 	BookRepository book_repository.BookRepository
 	DB             *gorm.DB
+	Recommender    recommender.BookRecommender
 }
 
-func NewBookService(bookRepository book_repository.BookRepository, db *gorm.DB) BookService {
+func NewBookService(db *gorm.DB, recommender recommender.BookRecommender, bookRepository book_repository.BookRepository) BookService {
 	return &BookServiceImpl{
-		BookRepository: bookRepository,
 		DB:             db,
+		Recommender:    recommender,
+		BookRepository: bookRepository,
 	}
 }
 
@@ -195,4 +198,21 @@ func (service *BookServiceImpl) GetFile(ctx context.Context) [][]string {
 	}
 
 	return data
+}
+
+func (service *BookServiceImpl) GetRecommendation(ctx context.Context, bookId uint) []response.BookResponse {
+	tx := service.DB.Begin()
+	defer utils.CommitOrRollBack(tx)
+
+	recommenders := service.Recommender.Get(ctx, bookId)
+
+	bookIds := []uint{}
+	for _, recommender := range recommenders {
+		// TODO: Filter by cosine distance
+		bookIds = append(bookIds, recommender.BookId)
+	}
+
+	books := service.BookRepository.FindIn(ctx, tx, bookIds)
+
+	return response.ToBookResponses(books)
 }

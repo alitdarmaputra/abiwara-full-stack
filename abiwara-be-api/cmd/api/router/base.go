@@ -39,6 +39,15 @@ func NewRouter(
 		})
 	})
 
+	v1.GET("/book",
+		bookController.FindAll,
+	)
+	v1.GET("/book/:id",
+		bookController.FindById,
+	)
+	v1.GET("/book-recommendation/:id",
+		bookController.GetRecommendation,
+	)
 	v1JWTAuth := v1.Use(middleware.JWTMiddlewareAuth(cfg.JWTSecretKey))
 
 	UserRouter(v1JWTAuth, permissionMiddleware, userController)

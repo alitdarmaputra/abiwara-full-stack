@@ -20,4 +20,5 @@ type BookService interface {
 		search string,
 	) ([]response.BookResponse, common_response.Meta)
 	GetFile(ctx context.Context) [][]string
+	GetRecommendation(ctx context.Context, bookId uint) []response.BookResponse
 }

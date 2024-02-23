@@ -34,6 +34,7 @@ import (
 	user_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/user"
 	visitor_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/visitor"
 	upload_image_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/image-upload"
+	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/recommender"
 	smtp_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/smtp"
 	"github.com/gin-gonic/gin"
 )
@@ -67,6 +68,7 @@ func InitializeServer() *http.Server {
 
 	smtpService := smtp_service.NewSMTPService(cfg.SMTP)
 	imageUploader := upload_image_service.NewImageUploader(ik)
+	recommender := recommender.NewBookRecommender(cfg.Recommender.Token, cfg.Recommender.Url)
 
 	authMiddleware := middleware.NewAuthentication(cfg.JWTSecretKey)
 	permissionMiddleware := middleware.NewAuthorizationMiddleware(
@@ -84,7 +86,7 @@ func InitializeServer() *http.Server {
 		cfg,
 	)
 	userService.SetJWTConfig(cfg.JWTSecretKey, time.Duration(cfg.JWTExpiredTime)*time.Minute)
-	bookService := book_service.NewBookService(bookRepository, db)
+	bookService := book_service.NewBookService(db, recommender, bookRepository)
 	categoryService := category_service.NewCategoryService(categoryRepository, db)
 	visitorService := visitor_service.NewVisitorService(visitorRepository, db)
 	borrowerService := borrower_service.NewBorrowerService(

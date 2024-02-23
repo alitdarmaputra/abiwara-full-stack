@@ -12,10 +12,6 @@ func BookRouter(
 	middleware middleware.Authorization,
 	book book_controller.BookController,
 ) {
-	v1JWTAuth.GET("/book",
-		middleware.PermissionMiddleware(constant.PermissionShowBook),
-		book.FindAll,
-	)
 	v1JWTAuth.POST("/book",
 		middleware.PermissionMiddleware(constant.PermissionCreateBook),
 		book.Create,
@@ -23,10 +19,6 @@ func BookRouter(
 	v1JWTAuth.PUT("/book/:id",
 		middleware.PermissionMiddleware(constant.PermissionUpdateBook),
 		book.Update,
-	)
-	v1JWTAuth.GET("/book/:id",
-		middleware.PermissionMiddleware(constant.PermissionShowBook),
-		book.FindById,
 	)
 	v1JWTAuth.DELETE("/book/:id",
 		middleware.PermissionMiddleware(constant.PermissionDeleteBook),

@@ -9,15 +9,16 @@ import (
 )
 
 type Api struct {
-	Host                  string   `json:"host"                         mapstructure:"APP_HOST"`
-	Port                  int      `json:"port"                         mapstructure:"APP_PORT"`
-	Env                   string   `json:"env"                          mapstructure:"ENV"`
-	JWTSecretKey          string   `json:"-"                            mapstructure:"JWT_SECRET_KEY"`
-	JWTExpiredTime        int      `json:"jwt_expired_time"             mapstructure:"JWT_EXPIRED"`
-	ResetTokenExpiredTime int      `json:"reset_token_expiredbali_time" mapstructure:"RESET_TOKEN_EXPIRED"`
-	Database              Database `json:"database"`
-	SMTP                  SMTP     `json:"smtp"`
-	ImgKit                ImgKit   `json:"imgkit"`
+	Host                  string      `json:"host"                         mapstructure:"APP_HOST"`
+	Port                  int         `json:"port"                         mapstructure:"APP_PORT"`
+	Env                   string      `json:"env"                          mapstructure:"ENV"`
+	JWTSecretKey          string      `json:"-"                            mapstructure:"JWT_SECRET_KEY"`
+	JWTExpiredTime        int         `json:"jwt_expired_time"             mapstructure:"JWT_EXPIRED"`
+	ResetTokenExpiredTime int         `json:"reset_token_expiredbali_time" mapstructure:"RESET_TOKEN_EXPIRED"`
+	Database              Database    `json:"database"`
+	SMTP                  SMTP        `json:"smtp"`
+	ImgKit                ImgKit      `json:"imgkit"`
+	Recommender           Recommender `json:"recommender"`
 }
 
 type Database struct {
@@ -42,6 +43,11 @@ type ImgKit struct {
 	ImgKitPublicKey   string `mapstructure:"IMGKIT_PUBLIC_KEY"`
 	ImgKitPrivateKey  string `mapstructure:"IMGKIT_PRIVATE_KEY"`
 	ImgKitUrlEndpoint string `mapstructure:"IMGKIT_URL_ENDPOINT"`
+}
+
+type Recommender struct {
+	Token string `mapstructure:"RECOMMENDER_TOKEN"`
+	Url   string `mapstructure:"RECOMMENDER_URL"`
 }
 
 func structToMap(input interface{}) map[string]interface{} {
@@ -115,6 +121,7 @@ func LoadConfigAPI(path string) *Api {
 	viper.Unmarshal(&api.Database)
 	viper.Unmarshal(&api.SMTP)
 	viper.Unmarshal(&api.ImgKit)
+	viper.Unmarshal(&api.Recommender)
 
 	return api
 }

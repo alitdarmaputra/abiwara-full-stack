@@ -106,3 +106,12 @@ func (controller *BookControllerImpl) GetFile(ctx *gin.Context) {
 		panic(err)
 	}
 }
+
+func (controller *BookControllerImpl) GetRecommendation(ctx *gin.Context) {
+	param := request.PathParam{}
+	err := ctx.ShouldBindUri(&param)
+	utils.PanicIfError(err)
+
+	bookResponses := controller.BookService.GetRecommendation(ctx, param.Id)
+	response.JsonBasicData(ctx, http.StatusOK, "OK", bookResponses)
+}
