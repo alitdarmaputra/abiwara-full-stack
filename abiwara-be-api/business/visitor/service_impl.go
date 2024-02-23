@@ -36,7 +36,7 @@ func (service *VisitorServiceImpl) Create(
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
 
-	if time.Now().Hour() < 7 || time.Now().Hour() > 15 || time.Now().Weekday() == time.Sunday {
+	if time.Now().Hour() < 7 || time.Now().Hour() > 13 || time.Now().Weekday() == time.Sunday {
 		panic(business.NewBadRequestError("Invalid check in time"))
 	}
 
@@ -51,7 +51,6 @@ func (service *VisitorServiceImpl) Create(
 		if ok {
 			visitor = visitor_repository.Visitor{}
 			visitor.VisitTime = time.Now()
-			visitor.VisitDate = time.Now()
 			visitor.Name = request.Name
 			visitor.Class = request.Class
 			visitor.PIC = request.PIC

@@ -104,9 +104,9 @@ func (repository *VisitorRepositoryImpl) GetTotal(
 	var totalVisitors []TotalVisitor = []TotalVisitor{}
 
 	rows, err := tx.Model(&Visitor{}).
-		Select("visit_date, COUNT(*)").
-		Where("visit_date >= ? AND visit_date <= ?", startDate.Format("2006-01-02"), endDate.Format("2006-01-02")).
-		Group("visit_date").
+		Select("DATE(visit_time), COUNT(*)").
+		Where("DATE(visit_time) >= ? AND DATE(visit_time) <= ?", startDate.Format("2006-01-02"), endDate.Format("2006-01-02")).
+		Group("DATE(visit_time)").
 		Rows()
 
 	utils.PanicIfError(err)

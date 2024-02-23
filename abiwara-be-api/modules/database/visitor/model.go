@@ -14,12 +14,11 @@ type Visitor struct {
 	PIC         string    `gorm:"column:pic"`
 	Description string    `gorm:"column:description"`
 	VisitTime   time.Time `gorm:"column:visit_time"`
-	VisitDate   time.Time `gorm:"column:visit_date"`
 	UserId      string    `gorm:"column:user_id"`
 	User        user_repository.User
 }
 
 type TotalVisitor struct {
-	VisitDate time.Time `gorm:"column:visit_date"`
+	VisitDate time.Time
 	Total     int
 }

@@ -12,7 +12,6 @@ type VisitorResponse struct {
 	PIC         string    `json:"pic"`
 	Description string    `json:"description"`
 	VisitTime   time.Time `json:"visit_time"`
-	VisitDate   time.Time `json:"visit_date"`
 }
 
 func ToVisitorResponse(visitor visitor_repository.Visitor) VisitorResponse {
@@ -22,7 +21,6 @@ func ToVisitorResponse(visitor visitor_repository.Visitor) VisitorResponse {
 		PIC:         visitor.PIC,
 		Description: visitor.Description,
 		VisitTime:   visitor.VisitTime,
-		VisitDate:   visitor.VisitDate,
 	}
 }
 
