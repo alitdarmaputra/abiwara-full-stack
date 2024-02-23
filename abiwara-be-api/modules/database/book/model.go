@@ -26,6 +26,7 @@ type Book struct {
 	FundingSource    string    `gorm:"column:funding_source"`
 	Summary          string    `gorm:"column:summary"`
 	Status           string    `gorm:"column:status"`
+	Rating           float64   `gorm:"column:rating"`
 	CategoryId       string    `gorm:"column:category_id"`
 	Category         category_repository.Category
 }

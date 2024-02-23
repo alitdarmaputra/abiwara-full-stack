@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database"
-	book_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/book"
 	"gorm.io/gorm"
 )
 
@@ -23,21 +22,6 @@ func (repository *RatingRepositoryImpl) SaveOrUpdate(
 	return rating, database.WrapError(result.Error)
 }
 
-func (repository *RatingRepositoryImpl) FindTotal(
-	ctx context.Context,
-	tx *gorm.DB,
-) ([]TotalRating, error) {
-	totalRatings := []TotalRating{}
-	result := tx.Model(&book_repository.Book{}).
-		Joins("left join ratings on books.id = ratings.book_id").
-		Select("books.id as id, title as book_title, books.authors as book_authors, COALESCE(AVG(ratings.rating), 0) as average, COUNT(ratings.rating) as total").
-		Group("books.id").
-		Order("average DESC").
-		Limit(10).
-		Find(&totalRatings)
-	return totalRatings, database.WrapError(result.Error)
-}
-
 func (repository *RatingRepositoryImpl) FindByParam(
 	ctx context.Context,
 	tx *gorm.DB,
@@ -51,18 +35,18 @@ func (repository *RatingRepositoryImpl) FindByParam(
 	return rating, database.WrapError(result.Error)
 }
 
-func (repository *RatingRepositoryImpl) FindTotalById(
+func (repository *RatingRepositoryImpl) FindTotalByBookId(
 	ctx context.Context,
 	tx *gorm.DB,
-	id uint,
+	bookId uint,
 ) (TotalRating, error) {
 	totalRating := TotalRating{}
 
 	result := tx.Model(&Rating{}).
 		Joins("join books on books.id = book_id").
-		Select("books.title as book_title, books.authors as book_author, AVG(rating) as average, COUNT(rating) as total").
+		Select("books.id, books.title, AVG(ratings.rating) as average, SUM(ratings.rating) as total, COUNT(ratings.rating) as count").
 		Group("ratings.book_id").
-		Where("ratings.book_id = ?", id).
+		Where("ratings.book_id = ?", bookId).
 		Find(&totalRating)
 	return totalRating, database.WrapError(result.Error)
 }

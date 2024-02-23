@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/request"
-	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/response"
+	book_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/book"
 	borrower_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/borrower"
 	rating_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/rating"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/utils"
@@ -14,18 +14,21 @@ import (
 type RatingServiceImpl struct {
 	RatingRepository   rating_repository.RatingRepository
 	BorrowerRepository borrower_repository.BorrowerRepository
+	BookRepository     book_repository.BookRepository
 	DB                 *gorm.DB
 }
 
 func NewRatingService(
 	ratingRepository rating_repository.RatingRepository,
 	borrowerRepository borrower_repository.BorrowerRepository,
+	bookRepository book_repository.BookRepository,
 	db *gorm.DB,
 ) RatingService {
 	return &RatingServiceImpl{
 		RatingRepository:   ratingRepository,
 		DB:                 db,
 		BorrowerRepository: borrowerRepository,
+		BookRepository:     bookRepository,
 	}
 }
 
@@ -53,27 +56,14 @@ func (service *RatingServiceImpl) CreateOrUpdate(
 	borrower.RatingId = rating.ID
 	borrower, err = service.BorrowerRepository.Update(ctx, tx, borrower)
 	utils.PanicIfError(err)
-}
 
-func (service *RatingServiceImpl) FindTotal(ctx context.Context) []response.RatingResponse {
-	tx := service.DB.Begin()
-	defer utils.CommitOrRollBack(tx)
-
-	totalRatings, err := service.RatingRepository.FindTotal(ctx, tx)
+	book, err := service.BookRepository.FindById(ctx, tx, rating.BookId)
 	utils.PanicIfError(err)
 
-	return response.ToRatingResponses(totalRatings)
-}
-
-func (service *RatingServiceImpl) FindTotalByBookId(
-	ctx context.Context,
-	bookId uint,
-) response.RatingResponse {
-	tx := service.DB.Begin()
-	defer utils.CommitOrRollBack(tx)
-
-	totalRating, err := service.RatingRepository.FindTotalById(ctx, tx, bookId)
+	totalRating, err := service.RatingRepository.FindTotalByBookId(ctx, tx, book.ID)
 	utils.PanicIfError(err)
 
-	return response.ToRatingResponse(totalRating)
+	book.Rating = totalRating.Average
+
+	service.BookRepository.Update(ctx, tx, book)
 }

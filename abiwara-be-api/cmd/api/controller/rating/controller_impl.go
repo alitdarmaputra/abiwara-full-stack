@@ -37,17 +37,3 @@ func (controller *RatingControllerImpl) CreateOrUpdate(ctx *gin.Context) {
 	controller.RatingService.CreateOrUpdate(ctx, claims.Id, ratingCreateOrUpdateRequest)
 	response.JsonBasicResponse(ctx, http.StatusCreated, "Created")
 }
-
-func (controller *RatingControllerImpl) FindTotal(ctx *gin.Context) {
-	ratingResponses := controller.RatingService.FindTotal(ctx)
-	response.JsonBasicData(ctx, http.StatusOK, "OK", ratingResponses)
-}
-
-func (controller *RatingControllerImpl) FindTotalByBookId(ctx *gin.Context) {
-	param := request.PathParam{}
-	err := ctx.ShouldBindUri(&param)
-	utils.PanicIfError(err)
-
-	ratingResponse := controller.RatingService.FindTotalByBookId(ctx, param.Id)
-	response.JsonBasicData(ctx, http.StatusOK, "OK", ratingResponse)
-}

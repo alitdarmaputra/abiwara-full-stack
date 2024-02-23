@@ -16,9 +16,9 @@ type Rating struct {
 }
 
 type TotalRating struct {
-	Id          uint
-	BookTitle   string
-	BookAuthors string
-	Average     float64
-	Total       int
+	Id        uint
+	BookTitle string
+	Average   float64
+	Total     int
+	Count     int
 }

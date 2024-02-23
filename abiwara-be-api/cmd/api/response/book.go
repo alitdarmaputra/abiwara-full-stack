@@ -8,13 +8,14 @@ import (
 )
 
 type BookResponse struct {
-	ID         uint   `json:"id"`
-	CoverImage string `json:"cover_img"`
-	Title      string `json:"title"`
-	Author     string `json:"author"`
-	Year       int    `json:"year"`
-	Remain     int    `json:"remain"`
-	Quantity   int    `json:"quantity"`
+	ID         uint    `json:"id"`
+	CoverImage string  `json:"cover_img"`
+	Title      string  `json:"title"`
+	Author     string  `json:"author"`
+	Year       int     `json:"year"`
+	Rating     float64 `json:"rating"`
+	Remain     int     `json:"remain"`
+	Quantity   int     `json:"quantity"`
 }
 
 type DetailBookResponse struct {
@@ -33,6 +34,8 @@ type DetailBookResponse struct {
 	Remain           int                          `json:"remain"`
 	TotalPage        int                          `json:"total_page"`
 	EntryDate        time.Time                    `json:"entry_date"`
+	Rating           float64                      `json:"rating"`
+	Status           string                       `json:"status"`
 	Summary          string                       `json:"summary"`
 	Cateogry         category_repository.Category `json:"category"`
 }
@@ -46,6 +49,7 @@ func ToBookResponse(book book_repository.Book) BookResponse {
 		Year:       book.Year,
 		Remain:     book.Remain,
 		Quantity:   book.Quantity,
+		Rating:     book.Rating,
 	}
 }
 
@@ -66,7 +70,9 @@ func ToDetailBookResponse(book book_repository.Book) DetailBookResponse {
 		Remain:           book.Remain,
 		TotalPage:        book.TotalPage,
 		EntryDate:        book.EntryDate,
+		Rating:           book.Rating,
 		Summary:          book.Summary,
+		Status:           book.Status,
 		Cateogry:         book.Category,
 	}
 }

@@ -95,7 +95,7 @@ func InitializeServer() *http.Server {
 		bookRepository,
 		ratingRepository,
 	)
-	ratingService := rating_service.NewRatingService(ratingRepository, borrowerRepository, db)
+	ratingService := rating_service.NewRatingService(ratingRepository, borrowerRepository, bookRepository, db)
 	imageUploadService := image_upload_service.NewImageUploadService(imageUploader)
 
 	bookController := book_controller.NewBookController(bookService)

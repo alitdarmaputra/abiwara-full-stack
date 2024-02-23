@@ -1,0 +1,2 @@
+ALTER TABLE books
+ADD COLUMN rating FLOAT DEFAULT 0 AFTER status;

@@ -10,6 +10,4 @@ func RatingRouter(
 	ratingController rating_controller.RatingController,
 ) {
 	v1JWTAuth.POST("/rating", ratingController.CreateOrUpdate)
-	v1JWTAuth.GET("/rating", ratingController.FindTotal)
-	v1JWTAuth.GET("/rating/:id", ratingController.FindTotalByBookId)
 }
