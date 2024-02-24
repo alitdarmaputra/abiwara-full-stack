@@ -61,8 +61,9 @@ func (repository *VisitorRepositoryImpl) FindAll(
 		endDate.Format(constant.DDMMYYYYhhmmss),
 	)
 
-	result := query.Limit(limit).Offset(offset).Order("created_at desc").Find(&visitors)
-	return visitors, int(result.RowsAffected)
+	totalResult := query.Find(&[]Visitor{})
+	query.Limit(limit).Offset(offset).Order("created_at desc").Find(&visitors)
+	return visitors, int(totalResult.RowsAffected)
 }
 
 func (repository *VisitorRepositoryImpl) FindOne(

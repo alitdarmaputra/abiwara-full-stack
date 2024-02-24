@@ -15,7 +15,7 @@ export const UserProvider = ({ children  }) => {
 		const getUserData = async() => {
 			try {
 				if (authToken) {
-					const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/member/me`).then(res => res.data);
+					const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/user/me`).then(res => res.data);
 					let userData = res.data;
 					setUser({ role: token.role, ...userData });
 				}

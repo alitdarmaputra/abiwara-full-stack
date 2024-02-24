@@ -60,47 +60,48 @@ func (repository *BookRepositoryImpl) FindAll(
 ) ([]Book, int) {
 	var books []Book = []Book{}
 
-	var result *gorm.DB = tx
-	result = result.Preload("Category")
+	var query *gorm.DB = tx
+	query = query.Preload("Category")
 
 	// Handle filter
 
 	if search != "" {
 		search = "%" + search + "%"
-		result = result.Where("title LIKE ? OR author LIKE ?", search, search)
+		query = query.Where("title LIKE ? OR author LIKE ?", search, search)
 	}
 
 	if best {
-		result = result.Where("rating >= 4")
+		query = query.Where("rating >= 4")
 	}
 
 	if exist {
-		result = result.Where("remain > 0")
+		query = query.Where("remain > 0")
 	}
 
 	if len(categories) > 0 {
-		orResult := result
+		orQuery := query
 		for i, category := range categories {
 			if i == 0 {
-				orResult = orResult.Where("category_id LIKE %?", category)
+				orQuery = orQuery.Where("category_id LIKE %?", category)
 				continue
 			}
-			orResult = orResult.Or("category_id LIKE %?", category)
+			orQuery = orQuery.Or("category_id LIKE %?", category)
 		}
+		query = query.Where(orQuery)
 	}
 
-	totalResult := result
+	totalResult := query
 
 	// Handle order and pagination
 
-	result = result.Limit(limit).
+	query = query.Limit(limit).
 		Offset(offset)
 
 	if search == "" {
-		result = result.Order(fmt.Sprintf("%s %s", order, sort))
+		query = query.Order(fmt.Sprintf("%s %s", order, sort))
 	}
 
-	result.Find(&books)
+	query.Find(&books)
 
 	totalResult = totalResult.Find(&[]Book{})
 

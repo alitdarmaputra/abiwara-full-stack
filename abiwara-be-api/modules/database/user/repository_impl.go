@@ -88,19 +88,29 @@ func (repository *UserRepositoryImpl) FindAll(
 	search string,
 ) ([]User, int) {
 	var users []User = []User{}
-	result := tx.Find(&users)
+	var query *gorm.DB = tx
 
 	if search != "" {
 		search = "%" + search + "%"
-		result = tx.Limit(limit).
-			Offset(offset).
-			Where("name LIKE ? AND role_id = ? AND is_verified = 1", search, 3).
-			Find(&users)
-	} else {
-		tx.Where("role_id = ? AND is_verified = 1", 3).Limit(limit).Offset(offset).Find(&users)
+		query = query.Where("name LIKE ? AND role_id = ? AND is_verified = 1", search, 3)
 	}
 
-	return users, int(result.RowsAffected)
+	totalResult := query
+
+	// Handle order and pagination
+
+	query = query.Limit(limit).
+		Offset(offset)
+
+	if search == "" {
+		query = query.Order("name asc")
+	}
+
+	query.Find(&users)
+
+	totalResult = totalResult.Find(&[]User{})
+
+	return users, int(totalResult.RowsAffected)
 }
 
 func (repository *UserRepositoryImpl) GetTotal(

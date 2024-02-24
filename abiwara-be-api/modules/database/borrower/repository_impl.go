@@ -40,9 +40,11 @@ func (repository *BorrowerRepositoryImpl) FindAll(
 ) ([]Borrower, int) {
 	var borrowers []Borrower
 
-	result := tx.
-		Where(param).
-		Find(&borrowers)
+	query := tx.Preload("Book").
+		Preload("User").
+		Preload("Rating")
+
+	query = tx.Where(param)
 
 	if search != "" {
 		search = "%" + search + "%"
@@ -56,31 +58,26 @@ func (repository *BorrowerRepositoryImpl) FindAll(
 			Joins("LEFT JOIN users ON users.id = borrowers.user_id").
 			Where("users.name LIKE ?", search)
 
-		_ = tx.
-			Preload("Book").
-			Preload("User").
-			Preload("Rating").
-			Where("book_id IN (?) OR user_id IN (?)", subqueryBook, subqueryUser).
-			Where(param).
-			Limit(limit).
-			Offset(offset).
-			Order("created_at desc").
-			Find(&borrowers)
-
-		return borrowers, int(result.RowsAffected)
+		query = query.
+			Where("book_id IN (?) OR user_id IN (?)", subqueryBook, subqueryUser)
 	}
 
-	_ = tx.
-		Preload("Book").
-		Preload("User").
-		Preload("Rating").
-		Limit(limit).
-		Offset(offset).
-		Order("created_at desc").
-		Where(param).
-		Find(&borrowers)
+	totalResult := query
 
-	return borrowers, int(result.RowsAffected)
+	// Handle order and pagination
+
+	query = query.Limit(limit).
+		Offset(offset)
+
+	if search == "" {
+		query = query.Order("created_at desc")
+	}
+
+	query.Find(&borrowers)
+
+	totalResult = totalResult.Find(&[]Borrower{})
+
+	return borrowers, int(totalResult.RowsAffected)
 }
 
 func (repository *BorrowerRepositoryImpl) FindById(
