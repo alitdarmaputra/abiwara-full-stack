@@ -17,7 +17,12 @@ type BookService interface {
 		ctx context.Context,
 		page int,
 		perPage int,
+		categories []string,
+		best bool,
+		exist bool,
 		search string,
+		order string,
+		sort string,
 	) ([]response.BookResponse, common_response.Meta)
 	GetFile(ctx context.Context) [][]string
 	GetRecommendation(ctx context.Context, bookId uint) []response.BookResponse

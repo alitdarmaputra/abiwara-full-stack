@@ -723,7 +723,7 @@ values
 ("215", "Sains, Ilmu Pengetahuan dan Agama"),
 ("218", "Manusia"),
 ("219", "Belum Digunakan"),
-("200.1", "Sistem-sistem Agama, Nilai-nilai Agama,"),
+("200.1", "Sistem-sistem Agama, Nilai-nilai Agama"),
 ("201", "Mitos Keagamaan, Mitos Agama"),
 ("201.5", "Hubungan Antar Agama"),
 ("201.6", "Hubungan Agama dengan Disiplin Ilmu Lainnya"),

@@ -2,6 +2,7 @@ package book_repository
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database"
 	"gorm.io/gorm"
@@ -50,24 +51,60 @@ func (repository *BookRepositoryImpl) FindAll(
 	ctx context.Context,
 	tx *gorm.DB,
 	offset, limit int,
+	categories []string,
+	best bool,
+	exist bool,
 	search string,
+	order string,
+	sort string,
 ) ([]Book, int) {
 	var books []Book = []Book{}
 
-	result := tx.Find(&books)
+	var result *gorm.DB = tx
+	result = result.Preload("Category")
+
+	// Handle filter
 
 	if search != "" {
 		search = "%" + search + "%"
-		tx.Where("title LIKE ? OR authors LIKE ?", search, search).
-			Limit(limit).
-			Offset(offset).
-			Order("updated_at desc").
-			Find(&books)
-	} else {
-		tx.Limit(limit).Offset(offset).Order("updated_at desc").Find(&books)
+		result = result.Where("title LIKE ? OR author LIKE ?", search, search)
 	}
 
-	return books, int(result.RowsAffected)
+	if best {
+		result = result.Where("rating >= 4")
+	}
+
+	if exist {
+		result = result.Where("remain > 0")
+	}
+
+	if len(categories) > 0 {
+		orResult := result
+		for i, category := range categories {
+			if i == 0 {
+				orResult = orResult.Where("category_id LIKE %?", category)
+				continue
+			}
+			orResult = orResult.Or("category_id LIKE %?", category)
+		}
+	}
+
+	totalResult := result
+
+	// Handle order and pagination
+
+	result = result.Limit(limit).
+		Offset(offset)
+
+	if search == "" {
+		result = result.Order(fmt.Sprintf("%s %s", order, sort))
+	}
+
+	result.Find(&books)
+
+	totalResult = totalResult.Find(&[]Book{})
+
+	return books, int(totalResult.RowsAffected)
 }
 
 func (repository *BookRepositoryImpl) FindOne(

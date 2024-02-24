@@ -16,6 +16,7 @@ type BookResponse struct {
 	Rating     float64 `json:"rating"`
 	Remain     int     `json:"remain"`
 	Quantity   int     `json:"quantity"`
+	Category   string  `json:"category"`
 }
 
 type DetailBookResponse struct {
@@ -50,6 +51,7 @@ func ToBookResponse(book book_repository.Book) BookResponse {
 		Remain:     book.Remain,
 		Quantity:   book.Quantity,
 		Rating:     book.Rating,
+		Category:   book.Category.Name,
 	}
 }
 

@@ -124,7 +124,12 @@ func (service *BookServiceImpl) FindAll(
 	ctx context.Context,
 	page int,
 	perPage int,
+	categories []string,
+	best bool,
+	exist bool,
 	search string,
+	order string,
+	sort string,
 ) ([]response.BookResponse, common_response.Meta) {
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
@@ -134,7 +139,12 @@ func (service *BookServiceImpl) FindAll(
 		tx,
 		utils.CountOffset(page, perPage),
 		perPage,
+		categories,
+		best,
+		exist,
 		search,
+		order,
+		sort,
 	)
 
 	return response.ToBookResponses(books), common_response.Meta{

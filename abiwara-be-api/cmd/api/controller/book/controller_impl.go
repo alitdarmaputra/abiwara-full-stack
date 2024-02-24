@@ -2,8 +2,10 @@ package book_controller
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 
@@ -80,7 +82,48 @@ func (controller *BookControllerImpl) FindAll(ctx *gin.Context) {
 		utils.PanicIfError(err)
 	}
 
-	bookResponses, meta := controller.BookService.FindAll(ctx, page, perPage, querySearch)
+	categories := []string{}
+
+	queryCategories, ok := ctx.GetQuery("categories")
+
+	if ok {
+		decodedCategories, err := url.QueryUnescape(queryCategories)
+		utils.PanicIfError(err)
+
+		err = json.Unmarshal([]byte(decodedCategories), &categories)
+		utils.PanicIfError(err)
+	}
+
+	best := false
+	_, ok = ctx.GetQuery("best")
+
+	if ok {
+		best = true
+	}
+
+	exist := false
+	_, ok = ctx.GetQuery("exist")
+
+	if ok {
+		exist = true
+	}
+
+	var order string = "updated_at"
+	var sort string = "desc"
+
+	sortQuery, ok := ctx.GetQuery("sort")
+	if ok {
+		sort = sortQuery
+	}
+
+	orderQuery, ok := ctx.GetQuery("order")
+	if ok {
+		if orderQuery == "updated_at" || orderQuery == "rating" {
+			order = orderQuery
+		}
+	}
+
+	bookResponses, meta := controller.BookService.FindAll(ctx, page, perPage, categories, best, exist, querySearch, order, sort)
 	response.JsonPageData(ctx, http.StatusOK, "OK", bookResponses, meta)
 }
 
