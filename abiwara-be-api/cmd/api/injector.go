@@ -7,6 +7,7 @@ import (
 	"time"
 
 	book_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/book"
+	bookmark_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/bookmark"
 	borrower_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/borrower"
 	category_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/category"
 	image_upload_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/image-upload"
@@ -14,6 +15,7 @@ import (
 	user_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/user"
 	visitor_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/visitor"
 	book_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/book"
+	bookmark_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/bookmark"
 	borrower_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/borrower"
 	category_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/category"
 	image_upload_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/image-upload"
@@ -26,6 +28,7 @@ import (
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/config/db"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/config/imgkit"
 	book_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/book"
+	bookmark_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/bookmark"
 	borrower_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/borrower"
 	category_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/category"
 	rating_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/rating"
@@ -65,7 +68,7 @@ func InitializeServer() *http.Server {
 	visitorRepository := visitor_repository.NewVisitorRepository()
 	borrowerRepository := borrower_repository.NewBorrowerRepository()
 	ratingRepository := rating_repository.NewRatingRepository()
-
+	bookmarkRepository := bookmark_repository.NewBookmarkRepository()
 	smtpService := smtp_service.NewSMTPService(cfg.SMTP)
 	imageUploader := upload_image_service.NewImageUploader(ik)
 	recommender := recommender.NewBookRecommender(cfg.Recommender.Token, cfg.Recommender.Url)
@@ -95,6 +98,7 @@ func InitializeServer() *http.Server {
 		bookRepository,
 		ratingRepository,
 	)
+	bookmarkService := bookmark_service.NewBookmarkService(bookmarkRepository, db)
 	ratingService := rating_service.NewRatingService(ratingRepository, borrowerRepository, bookRepository, db)
 	imageUploadService := image_upload_service.NewImageUploadService(imageUploader)
 
@@ -105,7 +109,7 @@ func InitializeServer() *http.Server {
 	borrowerController := borrower_controller.NewBorrowerController(borrowerService, authMiddleware)
 	ratingController := rating_controller.NewRatingController(ratingService, authMiddleware)
 	imageUploadController := image_upload_controller.NewImageUploadController(imageUploadService)
-
+	bookmarkController := bookmark_controller.NewBookmarkController(bookmarkService, authMiddleware)
 	handler := router.NewRouter(
 		cfg,
 		permissionMiddleware,
@@ -116,6 +120,7 @@ func InitializeServer() *http.Server {
 		borrowerController,
 		ratingController,
 		imageUploadController,
+		bookmarkController,
 	)
 
 	server := http.Server{

@@ -2,6 +2,7 @@ package router
 
 import (
 	book_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/book"
+	bookmark_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/bookmark"
 	borrower_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/borrower"
 	category_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/category"
 	image_upload_controller "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/controller/image-upload"
@@ -23,6 +24,7 @@ func NewRouter(
 	borrowerController borrower_controller.BorrowerController,
 	ratingController rating_controller.RatingController,
 	imageUploadController image_upload_controller.ImageUploadController,
+	bookmarkController bookmark_controller.BookmarkController,
 ) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.CustomRecovery(middleware.ErrorHandler))
@@ -57,6 +59,6 @@ func NewRouter(
 	BorrowerRouter(v1JWTAuth, permissionMiddleware, borrowerController)
 	RatingRouter(v1JWTAuth, ratingController)
 	ImageUploadRouter(v1JWTAuth, imageUploadController)
-
+	BookmarkRouter(v1JWTAuth, bookmarkController)
 	return r
 }
