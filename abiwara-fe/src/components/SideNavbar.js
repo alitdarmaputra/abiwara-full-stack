@@ -75,7 +75,7 @@ export default function SideNavbar() {
 
     return (
         <div className="relative z-30">
-            <div className="menu__button_container absolute top-2 left-2 box-border z-20 group-hover:opacity-100">
+            <div className="menu__button_container absolute h-20 flex items-center px-2 box-border z-20 group-hover:opacity-100">
 				<button onClick={() => setNavbar(!navbarActive)} className="w-8 h-8 bg-blue-700 md:hidden text-white shadow-md rounded-md flex justify-center items-center">
                     {
                         navbarActive ? (

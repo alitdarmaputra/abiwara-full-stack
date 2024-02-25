@@ -1,39 +1,46 @@
 import { numToIDR } from "../../utils/formatter";
-import TopNavbar from "../../components/TopNavbar";
 import AsyncSelect from 'react-select/async';
 import httpRequest from "../../config/http-request";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { notifyError } from "../../utils/toast";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../config";
 import { useAuth } from "../../context/auth";
+import { FaTrash } from "react-icons/fa";
+import getFirstCharacters from "../../utils/shortener";
 
 export default function BookCreate() {
     const [category, setCategory] = useState("");
     const [isLoading, setLoading] = useState(false);
     const navigate = useNavigate();
 	const { setAuthToken } = useAuth();
+	const status = useRef();
+	const [coverImg, setCoverImg] = useState();
+	const [isLoadingImg, setLoadingImg] = useState(false);
 
     const handleSubmitBook = async e => {
         e.preventDefault()
 
         const title_input = document.querySelector("#title_input");
+		const inventory_input = document.querySelector("#inventory_input");
         const price_input = document.querySelector("#price_input");
-        const authors_input = document.querySelector("#authors_input");
+        const author_input = document.querySelector("#author_input");
         const publisher_input = document.querySelector("#publisher_input");
-        const published_input = document.querySelector("#published_input");
+        const year_input = document.querySelector("#year_input");
+        const city_input = document.querySelector("#city_input");
+		const page_input = document.querySelector("#page_input");
         const quantity_input = document.querySelector("#quantity_input");
-        const page_input = document.querySelector("#page_input");
-        const buy_date_input = document.querySelector("#buy_date_input");
+        const entry_date_input = document.querySelector("#entry_date_input");
+		const funding_source_input = document.querySelector("#funding_source_input")
         const summary_input = document.querySelector("#summary_input");
 
-        if (title_input.value === "" || authors_input.value === "" || published_input.value === "" || quantity_input.value === "" || category === "") {
+        if (title_input.value === "" || inventory_input.value === "" || quantity_input === "" || category === "") {
             notifyError("Pastikan semua field sudah terisi")
             return
         }
 
-        if (published_input.value !== "" && isNaN(published_input.value)) {
+        if (year_input.value !== "" && isNaN(year_input.value)) {
             notifyError("Format tahun terbit tidak sesuai");
             return
         }
@@ -49,14 +56,21 @@ export default function BookCreate() {
         }
 
         const payload = {
-            title: title_input.value,
+			cover_img: coverImg,
+			inventory_number: inventory_input.value,
+			title: title_input.value,
+			call_number_title: getFirstCharacters(title_input.value),
             price: parseInt(price_input.value.replace("Rp. ", "").replace(/\./, "")),
-            authors: authors_input.value,
+            author: author_input.value,
+            call_number_author: getFirstCharacters(author_input.value),
             publisher: publisher_input.value,
-            published: parseInt(published_input.value),
-            quantity: parseInt(quantity_input.value),
-            page: parseInt(page_input.value),
-            buy_date: new Date(buy_date_input.value).toISOString(),
+			year: parseInt(year_input.value),
+			city: city_input.value,
+			quantity: parseInt(quantity_input.value),
+			total_page: parseInt(page_input.value),
+            entry_date: entry_date_input.value ? new Date(entry_date_input.value).toISOString() : null,
+			funding_source: funding_source_input.value,
+			status: status.current.value,
             summary: summary_input.value,
             category_id: category,
         }
@@ -84,27 +98,6 @@ export default function BookCreate() {
         e.target.value = numToIDR(e.target.value);
     }
 
-	const customStyles = {
-		control: (provided) => ({
-		...provided,
-			padding: '8px',
-			border: '2px solid #6B7280',
-			backgroundColor: 'transparent',
-			color: '#fff',
-		}),
-		option: (provided, state) => ({
-			...provided,
-			padding: '8px',
-			backgroundColor: '#1A202C',
-			color: '#fff',
-		}),
-		noOptionsMessage: () => ({
-			padding: '8px',
-			backgroundColor: '#1A202C',
-			color: '#fff',
-		}),
-	};
-
     const loadCategory = async search => {
         const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/category?search=${search}`)
         const options = res.data?.data?.map(option => {
@@ -115,7 +108,27 @@ export default function BookCreate() {
         })
         return options;
     }
+	
+	const form = document.getElementById("cover-image__form");
 
+	const handleSubmitImg = e => {
+		e.preventDefault();
+		setLoadingImg(true);
+		const formData = new FormData(form);
+		axiosInstance.post(`${httpRequest.api.baseUrl}/image-upload`, formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		})
+		.then((res) => {
+			setCoverImg(res.data?.data?.image_url);
+			setLoadingImg(false);
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+	}
+	
     return (
         <div className="flex-grow w-full">
             <ToastContainer />
@@ -127,24 +140,34 @@ export default function BookCreate() {
                         <input id="title_input" placeholder="Ketik judul" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
+                    <div className="inventory_form mb-3">
+                        <label className="font-bold text-sm" htmlFor="inventory_input">No Inventaris <span className="text-red-500">*</span></label>
+                        <input id="inventory_input" placeholder="Ketik no inventaris" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
+                    </div>
+
                     <div className="price_form mb-3">
                         <label className="font-bold text-sm" htmlFor="price_input">Harga</label>
                         <input onChange={formatValue} id="price_input" placeholder="Ketik harga" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
-                    <div className="authors_form mb-3">
-                        <label className="font-bold text-sm" htmlFor="authors_input">Pengarang <span className="text-red-500">*</span></label>
-                        <input id="authors_input" placeholder="Ketik pengarang" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
+                    <div className="author_form mb-3">
+                        <label className="font-bold text-sm" htmlFor="author_input">Penyusun</label>
+                        <input id="author_input" placeholder="Ketik penyusun" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="publisher_form mb-3">
-                        <label className="font-bold text-sm" htmlFor="publisher_input">Penerbit <span className="text-red-500">*</span></label>
+                        <label className="font-bold text-sm" htmlFor="publisher_input">Penerbit</label>
                         <input id="publisher_input" placeholder="Ketik penerbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
-                    <div className="published_form mb-3">
-                        <label className="font-bold text-sm" htmlFor="published_input">Tahun Terbit <span className="text-red-500">*</span></label>
-                        <input id="published_input" placeholder="Ketik tahun terbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
+                    <div className="year_form mb-3">
+                        <label className="font-bold text-sm" htmlFor="year_input">Tahun Terbit</label>
+                        <input id="year_input" placeholder="Ketik tahun terbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
+                    </div>
+
+                    <div className="city_form mb-3">
+                        <label className="font-bold text-sm" htmlFor="city_input">Kota Terbit</label>
+                        <input id="city_input" placeholder="Ketik kota terbit" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="page_form mb-3">
@@ -157,9 +180,22 @@ export default function BookCreate() {
                         <input id="quantity_input" placeholder="Ketik jumlah buku" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
-                    <div className="buy_date_form mb-3">
-                        <label className="font-bold text-sm" htmlFor="buy_date_input">Tanggal Pembelian <span className="text-red-500">*</span></label>
-                        <input id="buy_date_input" placeholder="Tanggal pembelian" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="date"></input>
+                    <div className="status_form mb-3">
+                        <label className="font-bold text-sm" htmlFor="status_input">Status</label>
+						<select ref={status} className='block w-full h-10 font-sans bg-white rounded-md p-2 dark:bg-[#2D3748] mt-2 border-2 dark:border-gray-500' id="class_input" name="class">
+							<option value="BAIK">Baik</option>
+							<option value="TIDAK BAIK">Tidak baik</option>
+						</select>
+                    </div>
+
+                    <div className="entry_date_form mb-3">
+                        <label className="font-bold text-sm" htmlFor="entry_date_input">Tanggal Masuk</label>
+                        <input id="entry_date_input" placeholder="Tanggal pembelian" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="date"></input>
+                    </div>
+
+                    <div className="funding_source_form mb-3">
+                        <label className="font-bold text-sm" htmlFor="page_input">Asal dana</label>
+                        <input id="funding_source_input" placeholder="Ketik asal dana" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="summary_form mb-3">
@@ -185,19 +221,49 @@ export default function BookCreate() {
 						>
 						</AsyncSelect>
                     </div>
-
-                    {isLoading ?
-                        <button disabled type="button" className="mt-10 w-full h-10 bg-blue-700 text-white font-bold rounded-lg hover:bg-blue-900">
-                            <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB" />
-                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor" />
-                            </svg>
-                            Memuat...
-                        </button>
-                        :
-                        <button className="mt-10 w-full h-10 bg-blue-700 text-white font-bold rounded-lg hover:bg-blue-900" onClick={handleSubmitBook}>Buat</button>
-                    }
                 </form>
+
+				<form id="cover-image__form" onSubmit={handleSubmitImg}>
+					<p className="font-bold text-sm mb-3" htmlFor="cover-image_input">Gambar Sampul</p>
+                    <div className="flex w-full justify-between mb-10">
+						<input id="cover-image_input" type="file" name="image" />
+						<div className="flex items-center gap-4">
+							<button type="submit" className={`py-1 px-5 text-sm rounded-md bg-gray-200 dark:bg-[#1A202C]`}>Upload</button>
+							{
+								isLoadingImg && (
+									<svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB" />
+										<path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor" />
+									</svg>
+								)
+							}
+							{
+								coverImg && (
+									<button className="dark:text-white" onClick={() => setCoverImg()}><FaTrash /></button>
+								)
+							}
+						</div>
+					</div>
+					<div id="uploaded-image">
+						{ coverImg && (
+							<div className="w-[154px] h-[246px]">
+								<img className="object-cover w-full h-full" alt="book cover" src={coverImg} />
+							</div>
+						)}
+					</div>
+				</form>
+
+				{isLoading ?
+					<button disabled type="button" className="mt-10 w-full h-10 bg-blue-700 text-white font-bold rounded-lg hover:bg-blue-900">
+						<svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB" />
+							<path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor" />
+						</svg>
+						Memuat...
+					</button>
+					:
+					<button className="mt-10 w-full h-10 bg-blue-700 text-white font-bold rounded-lg hover:bg-blue-900" onClick={handleSubmitBook}>Buat</button>
+				}
             </div>
         </div>
     )

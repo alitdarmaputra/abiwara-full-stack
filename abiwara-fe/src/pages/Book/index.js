@@ -84,7 +84,7 @@ export default function Book() {
 
         getBook()
     }
-
+	
     if (isLoading) {
         return (
             <div className="w-full h-screen flex justify-center items-center md:ml-64">
@@ -97,7 +97,7 @@ export default function Book() {
     }
 
     return (
-        <div className="flex-grow w-full">
+        <>
             <Modal active={active} setActive={setActive} title="Hapus Buku" children={bookDetail} action={action}></Modal>
 
             <div className="book__container bg-white dark:bg-[#2D3748] rounded-lg mb-10 dark:text-gray-200">
@@ -121,15 +121,16 @@ export default function Book() {
                     )}
                 </div>
 
-                <div className="table__container shadow-sm w-full overflow-x-scroll sm:rounded-md mb-9 text-sm">
-                    <table className="w-full">
+                <div className="table__container shadow-sm w-full overflow-x-auto sm:rounded-md mb-9 text-sm">
+                    <table id="table" className="w-full text-sm">
                         <thead className="text-slate-500 font-bold">
                             <tr className="border-b dark:border-b dark:border-b-gray-500">
-                                <th className="px-10 py-5 w-96">JUDUL</th>
-                                <th>TAHUN</th>
-                                <th className="px-10 md:px-2 w-18">PENGARANG</th>
-                                <th>SISA</th>
-                                <th className="px-10 w-30" >AKSI</th>
+								<th className="p-5 box-border">JUDUL BUKU</th>
+                                <th className="min-w-20 p-5 box-border">PENYUSUN</th>
+                                <th className="min-w-20 p-5 box-border">TAHUN</th>
+                                <th className="min-w-20 p-5 box-border">KATEGORI</th>
+                                <th className="min-w-10 p-5 box-border">SISA</th>
+                                <th className="min-w-30 p-5 box-border">AKSI</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -139,48 +140,52 @@ export default function Book() {
                                     : books.map(book => {
                                         return (
                                             <tr key={book.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
-                                                <td className="py-5 box-border pl-5">{book.title}</td>
-                                                <td className="text-center">{book.published}</td>
-                                                <td className="text-center">{book.authors}</td>
-                                                <td className="text-center">{book.remain}</td>
-                                                <td className="text-center flex items-center justify-center gap-5 py-5">
-                                                    <Link to={`/book/${book.id}`} className="flex justify-center items-center h-full">
-                                                        <AiFillEye></AiFillEye>
-                                                    </Link >
+                                                <td className="box-border p-5 text-wrap">{book.title}</td>
+												<td className="box-border p-5">{book.author}</td>
+												<td className="box-border text-center p-5">{book.year}</td>
+												<td className="box-border p-5">{book.category}</td>
+												<td className="box-border text-center p-5">{book.remain}</td>
+                                                <td className="box-border p-5">
+													<div className="flex justify-center items-center gap-5">
 
-                                                    {
-                                                        user.role === 1 && book.remain === book.quantity && (
-                                                            <BsFillTrashFill className="hover:cursor-pointer h-full" onClick={() => {
-                                                                setActive(true);
-                                                                setBookDetail(() => {
-                                                                    return (
-                                                                        <>
-                                                                            <p className="font-md mt-3">Apakah anda yakin ingin menghapus buku berikut:</p>
+														<Link to={`/book/${book.id}`} className="flex justify-center items-center h-full">
+															<AiFillEye></AiFillEye>
+														</Link >
 
-                                                                            <table className="font-sans mt-3">
-                                                                                <tr>
-                                                                                    <td>Judul</td>
-                                                                                    <td className="w-10 text-center"> : </td>
-                                                                                    <td>{book.title}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>Tahun Terbit</td>
-                                                                                    <td className="w-10 text-center"> : </td>
-                                                                                    <td>{book.published}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>Pengarang</td>
-                                                                                    <td className="w-10 text-center"> : </td>
-                                                                                    <td>{book.authors}</td>
-                                                                                </tr>
-                                                                            </table>
-                                                                        </>
-                                                                    )
-                                                                })
-                                                                setAction(() => deleteBook(book.id))
-                                                            }}></BsFillTrashFill>
-                                                        )
-                                                    }
+														{
+															user.role === 1 && book.remain === book.quantity && (
+																<BsFillTrashFill className="hover:cursor-pointer" onClick={() => {
+																	setActive(true);
+																	setBookDetail(() => {
+																		return (
+																			<>
+																				<p className="font-md mt-3">Apakah anda yakin ingin menghapus buku berikut:</p>
+
+																				<table className="font-sans mt-3">
+																					<tr>
+																						<td>Judul</td>
+																						<td className="w-10 text-center"> : </td>
+																						<td>{book.title}</td>
+																					</tr>
+																					<tr>
+																						<td>Tahun Terbit</td>
+																						<td className="w-10 text-center"> : </td>
+																						<td>{book.published}</td>
+																					</tr>
+																					<tr>
+																						<td>Pengarang</td>
+																						<td className="w-10 text-center"> : </td>
+																						<td>{book.authors}</td>
+																					</tr>
+																				</table>
+																			</>
+																		)
+																	})
+																	setAction(() => deleteBook(book.id))
+																}}></BsFillTrashFill>
+															)
+														}
+													</div>
                                                 </td>
                                             </tr>
                                         )
@@ -227,6 +232,6 @@ export default function Book() {
                 </div>
             </div>
 			<ScrollRestoration />
-        </div>
+        </>
     )
 }
