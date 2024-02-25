@@ -85,6 +85,9 @@ export default function VisitorCreate() {
                                 <option value="IXD">IXD</option>
                                 <option value="IXE">IXE</option>
                             </optgroup>
+                            <optgroup label='Lainnya'>
+								<option value="Lainnya">Lainnya</option>
+							</optgroup>
                         </select>
                     </div>
 

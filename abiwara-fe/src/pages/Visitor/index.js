@@ -6,6 +6,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { formatDateTime } from "../../utils/formatter";
 import { useAuth } from "../../context/auth";
 import axiosInstance from "../../config";
+import Pagination from "../../components/Pagination";
 
 export default function Visitor() {
     const [visitors, setVisitors] = useState([]);
@@ -98,40 +99,8 @@ export default function Visitor() {
                 </div>
 
                 <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 dark:text-gray-200">
-                    <div className="pagination flex w-60 justify-evenly items-center">
-                        <Link to={`/visitor?page=1`}><BsChevronDoubleLeft /></Link>
-
-                        {
-                            meta.page !== 1 && (
-                                <Link to={`/visitor?page=${meta.page - 1}`}><BsChevronLeft /></Link>
-                            )
-                        }
-
-                        {
-                            !isLoading && (
-                                function() {
-                                    const pageNums = []
-                                    for (let i = 1; i <= meta.total_page; i++) {
-                                        if (i === meta.page) {
-                                            pageNums.push(<Link key={i} className="page h-8 w-8 rounded-md shadow-md text-white bg-blue-700 flex items-center justify-center" to={`/visitor?page=${i}`}>{i}</Link>)
-                                        } else {
-                                            pageNums.push(<Link key={i} className="page" to={`/visitor?page=${i}`}>{i}</Link>)
-                                        }
-                                    }
-                                    return <>{pageNums}</>
-                                }()
-                            )
-                        }
-
-                        {
-                            meta.page !== meta.total_page && (
-                                <Link to={`/visitor?page=${meta.page + 1}`}><BsChevronRight /></Link>
-                            )
-                        }
-
-                        <Link to={`/visitor?page=${meta.total_page}`}><BsChevronDoubleRight /></Link>
-                    </div>
-                </div>
+					<Pagination stringUrl={window.location.href} currPage={meta.page} totalPage={meta.total_page} n={3} />
+				</div>
             </div>
         </div>
     )
