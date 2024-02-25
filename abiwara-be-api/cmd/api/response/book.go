@@ -12,7 +12,7 @@ type BookResponse struct {
 	CoverImage string  `json:"cover_img"`
 	Title      string  `json:"title"`
 	Author     string  `json:"author"`
-	Year       int     `json:"year"`
+	Year       *int    `json:"year"`
 	Rating     float64 `json:"rating"`
 	Remain     int     `json:"remain"`
 	Quantity   int     `json:"quantity"`
@@ -25,16 +25,16 @@ type DetailBookResponse struct {
 	Title            string                       `json:"title"`
 	InventoryNumber  string                       `json:"inventory_number"`
 	CallNumberTitle  string                       `json:"call_number_title"`
-	Price            int                          `json:"price"`
+	Price            *int                         `json:"price"`
 	Author           string                       `json:"author"`
 	CallNumberAuthor string                       `json:"call_number_author"`
 	Publisher        string                       `json:"publisher"`
-	Year             int                          `json:"year"`
+	Year             *int                         `json:"year"`
 	City             string                       `json:"city"`
 	Quantity         int                          `json:"quantity"`
 	Remain           int                          `json:"remain"`
-	TotalPage        int                          `json:"total_page"`
-	EntryDate        time.Time                    `json:"entry_date"`
+	TotalPage        *int                         `json:"total_page"`
+	EntryDate        *time.Time                   `json:"entry_date"`
 	Rating           float64                      `json:"rating"`
 	Status           string                       `json:"status"`
 	Summary          string                       `json:"summary"`
