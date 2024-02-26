@@ -31,6 +31,7 @@ import (
 	bookmark_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/bookmark"
 	borrower_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/borrower"
 	category_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/category"
+	file_upload_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/file_upload"
 	rating_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/rating"
 	role_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/role"
 	token_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/token"
@@ -69,6 +70,7 @@ func InitializeServer() *http.Server {
 	borrowerRepository := borrower_repository.NewBorrowerRepository()
 	ratingRepository := rating_repository.NewRatingRepository()
 	bookmarkRepository := bookmark_repository.NewBookmarkRepository()
+	fileUploadRepository := file_upload_repository.NewFileUploadRepository()
 	smtpService := smtp_service.NewSMTPService(cfg.SMTP)
 	imageUploader := upload_image_service.NewImageUploader(ik)
 	recommender := recommender.NewBookRecommender(cfg.Recommender.Token, cfg.Recommender.Url)
@@ -100,7 +102,7 @@ func InitializeServer() *http.Server {
 	)
 	bookmarkService := bookmark_service.NewBookmarkService(bookmarkRepository, db)
 	ratingService := rating_service.NewRatingService(ratingRepository, borrowerRepository, bookRepository, db)
-	imageUploadService := image_upload_service.NewImageUploadService(imageUploader)
+	imageUploadService := image_upload_service.NewImageUploadService(imageUploader, fileUploadRepository, db)
 
 	bookController := book_controller.NewBookController(bookService)
 	userController := user_controller.NewUserController(userService, authMiddleware)

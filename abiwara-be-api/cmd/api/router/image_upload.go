@@ -10,4 +10,5 @@ func ImageUploadRouter(
 	imageUploadController image_upload_controller.ImageUploadController,
 ) {
 	v1JWTAuth.POST("/image-upload", imageUploadController.Post)
+	v1JWTAuth.DELETE("/image-upload/:id", imageUploadController.Delete)
 }

@@ -1,7 +1,6 @@
 CREATE TABLE books (    
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	inventory_number VARCHAR(255) NOT NULL,
-	cover_img VARCHAR(255),
 	author VARCHAR(255),
 	call_number_author VARCHAR(255),
 	title VARCHAR(255) NOT NULL,

@@ -19,7 +19,7 @@ func NewImageUploader(ik *imagekit.ImageKit) ImageUploader {
 	}
 }
 
-func (u *ImageUploaderImpl) UploadImage(ctx context.Context, image []byte, name string) (string, error) {
+func (u *ImageUploaderImpl) UploadImage(ctx context.Context, image []byte, name string) (ImgKitResp, error) {
 	// Encode Image to Base64String
 	base64Image := base64.StdEncoding.EncodeToString(image)
 
@@ -28,16 +28,25 @@ func (u *ImageUploaderImpl) UploadImage(ctx context.Context, image []byte, name 
 		FileName: name,
 	})
 	if err != nil {
-		return "", err
+		return ImgKitResp{}, err
 	}
 
 	// Parse Resp to Json
-	imgKitResp := &ImgKitResp{}
+	imgKitResp := ImgKitResp{}
 
-	err = json.Unmarshal(resp.Body(), imgKitResp)
+	err = json.Unmarshal(resp.Body(), &imgKitResp)
 	if err != nil {
-		return "", err
+		return ImgKitResp{}, err
 	}
 
-	return imgKitResp.Url, nil
+	return imgKitResp, nil
+}
+
+func (u *ImageUploaderImpl) DeleteImage(ctx context.Context, imgId string) error {
+	_, err := u.Ik.Media.DeleteFile(ctx, imgId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

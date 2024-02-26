@@ -53,7 +53,7 @@ func (controller *UserControllerImpl) Delete(ctx *gin.Context) {
 	claims, err := controller.Middleware.ExtractJWTUser(ctx)
 	utils.PanicIfError(err)
 
-	param := request.UserPathParam{}
+	param := request.StringPathParam{}
 	err = ctx.ShouldBindUri(&param)
 	utils.PanicIfError(err)
 

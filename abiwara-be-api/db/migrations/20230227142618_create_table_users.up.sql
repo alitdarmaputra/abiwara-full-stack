@@ -4,7 +4,6 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     class VARCHAR(50),
-    profile_img VARCHAR(255),
     is_verified BOOL NOT NULL DEFAULT FALSE,
     role_id INT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,

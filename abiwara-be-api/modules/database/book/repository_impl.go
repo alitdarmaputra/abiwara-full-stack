@@ -61,7 +61,7 @@ func (repository *BookRepositoryImpl) FindAll(
 	var books []Book = []Book{}
 
 	var query *gorm.DB = tx
-	query = query.Preload("Category")
+	query = query.Preload("Category").Preload("Img")
 
 	// Handle filter
 

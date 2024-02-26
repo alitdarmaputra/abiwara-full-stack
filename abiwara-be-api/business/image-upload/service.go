@@ -8,4 +8,5 @@ import (
 
 type ImageUploadService interface {
 	Post(ctx context.Context, byteImage []byte, imageName string) (response.ImageUploadResponse, error)
+	Delete(ctx context.Context, imgId string)
 }
