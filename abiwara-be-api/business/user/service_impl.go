@@ -104,7 +104,6 @@ func (service *UserServiceImpl) Create(
 	user.Class = request.Class
 	user.Role = role
 	user.Name = request.Name
-	user.ProfileImg = "https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png"
 
 	user, err = service.UserRepository.SaveOrUpdate(ctx, tx, user)
 	utils.PanicIfError(err)

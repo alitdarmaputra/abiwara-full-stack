@@ -42,9 +42,13 @@ type DetailBookResponse struct {
 }
 
 func ToBookResponse(book book_repository.Book) BookResponse {
+	if book.Img.Url == "" {
+		book.Img.Url = "https://ik.imagekit.io/pohfq3xvx/book-cover_7yiR3zQdQ.png?updatedAt=1708666722422"
+	}
+
 	return BookResponse{
 		ID:         book.ID,
-		CoverImage: book.CoverImg,
+		CoverImage: book.Img.Url,
 		Title:      book.Title,
 		Author:     book.Author,
 		Year:       book.Year,
@@ -56,10 +60,14 @@ func ToBookResponse(book book_repository.Book) BookResponse {
 }
 
 func ToDetailBookResponse(book book_repository.Book) DetailBookResponse {
+	if book.Img.Url == "" {
+		book.Img.Url = "https://ik.imagekit.io/pohfq3xvx/book-cover_7yiR3zQdQ.png?updatedAt=1708666722422"
+	}
+
 	return DetailBookResponse{
 		ID:               book.ID,
 		InventoryNumber:  book.InventoryNumber,
-		CoverImage:       book.CoverImg,
+		CoverImage:       book.Img.Url,
 		Title:            book.Title,
 		CallNumberTitle:  book.CallNumberTitle,
 		City:             book.City,

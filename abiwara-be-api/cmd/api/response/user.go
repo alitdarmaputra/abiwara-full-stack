@@ -10,11 +10,15 @@ type UserResponse struct {
 }
 
 func ToUserResponse(user user_repository.User) UserResponse {
+	if user.Img.Url == "" {
+		user.Img.Url = "https://ik.imagekit.io/pohfq3xvx/default-avatar_MvtamjwS3.png?updatedAt=1708938962261"
+	}
+
 	return UserResponse{
 		Id:         user.ID,
 		Name:       user.Name,
 		Class:      user.Class,
-		ProfileImg: user.ProfileImg,
+		ProfileImg: user.Img.Url,
 	}
 }
 

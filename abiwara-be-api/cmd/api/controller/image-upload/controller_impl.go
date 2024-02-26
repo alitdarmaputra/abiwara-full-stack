@@ -29,7 +29,7 @@ func (controller *ImageUploadControllerImpl) Post(ctx *gin.Context) {
 	fileHeader, _ := ctx.FormFile("image")
 
 	if fileHeader.Size > (4 << 20) {
-		response.JsonErrorResponse(ctx, http.StatusBadRequest, "Bad Request", strconv.FormatInt(fileHeader.Size, 10)+" size are exceed file size 4 MiB")
+		response.JsonErrorResponse(ctx, http.StatusRequestEntityTooLarge, "Payload too large", strconv.FormatInt(fileHeader.Size, 10)+" size are exceed file size 4 mb")
 		return
 	}
 

@@ -56,7 +56,7 @@ export default function BookCreate() {
         }
 
         const payload = {
-			cover_img: coverImg,
+			cover_img: coverImg.id,
 			inventory_number: inventory_input.value,
 			title: title_input.value,
 			call_number_title: getFirstCharacters(title_input.value),
@@ -78,19 +78,21 @@ export default function BookCreate() {
         try {
             setLoading(true);
             const res = await axiosInstance.post(`${httpRequest.api.baseUrl}/book`, payload);
-            setLoading(false);
 
             if (res.status === 201) {
                 navigate("/book");
-            } else if (res.status === 400) {
-                notifyError("Masukkan tidak sesuai");
-            } else if (res.status === 401) {
-				setAuthToken();
-            } else {
-                notifyError("Gagal membuat data buku");
             }
-        } catch (err) {
-            console.log(err);
+			setLoading(false);
+		} catch (err) {
+			if (err.response.data.code === 400 ) {
+				notifyError("Masukkan tidak sesuai");
+			} else if (err.response.data.code == 401 ) {
+				setAuthToken();
+			} else {
+				notifyError("Server error");
+				console.log(err);
+			}
+			setLoading(false);
         }
     }
 
@@ -111,24 +113,42 @@ export default function BookCreate() {
 	
 	const form = document.getElementById("cover-image__form");
 
-	const handleSubmitImg = e => {
+	const handleSubmitImg = async e => {
 		e.preventDefault();
-		setLoadingImg(true);
 		const formData = new FormData(form);
-		axiosInstance.post(`${httpRequest.api.baseUrl}/image-upload`, formData, {
-			headers: {
-				"Content-Type": "multipart/form-data",
-			},
-		})
-		.then((res) => {
-			setCoverImg(res.data?.data?.image_url);
+		try {
+			setLoadingImg(true);
+			let res = await axiosInstance.post(`${httpRequest.api.baseUrl}/image-upload`, formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			})
 			setLoadingImg(false);
-		})
-		.catch((err) => {
-			console.log(err);
-		});
+			setCoverImg(res.data?.data);
+		} catch(err) {
+			if (err.response.data.code === 413) {
+				notifyError("Ukuran file terlalu besar");
+			} else if (err.response.data.code == 400 ) {
+				notifyError("Format file tidak didukung");
+			} else {
+				notifyError("Server error");
+				console.log(err);
+			}
+		}
 	}
 	
+	const handleDeleteImg = () => {
+		setLoadingImg(true);
+		axiosInstance.delete(`${httpRequest.api.baseUrl}/image-upload/${coverImg.id}`)
+		.then(() => {
+			setLoadingImg(false);
+			setCoverImg({});
+		})
+		.catch((err) => {
+			console.log(err)
+		})
+	}
+
     return (
         <div className="flex-grow w-full">
             <ToastContainer />
@@ -224,7 +244,8 @@ export default function BookCreate() {
                 </form>
 
 				<form id="cover-image__form" onSubmit={handleSubmitImg}>
-					<p className="font-bold text-sm mb-3" htmlFor="cover-image_input">Gambar Sampul</p>
+					<p className="font-bold text-sm mb-3">Gambar Sampul</p>
+					<p className="text-xs mb-3 text-gray-500">Tipe file .png / .jpeg. Ukuran maksimum 4 mb </p>
                     <div className="flex w-full justify-between mb-10">
 						<input id="cover-image_input" type="file" name="image" />
 						<div className="flex items-center gap-4">
@@ -238,16 +259,16 @@ export default function BookCreate() {
 								)
 							}
 							{
-								coverImg && (
-									<button className="dark:text-white" onClick={() => setCoverImg()}><FaTrash /></button>
+								coverImg.image_url && !isLoadingImg && (
+									<button className="dark:text-white" onClick={() => handleDeleteImg()}><FaTrash /></button>
 								)
 							}
 						</div>
 					</div>
 					<div id="uploaded-image">
-						{ coverImg && (
+						{ coverImg.image_url && (
 							<div className="w-[154px] h-[246px]">
-								<img className="object-cover w-full h-full" alt="book cover" src={coverImg} />
+								<img className="object-cover w-full h-full" alt="book cover" src={coverImg.image_url} />
 							</div>
 						)}
 					</div>

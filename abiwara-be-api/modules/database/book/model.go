@@ -30,5 +30,5 @@ type Book struct {
 	CategoryId       string     `gorm:"column:category_id"`
 	CoverImg         string     `gorm:"column:cover_img"`
 	Category         category_repository.Category
-	Img              file_upload_repository.FileUpload
+	Img              file_upload_repository.FileUpload `gorm:"foreignKey:CoverImg"`
 }
