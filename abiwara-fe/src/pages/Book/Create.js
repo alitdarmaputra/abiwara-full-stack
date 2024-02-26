@@ -86,7 +86,7 @@ export default function BookCreate() {
 		} catch (err) {
 			if (err.response.data.code === 400 ) {
 				notifyError("Masukkan tidak sesuai");
-			} else if (err.response.data.code == 401 ) {
+			} else if (err.response.data.code === 401 ) {
 				setAuthToken();
 			} else {
 				notifyError("Server error");
@@ -128,7 +128,7 @@ export default function BookCreate() {
 		} catch(err) {
 			if (err.response.data.code === 413) {
 				notifyError("Ukuran file terlalu besar");
-			} else if (err.response.data.code == 400 ) {
+			} else if (err.response.data.code === 400 ) {
 				notifyError("Format file tidak didukung");
 			} else {
 				notifyError("Server error");
