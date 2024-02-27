@@ -91,6 +91,8 @@ func (repository *BookRepositoryImpl) FindAll(
 	}
 
 	totalResult := query
+	totalResult = totalResult.Find(&[]Book{})
+	totalBook := int(totalResult.RowsAffected)
 
 	// Handle order and pagination
 
@@ -103,9 +105,7 @@ func (repository *BookRepositoryImpl) FindAll(
 
 	query.Find(&books)
 
-	totalResult = totalResult.Find(&[]Book{})
-
-	return books, int(totalResult.RowsAffected)
+	return books, int(totalBook)
 }
 
 func (repository *BookRepositoryImpl) FindOne(

@@ -92,10 +92,15 @@ func (repository *UserRepositoryImpl) FindAll(
 
 	if search != "" {
 		search = "%" + search + "%"
-		query = query.Where("name LIKE ? AND role_id = ? AND is_verified = 1", search, 3)
+		query = query.Where("name LIKE ?", search)
 	}
 
+	query = query.Where("role_id = ? AND is_verified = 1", 3)
+
 	totalResult := query
+	totalResult = totalResult.Find(&[]User{})
+
+	totalUser := int(totalResult.RowsAffected)
 
 	// Handle order and pagination
 
@@ -108,9 +113,7 @@ func (repository *UserRepositoryImpl) FindAll(
 
 	query.Find(&users)
 
-	totalResult = totalResult.Find(&[]User{})
-
-	return users, int(totalResult.RowsAffected)
+	return users, int(totalUser)
 }
 
 func (repository *UserRepositoryImpl) GetTotal(

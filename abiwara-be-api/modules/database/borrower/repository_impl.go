@@ -41,10 +41,9 @@ func (repository *BorrowerRepositoryImpl) FindAll(
 	var borrowers []Borrower
 
 	query := tx.Preload("Book").
-		Preload("User").
-		Preload("Rating")
+		Preload("User").Preload("Rating")
 
-	query = tx.Where(param)
+	query = query.Where(param)
 
 	if search != "" {
 		search = "%" + search + "%"
@@ -63,7 +62,8 @@ func (repository *BorrowerRepositoryImpl) FindAll(
 	}
 
 	totalResult := query
-
+	totalResult = totalResult.Find(&[]Borrower{})
+	totalBorrower := int(totalResult.RowsAffected)
 	// Handle order and pagination
 
 	query = query.Limit(limit).
@@ -75,9 +75,7 @@ func (repository *BorrowerRepositoryImpl) FindAll(
 
 	query.Find(&borrowers)
 
-	totalResult = totalResult.Find(&[]Borrower{})
-
-	return borrowers, int(totalResult.RowsAffected)
+	return borrowers, int(totalBorrower)
 }
 
 func (repository *BorrowerRepositoryImpl) FindById(
