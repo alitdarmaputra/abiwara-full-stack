@@ -16,7 +16,7 @@ export default function BookCreate() {
     const navigate = useNavigate();
 	const { setAuthToken } = useAuth();
 	const status = useRef();
-	const [coverImg, setCoverImg] = useState();
+	const [coverImg, setCoverImg] = useState({});
 	const [isLoadingImg, setLoadingImg] = useState(false);
 
     const handleSubmitBook = async e => {
@@ -32,10 +32,10 @@ export default function BookCreate() {
 		const page_input = document.querySelector("#page_input");
         const quantity_input = document.querySelector("#quantity_input");
         const entry_date_input = document.querySelector("#entry_date_input");
-		const funding_source_input = document.querySelector("#funding_source_input")
+		const source_input = document.querySelector("#source_input")
         const summary_input = document.querySelector("#summary_input");
 
-        if (title_input.value === "" || inventory_input.value === "" || quantity_input === "" || category === "") {
+        if (title_input.value === "" || inventory_input.value === "" || quantity_input.value === "" || category === "") {
             notifyError("Pastikan semua field sudah terisi")
             return
         }
@@ -69,7 +69,7 @@ export default function BookCreate() {
 			quantity: parseInt(quantity_input.value),
 			total_page: parseInt(page_input.value),
             entry_date: entry_date_input.value ? new Date(entry_date_input.value).toISOString() : null,
-			funding_source: funding_source_input.value,
+			source: source_input.value,
 			status: status.current.value,
             summary: summary_input.value,
             category_id: category,
@@ -111,10 +111,10 @@ export default function BookCreate() {
         return options;
     }
 	
-	const form = document.getElementById("cover-image__form");
 
 	const handleSubmitImg = async e => {
 		e.preventDefault();
+		const form = document.getElementById("cover-image__form");
 		const formData = new FormData(form);
 		try {
 			setLoadingImg(true);
@@ -213,9 +213,9 @@ export default function BookCreate() {
                         <input id="entry_date_input" placeholder="Tanggal pembelian" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="date"></input>
                     </div>
 
-                    <div className="funding_source_form mb-3">
-                        <label className="font-bold text-sm" htmlFor="page_input">Asal dana</label>
-                        <input id="funding_source_input" placeholder="Ketik asal dana" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
+                    <div className="source_form mb-3">
+                        <label className="font-bold text-sm" htmlFor="page_input">Asal</label>
+                        <input id="source_input" placeholder="Ketik asal dana" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="summary_form mb-3">
@@ -243,13 +243,12 @@ export default function BookCreate() {
                     </div>
                 </form>
 
-				<form id="cover-image__form" onSubmit={handleSubmitImg}>
+				<form id="cover-image__form" onChange={handleSubmitImg}>
 					<p className="font-bold text-sm mb-3">Gambar Sampul</p>
 					<p className="text-xs mb-3 text-gray-500">Tipe file .png / .jpeg. Ukuran maksimum 4 mb </p>
                     <div className="flex w-full justify-between mb-10">
 						<input id="cover-image_input" type="file" name="image" />
 						<div className="flex items-center gap-4">
-							<button type="submit" className={`py-1 px-5 text-sm rounded-md bg-gray-200 dark:bg-[#1A202C]`}>Upload</button>
 							{
 								isLoadingImg && (
 									<svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

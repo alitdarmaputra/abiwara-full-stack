@@ -43,7 +43,7 @@ func (repository *BookRepositoryImpl) FindById(
 	bookId uint,
 ) (Book, error) {
 	var book Book
-	result := tx.Joins("Category").First(&book, "books.id = ?", bookId)
+	result := tx.Joins("Category").Joins("Img").First(&book, "books.id = ?", bookId)
 	return book, database.WrapError(result.Error)
 }
 
@@ -123,7 +123,7 @@ func (repository *BookRepositoryImpl) FindAllWithoutParameter(
 	tx *gorm.DB,
 ) []Book {
 	var books []Book = []Book{}
-	tx.Find(&books)
+	tx.Preload("Category").Preload("Img").Find(&books)
 	return books
 }
 

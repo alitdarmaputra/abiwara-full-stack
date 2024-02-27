@@ -6,7 +6,9 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { UserContext } from "../../context/user";
 import axiosInstance from "../../config";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
+import { formatDate } from "../../utils/formatter";
+import { notifyError } from "../../utils/toast";
 
 export default function BookDetail() {
     const [isLoading, setLoading] = useState(false);
@@ -14,18 +16,24 @@ export default function BookDetail() {
     const { id } = useParams();
 	const { user } = useContext(UserContext);
     const { setAuthToken } = useAuth();
+	const [coverImg, setCoverImg] = useState({});
 
     useEffect(() => {
         async function getBookDetail() {
-            const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book/${id}`);
-            if (res.status === 200) {
+			try {
+				const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book/${id}`);
                 setBookDetail(res.data.data);
-
+				setCoverImg(res.data.data?.img);
                 setLoading(false);
-            } else if (res.status === 401) {
-                setLoading(false);
-				setAuthToken();
-            }
+			} catch(err) {
+				if (err.response.data.code === 401 ) {
+					notifyError("Sesi telah berakhir");
+					setAuthToken();
+				} else {
+					notifyError("Server error");
+					console.log(err);
+				}
+			}
         }
 
         getBookDetail()
@@ -49,7 +57,7 @@ export default function BookDetail() {
 			</Helmet>
             <div className="book__container bg-white rounded-lg p-5 mb-10 dark:bg-[#2D3748] dark:text-gray-200">
                 <div className="detail_head__container flex justify-between p-5 box-border items-center">
-                    <p className="text-slate-500 mt-2 font-semibold">{bookDetail.category && bookDetail.category["Name"]}</p>
+                    <p className="text-slate-500 mt-2 font-semibold">{bookDetail.category && bookDetail.category.name}</p>
 
                     {user.role === 1 && (
                         <div className="flex justify-end">
@@ -60,36 +68,83 @@ export default function BookDetail() {
                     )}
                 </div>
 
-                <div className="title__container px-5">
+                <div className="title__container px-5 mb-5">
                     <h1 className="font-bold text-3xl">{bookDetail.title}</h1>
                 </div>
 
                 <div className="book_detail__container px-5 h-full">
+					<div id="uploaded-image">
+						<div className="w-[154px] h-[246px]">
+							<img className="object-cover w-full h-full" alt="book cover" src={coverImg.image_url} />
+						</div>
+					</div>
                     <table className="mt-10">
-                        <tr>
-                            <td>Pengarang</td>
-                            <td className="w-10 text-center"> : </td>
-                            <td>{bookDetail.authors}</td>
-                        </tr>
-                        <tr>
-                            <td>Penerbit</td>
-                            <td className="w-10 text-center"> : </td>
-                            <td>{bookDetail.publisher}</td>
-                        </tr>
-                        <tr>
-                            <td>Tahun Terbit</td>
-                            <td className="w-10 text-center"> : </td>
-                            <td>{bookDetail.published}</td>
-                        </tr>
-                        <tr>
-                            <td>Sisa</td>
-                            <td className="w-10 text-center"> : </td>
-                            <td>{bookDetail.remain}</td>
-                        </tr>
-                        <tr>
-                            <td>Ringkasan</td>
-                            <td className="w-10 text-center"> : </td>
-                        </tr>
+						<tbody>
+							<tr>
+								<td>No Inventaris</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.inventory_number}</td>
+							</tr>
+							<tr>
+								<td>Tanggal Masuk</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.entry_date && formatDate(bookDetail.entry_date)}</td>
+							</tr>
+							<tr>
+								<td>Penyusun</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.author}</td>
+							</tr>
+							<tr>
+								<td>Penerbit</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.publisher}</td>
+							</tr>
+							<tr>
+								<td>Kota Terbit</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.city}</td>
+							</tr>
+							<tr>
+								<td>Tahun Terbit</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.year}</td>
+							</tr>
+							<tr>
+								<td>Sisa</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.remain}</td>
+							</tr>
+							<tr>
+								<td>Call Number Klasifikasi</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.category?.id}</td>
+							</tr>
+							<tr>
+								<td>Call Number Pengarang</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.call_number_author}</td>
+							</tr>
+							<tr>
+								<td>Call Number Klasifikasi Judul</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.call_number_title}</td>
+							</tr>
+							<tr>
+								<td>Asal</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.source}</td>
+							</tr>
+							<tr>
+								<td>Status</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{bookDetail.status}</td>
+							</tr>
+							<tr>
+								<td>Ringkasan</td>
+								<td className="w-10 text-center"> : </td>
+							</tr>
+						</tbody>
                     </table>
 
                     <p className="mt-3">{bookDetail.summary}</p>

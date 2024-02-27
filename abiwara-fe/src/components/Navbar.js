@@ -6,17 +6,18 @@ import ThemeToggle from "./ThemeToggle";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user";
 import { useAuth } from "../context/auth";
+import { ThemeContext } from "../context/theme";
 
 export default function Navbar() {
     const [openMenu, setOpenMenu] = useState(false);
     const [openProfile, setOpenProfile] = useState(false);
-    const [theme, setTheme] = useState(localStorage.getItem("theme"));
     const [translateNavbar, setTranslateNavbar] = useState(0);
     const [transparantNavbar, setTransparantNavbar] = useState(true);
 	const { authToken, setAuthToken } = useAuth();
 	const { user } = useContext(UserContext);
 	const location = useLocation();
 	const navigate = useNavigate();
+	const { theme, setTheme } = useContext(ThemeContext);
 
     let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
@@ -51,20 +52,6 @@ export default function Navbar() {
     window.addEventListener("scroll", updateNavbar);
 
     useEffect(() => {
-        if (theme === "dark") {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-    }, [theme]);
-
-    useEffect(() => {
-        if (localStorage.getItem("theme") === "dark" || window.matchMedia('(prefer-color-scheme: dark)').matches) {
-            setTheme("dark");
-        } else {
-            setTheme("light");
-        }
-
         document.onclick = e => {
             const hamburgerMenu = document.getElementById("hamburger-menu");
             const hamburgerBtn = document.getElementById("navbar__hamburger");

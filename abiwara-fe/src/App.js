@@ -31,6 +31,7 @@ import BorrowStep from "./pages/Help/BorrowStep";
 import CatalogueDetail from "./pages/Catalogue/CatalogueDetail";
 import RouteWithTitle from "./components/RouteWithTitle";
 import { HelmetProvider } from "react-helmet-async";
+import { ThemeProvider } from "./context/theme";
 
 const router = createBrowserRouter([
 	{
@@ -126,11 +127,13 @@ const router = createBrowserRouter([
 export default function App() {
     return (
 		<HelmetProvider>
-			<AuthProvider>
-				<UserProvider>
-					<RouterProvider router={router} />
-				</UserProvider>
-			</AuthProvider>
+			<ThemeProvider>
+				<AuthProvider>
+					<UserProvider>
+						<RouterProvider router={router} />
+					</UserProvider>
+				</AuthProvider>
+			</ThemeProvider>
 		</HelmetProvider>
     )
 }

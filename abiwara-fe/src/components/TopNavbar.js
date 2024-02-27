@@ -3,13 +3,14 @@ import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user";
 import ThemeToggle from "./ThemeToggle";
+import { ThemeContext } from "../context/theme";
 
 export default function TopNavbar() {
     const auth = useAuth();
 	const { user } = useContext(UserContext);
     const [isActive, setActive] = useState(false);
     const navigate = useNavigate();
-    const [theme, setTheme] = useState(localStorage.getItem("theme"));
+	const { theme, setTheme } = useContext(ThemeContext);
 
     const handleDisplayModal = () => {
         setActive(!isActive);
@@ -20,22 +21,6 @@ export default function TopNavbar() {
 		auth.setAuthToken();
         navigate("/login");
     }
-	
-	useEffect(() => {
-        if (localStorage.getItem("theme") === "dark" || window.matchMedia('(prefer-color-scheme: dark)').matches) {
-            setTheme("dark");
-        } else {
-            setTheme("light");
-        }
-	}, [user])
-
-    useEffect(() => {
-        if (theme === "dark") {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-    }, [theme]);
 
     return (
         <>

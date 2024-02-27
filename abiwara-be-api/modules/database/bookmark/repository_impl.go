@@ -30,14 +30,14 @@ func (repository *BookmarkRepositoryImpl) FindAll(ctx context.Context, tx *gorm.
 
 	if search != "" {
 		search = "%" + search + "%"
-		tx.Preload("Book").
+		tx.Preload("Book.Category").Preload("Book.Img").
 			Where("user_id = ? AND (title LIKE ? OR authors LIKE ?)", userId, search, search).
 			Limit(limit).
 			Offset(offset).
 			Order("created_at desc").
 			Find(&bookmarks)
 	} else {
-		tx.Preload("Book").
+		tx.Preload("Book.Category").Preload("Book.Img").
 			Where("user_id = ?", userId).Limit(limit).Offset(offset).Order("created_at desc").Find(&bookmarks)
 	}
 
@@ -45,7 +45,12 @@ func (repository *BookmarkRepositoryImpl) FindAll(ctx context.Context, tx *gorm.
 }
 
 func (repository *BookmarkRepositoryImpl) FindByBookId(ctx context.Context, tx *gorm.DB, userId string, bookId uint) (Bookmark, error) {
-	var bookmark Bookmark
-	result := tx.Joins("Book").First(&bookmark, "user_id = ? AND book_id = ?", userId, bookId)
+	var bookmark Bookmark = Bookmark{}
+
+	result := tx.Debug().
+		Preload("Book.Category").
+		Preload("Book.Img").
+		First(&bookmark, "user_id = ? AND book_id = ?", userId, bookId)
+
 	return bookmark, database.WrapError(result.Error)
 }

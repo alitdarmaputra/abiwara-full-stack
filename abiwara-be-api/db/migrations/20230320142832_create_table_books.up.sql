@@ -13,7 +13,7 @@ CREATE TABLE books (
     remain INT NOT NULL,
     total_page INT,
     entry_date DATETIME,
-	funding_source VARCHAR(20),
+	source VARCHAR(20),
 	status ENUM('baik', 'tidak baik'),
     summary TEXT,
     category_id VARCHAR(20),

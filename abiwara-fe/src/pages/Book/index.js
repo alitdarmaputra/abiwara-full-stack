@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsCloudDownloadFill, BsFillTrashFill } from "react-icons/bs";
+import { BsCloudDownloadFill, BsFillTrashFill } from "react-icons/bs";
 import httpRequest from "../../config/http-request";
 import { Link, ScrollRestoration, useSearchParams } from "react-router-dom";
 import { AiFillEye } from "react-icons/ai";
@@ -8,6 +8,8 @@ import { useAuth } from "../../context/auth";
 import Modal from "../../components/Modal";
 import axiosInstance from "../../config";
 import { UserContext } from "../../context/user";
+import Pagination from "../../components/Pagination";
+import { notifyError } from "../../utils/toast";
 
 export default function Book() {
     const [books, setBooks] = useState({});
@@ -52,12 +54,18 @@ export default function Book() {
 
     const deleteBook = id => {
         return async () => {
-            const res = await axiosInstance.delete(`${httpRequest.api.baseUrl}/book/${id}`);
-            if (res.status === 200) {
-                return true;
-            } else if (res.status === 401) {
-				setAuthToken();
-            }
+			try{
+				await axiosInstance.delete(`${httpRequest.api.baseUrl}/book/${id}`);
+				setActive(false);
+			} catch(err) {
+				if (err.response.data.code === 401) {
+					notifyError("Sesi telah selesai");
+					setAuthToken();
+				} else {
+					notifyError("Server error");
+					console.log(err);
+				}
+			}
         }
     }
 
@@ -136,14 +144,14 @@ export default function Book() {
                         <tbody>
                             {
                                 books.length < 1 ?
-                                    <tr><td colSpan="5" className="text-center py-6">Tidak ada buku yang ditemukan</td></tr>
+                                    <tr><td colSpan="6" className="text-center py-6">Tidak ada buku yang ditemukan</td></tr>
                                     : books.map(book => {
                                         return (
                                             <tr key={book.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
                                                 <td className="box-border p-5 text-wrap">{book.title}</td>
 												<td className="box-border p-5">{book.author}</td>
 												<td className="box-border text-center p-5">{book.year}</td>
-												<td className="box-border p-5">{book.category}</td>
+												<td className="box-border p-5">{book.category.name}</td>
 												<td className="box-border text-center p-5">{book.remain}</td>
                                                 <td className="box-border p-5">
 													<div className="flex justify-center items-center gap-5">
@@ -170,12 +178,12 @@ export default function Book() {
 																					<tr>
 																						<td>Tahun Terbit</td>
 																						<td className="w-10 text-center"> : </td>
-																						<td>{book.published}</td>
+																						<td>{book.year}</td>
 																					</tr>
 																					<tr>
-																						<td>Pengarang</td>
+																						<td>Penyusun</td>
 																						<td className="w-10 text-center"> : </td>
-																						<td>{book.authors}</td>
+																						<td>{book.author}</td>
 																					</tr>
 																				</table>
 																			</>
@@ -196,40 +204,8 @@ export default function Book() {
                 </div>
 
                 <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 dark:text-gray-200">
-                    <div className="pagination flex w-60 justify-evenly items-center">
-                        <Link to={`/book?page=1`}><BsChevronDoubleLeft /></Link>
-
-                        {
-                            meta.page !== 1 && (
-                                <Link to={`/book?page=${meta.page - 1}`}><BsChevronLeft /></Link>
-                            )
-                        }
-
-                        {
-                            !isLoading && (
-                                function() {
-                                    const pageNums = []
-                                    for (let i = 1; i <= meta.total_page; i++) {
-                                        if (i === meta.page) {
-                                            pageNums.push(<Link key={i} className="page h-8 w-8 rounded-md shadow-md text-white bg-blue-700 flex items-center justify-center" to={`/book?page=${i}`}>{i}</Link>)
-                                        } else {
-                                            pageNums.push(<Link key={i} className="page" to={`/book?page=${i}`}>{i}</Link>)
-                                        }
-                                    }
-                                    return <>{pageNums}</>
-                                }()
-                            )
-                        }
-
-                        {
-                            meta.page !== meta.total_page && (
-                                <Link to={`/book?page=${meta.page + 1}`}><BsChevronRight /></Link>
-                            )
-                        }
-
-                        <Link to={`/book?page=${meta.total_page}`}><BsChevronDoubleRight /></Link>
-                    </div>
-                </div>
+					<Pagination stringUrl={window.location.href} currPage={meta.page} totalPage={meta.total_page} n={3} />
+				</div>
             </div>
 			<ScrollRestoration />
         </>

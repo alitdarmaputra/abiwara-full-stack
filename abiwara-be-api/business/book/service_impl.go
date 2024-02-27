@@ -3,7 +3,9 @@ package book_service
 import (
 	"context"
 	"fmt"
+	"math"
 
+	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business"
 	common_response "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/common/response"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/request"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/response"
@@ -32,7 +34,6 @@ func (service *BookServiceImpl) Create(
 	request request.BookCreateUpdateRequest,
 ) {
 	book := book_repository.Book{
-		CoverImg:         request.CoverImg,
 		InventoryNumber:  request.InventoryNumber,
 		Author:           request.Author,
 		CallNumberAuthor: request.CallNumberAuthor,
@@ -46,14 +47,14 @@ func (service *BookServiceImpl) Create(
 		Remain:           request.Quantity,
 		TotalPage:        request.TotalPage,
 		EntryDate:        request.EntryDate,
-		FundingSource:    request.FundingSource,
+		Source:           request.Source,
 		Status:           request.Status,
 		Summary:          request.Summary,
 		CategoryId:       request.CategoryId,
 	}
 
-	if book.CoverImg == "" {
-		book.CoverImg = "https://ik.imagekit.io/pohfq3xvx/book-cover_7yiR3zQdQ.png?updatedAt=1708666722422"
+	if request.CoverImg != "" {
+		book.CoverImg = &request.CoverImg
 	}
 
 	tx := service.DB.Begin()
@@ -76,7 +77,10 @@ func (service *BookServiceImpl) Update(
 	book, err := service.BookRepository.FindById(ctx, tx, bookId)
 	utils.PanicIfError(err)
 
-	book.CoverImg = request.CoverImg
+	if request.CoverImg != "" {
+		book.CoverImg = &request.CoverImg
+	}
+
 	book.InventoryNumber = request.InventoryNumber
 	book.Author = request.Author
 	book.CallNumberAuthor = request.CallNumberAuthor
@@ -85,16 +89,26 @@ func (service *BookServiceImpl) Update(
 	book.Publisher = request.Publisher
 	book.Year = request.Year
 	book.City = request.City
-	book.Remain = book.Remain + (book.Quantity - request.Quantity)
-	book.Quantity = request.Quantity
 	book.Price = request.Price
 	book.TotalPage = request.TotalPage
 	book.EntryDate = request.EntryDate
-	book.FundingSource = request.FundingSource
+	book.Source = request.Source
 	book.Summary = request.Summary
 	book.Status = request.Status
 	book.CategoryId = request.CategoryId
 	book.Category.ID = request.CategoryId
+
+	if book.Quantity < request.Quantity {
+		book.Remain = book.Remain + int(math.Abs(float64(book.Quantity-request.Quantity)))
+	} else if book.Quantity > request.Quantity {
+		book.Remain = book.Remain - int(math.Abs(float64(book.Quantity-request.Quantity)))
+	}
+
+	if book.Remain < 0 {
+		panic(business.NewBadRequestError("Remain < 0"))
+	}
+
+	book.Quantity = request.Quantity
 
 	_, err = service.BookRepository.Update(ctx, tx, book)
 }
@@ -155,6 +169,13 @@ func (service *BookServiceImpl) FindAll(
 	}
 }
 
+func getIntOrDefault(i *int) int {
+	if i != nil {
+		return *i
+	}
+	return 0
+}
+
 func (service *BookServiceImpl) GetFile(ctx context.Context) [][]string {
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
@@ -172,6 +193,7 @@ func (service *BookServiceImpl) GetFile(ctx context.Context) [][]string {
 			"Penerbit",
 			"Kota Terbit",
 			"Tahun Terbit",
+			"Jumlah Halaman",
 			"Call Number Klasifikasi",
 			"Call Number Pengarang",
 			"Call Number Klasifikasi Judul",
@@ -179,30 +201,44 @@ func (service *BookServiceImpl) GetFile(ctx context.Context) [][]string {
 			"Asal",
 			"Eks",
 			"Status",
-			"Tanggal Pembelian",
+			"Harga",
+			"Cover",
 		},
 	)
 
 	for _, book := range books {
+		var entryDateString string = ""
+		if book.EntryDate != nil {
+			entryDateString = book.EntryDate.String()
+			fmt.Println(entryDateString)
+		}
+
+		var cover string = ""
+		if book.CoverImg != nil {
+			cover = *book.CoverImg
+		}
+
 		data = append(
 			data,
 			[]string{
 				fmt.Sprintf("%d", book.ID),
-				book.EntryDate.String(),
+				string(entryDateString),
 				string(book.InventoryNumber),
 				string(book.Author),
 				string(book.Title),
 				string(book.Publisher),
 				string(book.City),
-				fmt.Sprintf("%d", book.Year),
+				fmt.Sprintf("%d", getIntOrDefault(book.Year)),
+				fmt.Sprintf("%d", getIntOrDefault(book.TotalPage)),
 				string(book.CategoryId),
 				string(book.CallNumberAuthor),
 				string(book.CallNumberTitle),
 				string(book.Category.Name),
-				string(book.FundingSource),
+				string(book.Source),
 				fmt.Sprintf("%d", book.Quantity),
 				string(book.Status),
-				book.EntryDate.String(),
+				fmt.Sprintf("%d", getIntOrDefault(book.Price)),
+				string(cover),
 			},
 		)
 	}

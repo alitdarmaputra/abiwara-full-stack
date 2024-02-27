@@ -16,7 +16,7 @@ type BookCreateUpdateRequest struct {
 	Quantity         int        `json:"quantity"    binding:"required"`
 	TotalPage        *int       `json:"total_page"`
 	EntryDate        *time.Time `json:"entry_date"`
-	FundingSource    string     `json:"funding_source"`
+	Source           string     `json:"source"`
 	Summary          string     `json:"summary"`
 	Status           string     `json:"status"`
 	CategoryId       string     `json:"category_id"`

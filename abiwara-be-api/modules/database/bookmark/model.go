@@ -8,10 +8,10 @@ import (
 )
 
 type Bookmark struct {
-	ID        uint      `gorm:"primarykey"`
-	UserId    string    `gorm:"column:user_id"`
-	BookId    uint      `gorm:"column:book_id"`
-	CreatedAt time.Time `gorm:"column:created_at"`
-	User      user_repository.User
-	Book      book_repository.Book
+	ID        uint                 `gorm:"primarykey"`
+	UserId    string               `gorm:"column:user_id"`
+	BookId    uint                 `gorm:"column:book_id"`
+	CreatedAt time.Time            `gorm:"column:created_at"`
+	User      user_repository.User `gorm:"foreignKey:UserId"`
+	Book      book_repository.Book `gorm:"foreignKey:BookId"`
 }

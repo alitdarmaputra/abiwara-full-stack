@@ -41,7 +41,7 @@ export default function Dashboard() {
     useEffect(() => {
         const getData = async () => {
             try {
-                if (user.role === 1 || user.role === 3) {
+                if (user.role === 1 || user.role === 2) {
                     let today = moment();
                     let saturday = getSaturday(today).format("YYYY-MM-DD");
                     let monday = getMonday(today).format("YYYY-MM-DD");
@@ -110,7 +110,7 @@ export default function Dashboard() {
         <div className="flex-grow w-full md:mt-0 pb-5">
             <div className="dashboard__container flex mb-10 flex-col md:flex-row">
                 {
-                    user.role === 1 || user.role === 3 ? (
+                    user.role === 1 || user.role === 2 ? (
                         <>
                             <div className="chart__container md:w-2/3 bg-white p-5 rounded-lg font-montserrat mb-5 md:mb-0 w-full dark:bg-[#2D3748] dark:text-gray-200">
                                 <h1 className="font-bold w-full text-center mb-10 text-xl">Daftar Kunjungan</h1>
