@@ -3,6 +3,7 @@ package book_repository
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database"
 	"gorm.io/gorm"
@@ -51,7 +52,7 @@ func (repository *BookRepositoryImpl) FindAll(
 	ctx context.Context,
 	tx *gorm.DB,
 	offset, limit int,
-	categories []string,
+	categories []int,
 	best bool,
 	exist bool,
 	search string,
@@ -63,32 +64,37 @@ func (repository *BookRepositoryImpl) FindAll(
 	var query *gorm.DB = tx
 	query = query.Preload("Category").Preload("Img")
 
+	firstGroup := tx
+
 	// Handle filter
 
 	if search != "" {
 		search = "%" + search + "%"
-		query = query.Where("title LIKE ? OR author LIKE ?", search, search)
+		firstGroup = firstGroup.Where("title LIKE ? OR author LIKE ?", search, search)
 	}
 
 	if best {
-		query = query.Where("rating >= 4")
+		firstGroup = firstGroup.Where("rating >= 4")
 	}
 
 	if exist {
-		query = query.Where("remain > 0")
+		firstGroup = firstGroup.Where("remain > 0")
 	}
 
+	secondGroup := tx
+
 	if len(categories) > 0 {
-		orQuery := query
 		for i, category := range categories {
+			categoryString := strconv.Itoa(category) + "%"
 			if i == 0 {
-				orQuery = orQuery.Where("category_id LIKE %?", category)
-				continue
+				secondGroup = secondGroup.Where("category_id LIKE ?", categoryString)
+			} else {
+				secondGroup = secondGroup.Or("category_id LIKE ?", categoryString)
 			}
-			orQuery = orQuery.Or("category_id LIKE %?", category)
 		}
-		query = query.Where(orQuery)
 	}
+
+	query = firstGroup.Where(secondGroup)
 
 	totalResult := query
 	totalResult = totalResult.Find(&[]Book{})
@@ -100,7 +106,7 @@ func (repository *BookRepositoryImpl) FindAll(
 		Offset(offset)
 
 	if search == "" {
-		query = query.Order(fmt.Sprintf("%s %s", order, sort))
+		query = query.Order(fmt.Sprintf("%s %s", sort, order))
 	}
 
 	query.Find(&books)

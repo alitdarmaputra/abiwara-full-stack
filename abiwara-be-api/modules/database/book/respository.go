@@ -12,7 +12,7 @@ type BookRepository interface {
 	Delete(ctx context.Context, tx *gorm.DB, bookId uint) error
 	FindById(ctx context.Context, tx *gorm.DB, bookId uint) (Book, error)
 	FindAll(ctx context.Context, tx *gorm.DB, offset, limit int,
-		categories []string,
+		categories []int,
 		best bool,
 		exist bool,
 		search string,

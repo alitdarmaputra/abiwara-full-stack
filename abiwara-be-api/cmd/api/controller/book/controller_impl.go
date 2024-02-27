@@ -82,7 +82,7 @@ func (controller *BookControllerImpl) FindAll(ctx *gin.Context) {
 		utils.PanicIfError(err)
 	}
 
-	categories := []string{}
+	categories := []int{}
 
 	queryCategories, ok := ctx.GetQuery("categories")
 
@@ -108,8 +108,8 @@ func (controller *BookControllerImpl) FindAll(ctx *gin.Context) {
 		exist = true
 	}
 
-	var order string = "updated_at"
-	var sort string = "desc"
+	var sort string = "updated_at"
+	var order string = "desc"
 
 	sortQuery, ok := ctx.GetQuery("sort")
 	if ok {

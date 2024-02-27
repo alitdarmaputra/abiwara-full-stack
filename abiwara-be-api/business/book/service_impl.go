@@ -138,7 +138,7 @@ func (service *BookServiceImpl) FindAll(
 	ctx context.Context,
 	page int,
 	perPage int,
-	categories []string,
+	categories []int,
 	best bool,
 	exist bool,
 	search string,
