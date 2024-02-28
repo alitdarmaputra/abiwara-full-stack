@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, ScrollRestoration } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import SideNavbar from "../components/SideNavbar";
 import TopNavbar from "../components/TopNavbar";
 
@@ -13,7 +13,6 @@ export default function DashboardLayout() {
 					<Outlet />
 				</div>
 			</div>
-			<ScrollRestoration />
 		</div>
     );
 }

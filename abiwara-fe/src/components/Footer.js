@@ -1,8 +1,20 @@
 import { AiOutlineInstagram, AiOutlineSearch, AiFillYoutube, AiFillFacebook } from "react-icons/ai";
 import { ReactComponent as Logo } from "../assets/logo.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useRef } from "react";
 
 export default function Footer() {
+	const searchRef = useRef();
+	const navigate = useNavigate();
+
+	const handleSearch = (e) => {
+		e.preventDefault();
+		let searchValue = searchRef.current.value;
+
+		if (searchValue != "")
+			navigate(`/catalogue?search=${searchValue}`);
+	}
+
     return (
         <div id="footer" className="flex items-center flex-col bg-white pt-24 pb-10 px-5 md:px-0 dark:bg-[#1A202C]">
             <div id="footer__wrapper" className="max-w-6xl mb-10 text-sm w-full flex flex-col lg:flex-row justify-between">
@@ -38,9 +50,9 @@ export default function Footer() {
 
                 <div id="footer__others" className="flex flex-col">
                     <h3 className="mb-4 roboto-bold text-gray-700 dark:text-gray-200">Pencarian Buku</h3>
-                    <form className="flex items-center pl-4 pr-2 py-1 mb-10 rounded-full border border-gray-500">
-                        <input type="search" className="flex-grow md:w-72 text-sm px-2 focus:outline-none dark:bg-transparent dark:text-gray-200" placeHolder="Ketik judul, nama pengarang, atau penerbit" />
-                        <button className="p-2 rounded-full font-semibold text-white bg-[#473BF0] hover:bg-[#392ed3] poppins-semibold transition-all">
+                    <form onSubmit={handleSearch} className="flex items-center pl-4 pr-2 py-1 mb-10 rounded-full border border-gray-500">
+                        <input ref={searchRef} required type="search" className="flex-grow md:w-72 text-sm px-2 focus:outline-none dark:bg-transparent dark:text-gray-200" placeHolder="Ketik judul, nama pengarang, atau penerbit" />
+                        <button type="submit" className="p-2 rounded-full font-semibold text-white bg-[#473BF0] hover:bg-[#392ed3] poppins-semibold transition-all">
                             <AiOutlineSearch className="w-6 h-6 text-white" />
                         </button>
                     </form>

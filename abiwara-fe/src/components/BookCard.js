@@ -23,16 +23,16 @@ export default function BookCard({ book }) {
         <div id="book-card" className="mb-6 md:pr-4 flex flex-col md:flex-row rounded-md border-2 border-[#F4F7FA] dark:border-[#2D3748] dark:text-gray-200">
             <div id="book-card__img" className="flex justify-center items-center bg-[#F4F7FA] p-4 rounded-t-md md:rounded-l-md dark:bg-[#2D3748]">
                 <div className="w-[154px] h-[246px]">
-                    <img className="object-cover w-full h-full" alt="book cover" src={book.img} />
+                    <img className="object-cover w-full h-full" alt="book cover" src={book.img.image_url} />
                 </div>
             </div>
 
             <div id="book-card__meta" className="flex flex-grow p-4 items-center">
                 <div className="max-w-xl">
-                    <p className="rounded-md px-4 py-2 text-xs inline-block mb-6" style={{ backgroundColor: `${stringToColor(book.category)}` }}>
-                        {book.category}
+                    <p className="rounded-md px-4 py-2 text-xs inline-block mb-6" style={{ backgroundColor: `${stringToColor(book.category.name)}` }}>
+                        {book.category.name}
                     </p>
-                    <h3 className="mb-2 line-clamp-2 text-ellipsis text-xl roboto-bold">{book.title}</h3>
+                    <h3 className="mb-2 line-clamp-2 text-ellipsis text-3xl roboto-bold">{book.title}</h3>
                     <p className="mb-4 text-sm opacity-70">{`Oleh ${book.author}`}</p>
 
                     <table className="opacity-70 mb-4">
@@ -47,14 +47,14 @@ export default function BookCard({ book }) {
                             <td>{book.year ? book.year : "-"}</td>
                         </tr>
                         <tr>
-                            <td>Nomor Seri</td>
+                            <td>No Inventaris</td>
                             <td className="w-10 text-center"> : </td>
-                            <td>{book.serialNumber ? book.serialNumber : "-"}</td>
+                            <td>{book.inventory_number ? book.inventory_number : "-"}</td>
                         </tr>
                         <tr className="md:hidden">
                             <td>Ketersediaan</td>
                             <td className="w-10 text-center"> : </td>
-                            <td>{book.exist ? book.exist : "0"}</td>
+                            <td>{book.remain ? book.remain : "0"}</td>
                         </tr>
                     </table>
 
@@ -69,8 +69,8 @@ export default function BookCard({ book }) {
 
             <div id="book-card__status" className="ml-4 md:ml-10 flex flex-col justify-center items-start md:items-center">
                 <p className="hidden md:block mb-6">Ketersediaan</p>
-                <h1 className="hidden md:block mb-6 text-5xl font-bold roboto-bold">1</h1>
-                <Link to="/catalogue/1" className="px-2 py-2.5 md:w-[94px] mb-4 text-xs text-center rounded-md text-black border-2 border-black hover:bg-black hover:text-white poppins-regular dark:text-gray-200 dark:border-[#2D3748] dark:hover:bg-white dark:hover:text-black transition-all">Tampilkan Detail</Link>
+                <h1 className="hidden md:block mb-6 text-5xl font-bold roboto-bold">{book.remain}</h1>
+                <Link to={`/catalogue/${book.id}`} className="px-2 py-2.5 md:w-[94px] mb-4 text-xs text-center rounded-md text-black border-2 border-black hover:bg-black hover:text-white poppins-regular dark:text-gray-200 dark:border-[#2D3748] dark:hover:bg-white dark:hover:text-black transition-all">Tampilkan Detail</Link>
             </div>
 
             <div id="book-card__action" className="hidden items-end">

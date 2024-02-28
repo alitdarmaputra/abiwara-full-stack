@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import httpRequest from "../../config/http-request";
 import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/auth";
@@ -8,6 +7,8 @@ import { formatDate } from "../../utils/formatter";
 import Modal from "../../components/Modal";
 import axiosInstance from "../../config";
 import { UserContext } from "../../context/user";
+import Pagination from "../../components/Pagination";
+import { notifyError } from "../../utils/toast";
 
 export default function Borrower() {
     const [borrowers, setBorrowers] = useState({});
@@ -37,14 +38,20 @@ export default function Borrower() {
     useEffect(() => {
         async function getBorrowers() {
             let page = searchParams.get("page") ? searchParams.get("page") : 1;
-            const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/borrower?page=${page}`);
-            if (res.status === 200) {
+			try {
+				const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/borrower?page=${page}`);
                 setBorrowers(res.data.data)
                 setMeta(res.data.meta)
                 setLoading(false)
-            } else if (res.status === 401) {
-				setAuthToken();
-            }
+			} catch(err) {
+				if (err.response.data.code === 401) {
+					notifyError("Sesi telah selesai");
+					setAuthToken();
+				} else {
+					notifyError("Server error");
+					console.log(err);
+				}
+			}
         }
         getBorrowers()
     }, [searchParams, active, isUpdate, setAuthToken])
@@ -53,15 +60,19 @@ export default function Borrower() {
         e.preventDefault()
 
         let page = searchParams.get("page") ? searchParams.get("page") : 1;
-
-        const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/borrower?page=${page}&&search=${e.target.value}`);
-
-        if (res.status === 200) {
+		try {
+			const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/borrower?page=${page}&&search=${e.target.value}`);
             setBorrowers(res.data.data)
             setMeta(res.data.meta)
-        } else if (res.status === 401) {
-			setAuthToken();
-        }
+		} catch(err) {
+			if (err.response.data.code === 401) {
+				notifyError("Sesi telah selesai");
+				setAuthToken();
+			} else {
+				notifyError("Server error");
+				console.log(err);
+			}
+		}
     }
 
     const createUpdateBorrower = id => {
@@ -123,7 +134,7 @@ export default function Borrower() {
                                 }
 
                                 {
-                                    user.role === 2 && (
+                                    user.role === 3 && (
                                         <th className="px-10 w-30">RATING</th>
                                     )
                                 }
@@ -152,7 +163,7 @@ export default function Borrower() {
                                                 }
 
                                                 {
-                                                    user.role === 1 && !borrower.status ? (
+                                                    (user.role === 1 || user.role === 2) && !borrower.status ? (
                                                         <td className="text-center hover:text-blue-700 hover:underline hover:cursor-pointer" onClick={() => {
                                                             setActive(true)
                                                             setFinishDetail(() => {
@@ -204,7 +215,7 @@ export default function Borrower() {
                                                     )
                                                 }
                                                 {
-                                                    user.role === 2 && (
+                                                    user.role === 3 && (
                                                         <td className="flex items-center justify-center py-6">
                                                             {
                                                                 function() {
@@ -234,41 +245,9 @@ export default function Borrower() {
                     </table>
                 </div>
 
-                <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 mb-10 dark:text-gray-200">
-                    <div className="pagination flex w-60 justify-evenly items-center">
-                        <Link to={`/borrow?page=1`}><BsChevronDoubleLeft /></Link>
-
-                        {
-                            meta.page !== 1 && (
-                                <Link to={`/borrow?page=${meta.page - 1}`}><BsChevronLeft /></Link>
-                            )
-                        }
-
-                        {
-                            !isLoading && (
-                                function() {
-                                    const pageNums = []
-                                    for (let i = 1; i <= meta.total_page; i++) {
-                                        if (i === meta.page) {
-                                            pageNums.push(<Link key={i} className="page h-8 w-8 rounded-md shadow-md text-white bg-blue-700 flex items-center justify-center" to={`/borrow?page=${i}`}>{i}</Link>)
-                                        } else {
-                                            pageNums.push(<Link key={i} className="page" to={`/borrow?page=${i}`}>{i}</Link>)
-                                        }
-                                    }
-                                    return <>{pageNums}</>
-                                }()
-                            )
-                        }
-
-                        {
-                            meta.page !== meta.total_page && (
-                                <Link to={`/borrow?page=${meta.page + 1}`}><BsChevronRight /></Link>
-                            )
-                        }
-
-                        <Link to={`/borrow?page=${meta.total_page}`}><BsChevronDoubleRight /></Link>
-                    </div>
-                </div>
+                <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 dark:text-gray-200">
+					<Pagination stringUrl={window.location.href} currPage={meta.page} totalPage={meta.total_page} n={3} />
+				</div>
             </div>
         </div>
     )

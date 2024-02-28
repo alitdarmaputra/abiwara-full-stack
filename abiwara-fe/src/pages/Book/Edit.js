@@ -30,7 +30,7 @@ export default function BookEdit() {
                 const category = res.data.data.category;
                 setCategory({ defaultValue: category.id, label: `${category.id} | ${category.name}` });
 				
-				if (res.data.data?.img.id != "")
+				if (res.data.data?.img.id !== "")
 					setCoverImg({id: res.data.data?.img.id, image_url: res.data.data?.img.image_url});
 
                 setLoading(false);

@@ -1,5 +1,5 @@
 import { useAuth } from "../context/auth"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user";
 import ThemeToggle from "./ThemeToggle";
@@ -35,7 +35,7 @@ export default function TopNavbar() {
                         }}></div>
                         <div className="profile__name_role mr-5">
                             <h3 className="font-bold md:inline hidden text-xs">{user?.name}</h3>
-                            <p className="md:block hidden text-sm">{user?.role === 1 ? "Admin" : user?.role === 3 ? "Operator" : "Anggota"}</p>
+                            <p className="md:block hidden text-sm">{user?.role === 1 ? "Admin" : user?.role === 2 ? "Operator" : "Anggota"}</p>
                         </div>
                     </div>
                 </div>

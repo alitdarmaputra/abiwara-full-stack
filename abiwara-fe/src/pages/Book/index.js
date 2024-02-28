@@ -24,32 +24,42 @@ export default function Book() {
 
     useEffect(() => {
         async function getBooks() {
-            let page = searchParams.get("page") ? searchParams.get("page") : 1;
-            const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book?page=${page}`);
-            if (res.status === 200) {
+			try {
+				let page = searchParams.get("page") ? searchParams.get("page") : 1;
+				const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book?page=${page}`);
                 setBooks(res.data.data)
                 setMeta(res.data.meta)
                 setLoading(false)
-            } else if (res.status === 401) {
-				setAuthToken();
-            }
+			} catch(err) {
+				if (err.response.data.code === 401) {
+					notifyError("Sesi telah selesai");
+					setAuthToken();
+				} else {
+					notifyError("Server error");
+					console.log(err);
+				}
+			}
         }
         getBooks()
     }, [searchParams, active, setAuthToken])
 
     const handleSearch = async e => {
         e.preventDefault()
+		try {
+			let page = searchParams.get("page") ? searchParams.get("page") : 1;
 
-        let page = searchParams.get("page") ? searchParams.get("page") : 1;
-
-        const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book?page=${page}&&search=${e.target.value}`);
-
-        if (res.status === 200) {
+			const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book?page=${page}&&search=${e.target.value}`);
             setBooks(res.data.data)
             setMeta(res.data.meta)
-        } else if (res.status === 401) {
-			setAuthToken();
-        }
+		} catch(err) {
+			if (err.response.data.code === 401) {
+				notifyError("Sesi telah selesai");
+				setAuthToken();
+			} else {
+				notifyError("Server error");
+				console.log(err);
+			}
+		}
     }
 
     const deleteBook = id => {

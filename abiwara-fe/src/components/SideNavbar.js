@@ -50,7 +50,7 @@ export default function SideNavbar() {
             title: "Anggota",
             url: "/member",
             icon: <BiUser />,
-            roles: [1, 3]
+            roles: [1]
         }
     ]
 
