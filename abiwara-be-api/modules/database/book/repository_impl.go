@@ -64,7 +64,7 @@ func (repository *BookRepositoryImpl) FindAll(
 	var query *gorm.DB = tx
 	query = query.Preload("Category").Preload("Img")
 
-	firstGroup := tx
+	firstGroup := tx.Preload("Category").Preload("Img")
 
 	// Handle filter
 
