@@ -5,7 +5,7 @@ import { useCallback, useRef } from "react";
 
 export default function BookList({ books }) {
     return (
-        <div className="flex gap-6 flex-wrap">
+        <div className="flex gap-6 flex-wrap justify-between">
             {books.map((book) => (
                 <Book book={book} />
             ))}
@@ -31,6 +31,7 @@ export function BookListScroll({ books }) {
             <button className="hidden md:block md:absolute left-0 p-4 z-10 rounded-full bg-white text-black shadow-md transition-all translate-x-3 group-hover:-translate-x-6 opacity-0 group-hover:opacity-100 ease-in dark:bg-gray-900 dark:text-gray-200" onClick={handlePrev}><FaChevronLeft /></button>
             <button className="hidden md:block md:absolute right-0 p-5 z-10 rounded-full bg-white text-black shadow-md transition-all -translate-x-3 group-hover:translate-x-6 opacity-0 group-hover:opacity-100 ease-in dark:bg-gray-900 dark:text-gray-200" onClick={handleNext}><FaChevronRight /></button>
             <Swiper
+				id="swiper"
                 slidesPerView={2}
                 spaceBetween={30}
                 breakpoints={{
@@ -42,7 +43,7 @@ export function BookListScroll({ books }) {
             >
                 {
                     books.map((book) => (
-                        <SwiperSlide>
+                        <SwiperSlide key={book.id}>
                             <Book book={book} />
                         </SwiperSlide>
                     ))

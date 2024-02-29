@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { IoEarthOutline } from "react-icons/io5";
 import axiosInstance from "../../config";
 import httpRequest from "../../config/http-request";
-import { Link, ScrollRestoration, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, ScrollRestoration, useNavigate } from "react-router-dom";
 
 export default function Home() {
     const [openCategories, setOpenCategories] = useState(false);
@@ -96,16 +96,8 @@ export default function Home() {
 
                 <section id="content" className="flex items-center flex-col bg-white py-20 px-4 md:px-0 dark:bg-[#1A202C] transition-all">
                     <div id="content__wrapper" className="max-w-6xl mb-10 w-full">
-                        {/* Recommended Books */}
-                        <h2 className="mb-2 text-xl roboto-bold dark:text-gray-200">Rekomendasi untuk anda</h2>
-                        <div className="mb-10 flex flex-col md:flex-row justify-between">
-                            <p className="text-sm text-gray-400">Berdasarkan buku yang anda lihat terakhir, pengguna lain juga menyukai</p>
-                            <Link to="/catalogue?sort=updated_at" className="md:px-5 py-2 mt-2 md:mt-0 rounded-md font-semibold md:text-white text-left text-sm md:bg-[#473BF0] text-[#473BF0] md:hover:bg-[#392ed3] poppins-semibold transition-all">Lihat Semua</Link>
-                        </div>
-                        <BookList books={books} />
-
                         {/* Latest Books */}
-                        <h2 className="mt-20 mb-2 text-xl roboto-bold dark:text-gray-200">Koleksi baru dan diperbarui</h2>
+                        <h2 className="mb-2 text-xl roboto-bold dark:text-gray-200">Koleksi baru dan diperbarui</h2>
                         <div className="mb-10 flex flex-col md:flex-row justify-between">
                             <p className="text-sm text-gray-400">Merupakan daftar koleksi-koleksi terbaru kami. Tidak semuanya baru, adapula koleksi yang data-datanya sudah diperbaiki. Selamat menikmati</p>
                             <Link to="/catalogue?sort=updated_at" className="md:px-5 py-2 mt-2 md:mt-0 rounded-md font-semibold md:text-white text-left text-sm md:bg-[#473BF0] text-[#473BF0] md:hover:bg-[#392ed3] poppins-semibold transition-all">Lihat Semua</Link>

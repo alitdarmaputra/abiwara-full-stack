@@ -128,7 +128,7 @@ export default function Book() {
                     </div>
 
                     {user.role === 1 && (
-                        <div className="action_btn__container flex gap-2">
+                        <div className="action_btn__container flex gap-2 ml-10 md:ml-0">
                             <Link className="h-10 px-4 bg-gray-700 text-white font-bold shadow-md rounded-md flex justify-center items-center download-csv" onClick={handleDownload}>
                                 <BsCloudDownloadFill></BsCloudDownloadFill> <span className="hidden md:block pl-2">Unduh</span>
                             </Link>

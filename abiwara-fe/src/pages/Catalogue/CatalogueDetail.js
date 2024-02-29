@@ -1,16 +1,18 @@
 import SearchBox from "../../components/SearchBox";
 import { FaBookmark, FaRegBookmark, FaStar, FaStarHalf } from "react-icons/fa";
 import { stringToColor } from "../../utils/color";
-import { ScrollRestoration, useParams } from "react-router-dom";
+import { ScrollRestoration, useParams, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../config";
 import httpRequest from "../../config/http-request";
 import { formatDate } from "../../utils/formatter";
+import BookList from "../../components/BookList";
 
 export default function CatalogueDetail() {
 	const [isLoading, setLoading] = useState(true);
 	const [bookDetail, setBookDetail] = useState({});
+	const [recommendations, setRecommendations] = useState([]);
 	const { id } = useParams();
 
     const Stars = ({ rating }) => {
@@ -33,6 +35,9 @@ export default function CatalogueDetail() {
 			try {
 				const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book/${id}`);
                 setBookDetail(res.data.data);
+
+				const recommendationRes = await axiosInstance.get(`${httpRequest.api.baseUrl}/book-recommendation/${id}`);
+				setRecommendations(recommendationRes.data.data);
 				setLoading(false);
 			} catch(err) {
 				console.log(err);
@@ -40,7 +45,7 @@ export default function CatalogueDetail() {
 		}
 
 		getBookDetail();
-	}, [])
+	}, [id])
 
     if (isLoading) {
         return (
@@ -160,6 +165,20 @@ export default function CatalogueDetail() {
                 </div>
             </section >
 			<ScrollRestoration />
+			<section id="book-recommendation" className="flex items-center flex-col bg-white pb-10 px-4 md:px-0 dark:bg-[#1A202C] transition-all">
+				{
+					(recommendations.length > 0) && (
+						<div className="max-w-6xl mb-10 w-full">
+							{/* Recommended Books */}
+							<h2 className="mb-2 text-xl roboto-bold dark:text-gray-200">Rekomendasi untuk anda</h2>
+							<div className="mb-10 flex flex-col md:flex-row justify-between">
+								<p className="text-sm text-gray-400">Berdasarkan pengguna lainnya, berikut merupakan buku yang serupa</p>
+							</div>
+							<BookList books={recommendations} />
+						</div>
+					)
+				}
+			</section>
         </div>
     )
 }

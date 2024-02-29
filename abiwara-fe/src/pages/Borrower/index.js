@@ -120,7 +120,7 @@ export default function Borrower() {
                 <div className="table__container shadow-sm w-full overflow-x-scroll sm:rounded-md mb-9 text-sm">
                     <table className="w-full">
                         <thead className="text-slate-500 font-bold">
-                            <tr className="border-b dark:border-b dark:border-b-gray-500">
+                            <tr className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
                                 <th className="pl-5 py-5 text-center">NOMOR</th>
                                 <th className="text-center">NAMA</th>
                                 <th className="text-center">KELAS</th>

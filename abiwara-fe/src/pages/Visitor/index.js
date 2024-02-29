@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import httpRequest from "../../config/http-request";
 import { Link, useSearchParams } from "react-router-dom";
 import { formatDateTime } from "../../utils/formatter";
@@ -86,7 +85,7 @@ export default function Visitor() {
                                     <tr><td colSpan="5" className="text-center py-6">Tidak ada kunjungan pada hari ini.</td></tr>
                                     : visitors.map(visitor => {
                                         return (
-                                            <tr key={visitor.id} className="border text-left hover:bg-slate-50">
+                                            <tr key={visitor.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
                                                 <td className="py-5 box-border pl-5">{visitor.name}</td>
                                                 <td className="text-center px-4">{visitor.class}</td>
                                                 <td className="text-center">{formatDateTime(visitor.visit_time)}</td>
