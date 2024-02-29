@@ -32,6 +32,7 @@ import CatalogueDetail from "./pages/Catalogue/CatalogueDetail";
 import RouteWithTitle from "./components/RouteWithTitle";
 import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "./context/theme";
+import BookBulkCreate from "./pages/Book/BulkCreate";
 
 const router = createBrowserRouter([
 	{
@@ -77,6 +78,9 @@ const router = createBrowserRouter([
 			}, { 
 				path: "/book/create",
 				element: <RouteWithTitle title="Tambah Buku"><BookCreate /></RouteWithTitle> 
+			},{
+				path: "/book/bulk-create",
+				element: <RouteWithTitle title="Bulk Create Buku"><BookBulkCreate /></RouteWithTitle>
 			}, { 
 				path: "/book/:id/edit",
 				element: <RouteWithTitle title="Edit Buku"><BookEdit /></RouteWithTitle> 

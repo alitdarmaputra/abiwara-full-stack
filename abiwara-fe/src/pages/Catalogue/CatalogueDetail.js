@@ -74,7 +74,7 @@ export default function CatalogueDetail() {
                                 <p className="rounded-md px-4 py-2 inline-block mb-6" style={{ backgroundColor: `${stringToColor(bookDetail.category.name)}` }}>
                                     {bookDetail.category.name}
                                 </p>
-                                <h3 className="mb-2 line-clamp-2 text-ellipsis text-4xl roboto-bold">{bookDetail.title}</h3>
+                                <h3 className="mb-2 text-4xl roboto-bold">{bookDetail.title}</h3>
                                 <p className="mb-4 text-sm opacity-70">{`Oleh ${bookDetail.author || "-"}`}</p>
 
                                 <p className="mb-10">

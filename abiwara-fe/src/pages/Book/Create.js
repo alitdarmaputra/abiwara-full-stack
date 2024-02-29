@@ -4,7 +4,7 @@ import httpRequest from "../../config/http-request";
 import { useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { notifyError } from "../../utils/toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../config";
 import { useAuth } from "../../context/auth";
 import { FaTrash } from "react-icons/fa";
@@ -110,7 +110,6 @@ export default function BookCreate() {
         })
         return options;
     }
-	
 
 	const handleSubmitImg = async e => {
 		e.preventDefault();
@@ -154,6 +153,11 @@ export default function BookCreate() {
             <ToastContainer />
 
             <div className="book__container bg-white rounded-lg mb-10 p-5 dark:bg-[#2D3748] dark:text-gray-200">
+				<div className="flex justify-end">
+					<Link className="h-10 px-4 bg-blue-700 font-bold text-white shadow-md rounded-md flex justify-center items-center" to="/book/bulk-create">
+						+ <span className="hidden md:block pl-2">Bulk Create</span>
+					</Link>
+				</div>
                 <form onSubmit={handleSubmitBook}>
                     <div className="title_form mb-3">
                         <label className="font-bold text-sm" htmlFor="title_input">Judul <span className="text-red-500">*</span></label>
@@ -247,7 +251,7 @@ export default function BookCreate() {
 					<p className="font-bold text-sm mb-3">Gambar Sampul</p>
 					<p className="text-xs mb-3 text-gray-500">Tipe file .png / .jpeg. Ukuran maksimum 4 mb </p>
                     <div className="flex w-full justify-between mb-10">
-						<input id="cover-image_input" type="file" name="image" />
+						<input id="cover-image_input" type="file" accept="image/png, image/jpeg" name="image" />
 						<div className="flex items-center gap-4">
 							{
 								isLoadingImg && (

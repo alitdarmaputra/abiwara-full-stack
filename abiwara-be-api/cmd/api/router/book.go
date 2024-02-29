@@ -28,4 +28,12 @@ func BookRouter(
 		middleware.PermissionMiddleware(constant.PermissionShowBook),
 		book.GetFile,
 	)
+	v1JWTAuth.POST("/book/bulk-create",
+		middleware.PermissionMiddleware(constant.PermissionCreateBook),
+		book.BulkCreate,
+	)
+	v1JWTAuth.GET("/book/bulk-create",
+		middleware.PermissionMiddleware(constant.PermissionCreateBook),
+		book.BulkCreateFile,
+	)
 }

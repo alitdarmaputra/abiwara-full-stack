@@ -13,6 +13,8 @@ export default function Footer() {
 
 		if (searchValue != "")
 			navigate(`/catalogue?search=${searchValue}`);
+		else
+			navigate(`/catalogue`);
 	}
 
     return (
@@ -51,7 +53,7 @@ export default function Footer() {
                 <div id="footer__others" className="flex flex-col">
                     <h3 className="mb-4 roboto-bold text-gray-700 dark:text-gray-200">Pencarian Buku</h3>
                     <form onSubmit={handleSearch} className="flex items-center pl-4 pr-2 py-1 mb-10 rounded-full border border-gray-500">
-                        <input ref={searchRef} required type="search" className="flex-grow md:w-72 text-sm px-2 focus:outline-none dark:bg-transparent dark:text-gray-200" placeHolder="Ketik judul, nama pengarang, atau penerbit" />
+                        <input ref={searchRef} type="search" className="flex-grow md:w-72 text-sm px-2 focus:outline-none dark:bg-transparent dark:text-gray-200" placeHolder="Ketik judul, nama pengarang, atau penerbit" />
                         <button type="submit" className="p-2 rounded-full font-semibold text-white bg-[#473BF0] hover:bg-[#392ed3] poppins-semibold transition-all">
                             <AiOutlineSearch className="w-6 h-6 text-white" />
                         </button>

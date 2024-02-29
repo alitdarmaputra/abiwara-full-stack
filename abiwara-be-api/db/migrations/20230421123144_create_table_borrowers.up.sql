@@ -3,7 +3,6 @@ CREATE TABLE borrowers (
     user_id VARCHAR(50) NOT NULL,
     book_id INT NOT NULL,
     status TINYINT NOT NULL,
-    return_date DATETIME NOT NULL,
     due_date DATETIME NOT NULL,
 	return_date DATETIME,
     CONSTRAINT FK_borrower_user FOREIGN KEY (user_id)

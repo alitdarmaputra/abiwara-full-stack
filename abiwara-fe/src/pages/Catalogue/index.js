@@ -87,6 +87,13 @@ export default function Catalogue() {
 		
 		return arr.includes(target);
 	}
+	
+	const checkSort = (target) => {
+		const url = new URL(window.location.href);
+		const sort = url.searchParams.get("sort");
+		console.log(sort)
+		return target === sort;
+	}
 
 	const handleRating = () => {
 		const url = new URL(window.location.href)
@@ -197,9 +204,9 @@ export default function Catalogue() {
                                 <label for="sort" className="font-bold roboto-bold mr-2">Urutkan :</label>
                                 <div className="flex border p-2 items-center">
                                     <select onChange={handleSort} ref={sortRef} name="sort" id="sort" className="ml-2 appearance-none bg-transparent rounded-md bg-none hover:cursor-pointer">
-                                        <option value="title">Paling Sesuai</option>
-                                        <option value="updated_at">Terbaru</option>
-                                        <option value="rating">Rating Tertinggi</option>
+                                        <option selected={checkSort("")} value="title">Paling Sesuai</option>
+                                        <option selected={checkSort("updated_at")} value="updated_at">Terbaru</option>
+                                        <option selected={checkSort("rating")} value="rating">Rating Tertinggi</option>
                                     </select>
                                     <FaAngleDown />
                                 </div>

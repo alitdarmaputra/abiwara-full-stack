@@ -6,6 +6,7 @@ import (
 	common_response "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/common/response"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/request"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/response"
+	book_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/book"
 )
 
 type BookService interface {
@@ -26,4 +27,5 @@ type BookService interface {
 	) ([]response.BookResponse, common_response.Meta)
 	GetFile(ctx context.Context) [][]string
 	GetRecommendation(ctx context.Context, bookId uint) []response.BookResponse
+	BulkCreate(ctx context.Context, books []book_repository.Book)
 }

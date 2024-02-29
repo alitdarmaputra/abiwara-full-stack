@@ -106,6 +106,7 @@ func (repository *BookRepositoryImpl) FindAll(
 		Offset(offset)
 
 	if search == "" {
+		fmt.Println(sort, order)
 		query = query.Order(fmt.Sprintf("%s %s", sort, order))
 	}
 
@@ -142,4 +143,13 @@ func (repository *BookRepositoryImpl) FindIn(
 	tx.Where("(id) IN ?", bookIds).Find(&books)
 
 	return books
+}
+
+func (repository *BookRepositoryImpl) BulkCreate(
+	ctx context.Context,
+	tx *gorm.DB,
+	books []Book,
+) error {
+	result := tx.Debug().CreateInBatches(&books, len(books))
+	return result.Error
 }

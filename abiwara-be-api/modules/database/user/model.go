@@ -17,7 +17,7 @@ type User struct {
 	IsVerified bool                              `gorm:"is_verified"`
 	RoleId     uint                              `gorm:"role_id"`
 	Role       role_repository.Role              `gorm:"foreignKey:RoleId"`
-	ProfileImg string                            `gorm:"column:profile_img"`
+	ProfileImg *string                           `gorm:"column:profile_img"`
 	Img        file_upload_repository.FileUpload `gorm:"foreignKey:ProfileImg"`
 	CreatedAt  time.Time
 	UpdatedAt  time.Time

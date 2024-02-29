@@ -21,4 +21,5 @@ type BookRepository interface {
 	FindOne(ctx context.Context, tx *gorm.DB, title string) (Book, error)
 	FindAllWithoutParameter(ctx context.Context, tx *gorm.DB) []Book
 	FindIn(ctx context.Context, tx *gorm.DB, bookIds []uint) []Book
+	BulkCreate(ctx context.Context, tx *gorm.DB, books []Book) error
 }

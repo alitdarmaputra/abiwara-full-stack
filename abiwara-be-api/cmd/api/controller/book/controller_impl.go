@@ -7,11 +7,13 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
 
 	book_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/book"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/common/response"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/request"
+	book_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/book"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -111,15 +113,15 @@ func (controller *BookControllerImpl) FindAll(ctx *gin.Context) {
 	var sort string = "updated_at"
 	var order string = "desc"
 
-	sortQuery, ok := ctx.GetQuery("sort")
-	if ok {
-		sort = sortQuery
-	}
-
 	orderQuery, ok := ctx.GetQuery("order")
 	if ok {
-		if orderQuery == "updated_at" || orderQuery == "rating" {
-			order = orderQuery
+		order = orderQuery
+	}
+
+	sortQuery, ok := ctx.GetQuery("sort")
+	if ok {
+		if sortQuery == "updated_at" || sortQuery == "rating" {
+			sort = sortQuery
 		}
 	}
 
@@ -141,9 +143,8 @@ func (controller *BookControllerImpl) GetFile(ctx *gin.Context) {
 	ctx.Header("Content-Type", "text/csv")
 	ctx.Header(
 		"Content-Disposition",
-		fmt.Sprintf("attachment;filename=%s.csv", "daftar buku - "+time.Now().Format("2006-01-02")),
+		fmt.Sprintf("attachment;filename="+"daftar buku - "+time.Now().String()+".csv"),
 	)
-
 	wr := csv.NewWriter(ctx.Writer)
 	if err := wr.WriteAll(bookData); err != nil {
 		panic(err)
@@ -157,4 +158,101 @@ func (controller *BookControllerImpl) GetRecommendation(ctx *gin.Context) {
 
 	bookResponses := controller.BookService.GetRecommendation(ctx, param.Id)
 	response.JsonBasicData(ctx, http.StatusOK, "OK", bookResponses)
+}
+
+func (controller *BookControllerImpl) BulkCreate(ctx *gin.Context) {
+	fileHeader, _ := ctx.FormFile("file")
+
+	if fileHeader.Size > (4 << 20) {
+		response.JsonErrorResponse(ctx, http.StatusRequestEntityTooLarge, "Payload too large", strconv.FormatInt(fileHeader.Size, 10)+" size are exceed file size 4 mb")
+		return
+	}
+
+	file, err := fileHeader.Open()
+	utils.PanicIfError(err)
+	defer file.Close()
+
+	records, err := csv.NewReader(file).ReadAll()
+	utils.PanicIfError(err)
+
+	var books []book_repository.Book
+	for i, record := range records {
+		if i != 0 {
+			var year int
+			entryDate, err := time.Parse("02-01-2006", record[0])
+			utils.PanicIfError(err)
+
+			if record[6] != "" {
+				year, err = strconv.Atoi(record[6])
+				utils.PanicIfError(err)
+			}
+
+			quantity, err := strconv.Atoi(record[11])
+			utils.PanicIfError(err)
+			book := book_repository.Book{
+				EntryDate:        &entryDate,
+				InventoryNumber:  record[1],
+				Author:           record[2],
+				Title:            record[3],
+				Publisher:        record[4],
+				City:             record[5],
+				Year:             &year,
+				CategoryId:       record[7],
+				CallNumberAuthor: record[8],
+				CallNumberTitle:  record[9],
+				Source:           record[10],
+				Quantity:         quantity,
+				Remain:           quantity,
+				Status:           strings.ToLower(record[12]),
+			}
+			books = append(books, book)
+		}
+	}
+	controller.BookService.BulkCreate(ctx, books)
+	response.JsonBasicResponse(ctx, http.StatusCreated, "Created")
+}
+
+func (controller *BookControllerImpl) BulkCreateFile(ctx *gin.Context) {
+	data := [][]string{}
+	data = append(data, []string{
+		"Tanggal Masuk",
+		"No Inventaris",
+		"Penyusun",
+		"Judul Buku",
+		"Penerbit",
+		"Kota Terbit",
+		"Tahun Terbit",
+		"Call Number Klasifikasi",
+		"Call Number Penyusun",
+		"Call Number Klasifikasi Judul",
+		"Asal",
+		"Eks",
+		"Status",
+	})
+
+	data = append(data, []string{
+		"31-01-2006",
+		"No Inventaris",
+		"Penyusun",
+		"Judul Buku",
+		"Penerbit",
+		"Kota Terbit",
+		"2003",
+		"000",
+		"TES",
+		"TES",
+		"Asal",
+		"5",
+		"baik/tidak baik",
+	})
+	ctx.Header("Content-Type", "text/csv")
+	ctx.Header(
+		"Content-Disposition",
+		fmt.Sprintf("attachment;filename=%s.csv", "contoh-format-bulk-create-buku"),
+	)
+
+	wr := csv.NewWriter(ctx.Writer)
+	if err := wr.WriteAll(data); err != nil {
+		panic(err)
+	}
 }

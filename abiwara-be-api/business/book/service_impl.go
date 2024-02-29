@@ -209,8 +209,7 @@ func (service *BookServiceImpl) GetFile(ctx context.Context) [][]string {
 	for _, book := range books {
 		var entryDateString string = ""
 		if book.EntryDate != nil {
-			entryDateString = book.EntryDate.String()
-			fmt.Println(entryDateString)
+			entryDateString = book.EntryDate.Format("02-01-2006")
 		}
 
 		var cover string = ""
@@ -261,4 +260,11 @@ func (service *BookServiceImpl) GetRecommendation(ctx context.Context, bookId ui
 	books := service.BookRepository.FindIn(ctx, tx, bookIds)
 
 	return response.ToBookResponses(books)
+}
+
+func (service *BookServiceImpl) BulkCreate(ctx context.Context, books []book_repository.Book) {
+	tx := service.DB.Begin()
+	defer utils.CommitOrRollBack(tx)
+	err := service.BookRepository.BulkCreate(ctx, tx, books)
+	utils.PanicIfError(err)
 }

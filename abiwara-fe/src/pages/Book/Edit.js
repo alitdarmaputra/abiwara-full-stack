@@ -285,7 +285,7 @@ export default function BookEdit() {
 					<p className="font-bold text-sm mb-3">Gambar Sampul</p>
 					<p className="text-xs mb-3 text-gray-500">Tipe file .png / .jpeg. Ukuran maksimum 4 mb </p>
 					<div className="flex w-full justify-between mb-10">
-						<input id="cover-image_input" type="file" name="image" required/>
+						<input id="cover-image_input" type="file" accept="image/png, image/jpeg" name="image" required/>
 						<div className="flex items-center gap-4">
 							{
 								isLoadingImg && (
