@@ -1,19 +1,24 @@
 import SearchBox from "../../components/SearchBox";
 import { FaBookmark, FaRegBookmark, FaStar, FaStarHalf } from "react-icons/fa";
 import { stringToColor } from "../../utils/color";
-import { ScrollRestoration, useParams, useSearchParams } from "react-router-dom";
+import { ScrollRestoration, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../config";
 import httpRequest from "../../config/http-request";
 import { formatDate } from "../../utils/formatter";
 import BookList from "../../components/BookList";
+import { useAuth } from "../../context/auth";
+import { notifyError, notifySuccess } from "../../utils/toast";
+import { ToastContainer } from "react-toastify";
 
 export default function CatalogueDetail() {
 	const [isLoading, setLoading] = useState(true);
 	const [bookDetail, setBookDetail] = useState({});
 	const [recommendations, setRecommendations] = useState([]);
 	const { id } = useParams();
+	const { authToken } = useAuth();
+	const [markId, setMarkId] = useState();
 
     const Stars = ({ rating }) => {
         let ratingElements = [];
@@ -30,6 +35,25 @@ export default function CatalogueDetail() {
         return ratingElements;
     }
 	
+	const handleBookmark = async () => {
+		try {
+			// Delete bookmark if marked
+			if (markId) {
+				await axiosInstance.delete(`${httpRequest.api.baseUrl}/bookmark/${markId}`);
+				setMarkId();
+			} else {
+				const payload = {
+					book_id: parseInt(id)
+				}
+				const res = await axiosInstance.post(`${httpRequest.api.baseUrl}/bookmark`, payload);
+				setMarkId(res.data.data.id);
+				notifySuccess("Buku telah ditambahkan ke bookmark")
+			}
+		} catch(err) {
+			console.log(err);
+		}
+	}
+
 	useEffect(() => {
 		async function getBookDetail() {
 			try {
@@ -38,6 +62,8 @@ export default function CatalogueDetail() {
 
 				const recommendationRes = await axiosInstance.get(`${httpRequest.api.baseUrl}/book-recommendation/${id}`);
 				setRecommendations(recommendationRes.data.data);
+
+				axiosInstance.get(`${httpRequest.api.baseUrl}/bookmark/${id}`).then((res) => setMarkId(res.data.data.id)).catch(() => setMarkId());
 				setLoading(false);
 			} catch(err) {
 				console.log(err);
@@ -45,7 +71,7 @@ export default function CatalogueDetail() {
 		}
 
 		getBookDetail();
-	}, [id])
+	}, [id, markId])
 
     if (isLoading) {
         return (
@@ -60,6 +86,7 @@ export default function CatalogueDetail() {
 
     return (
         <div id="catalogue-detail">
+			<ToastContainer />
 			<Helmet>
 				<title>{bookDetail.title}</title>
 			</Helmet>
@@ -149,18 +176,22 @@ export default function CatalogueDetail() {
                                 </div>
                             </div>
                         </div>
-
-                        <div id="book-card__action" className="flex items-end dark:text-gray-200 dark:hover:text-black">
-                            <button className="hover:bg-gray-100 p-2 rounded-lg transition-all">
-                                {
-                                    false ? (
-                                        <FaBookmark />
-                                    ) : (
-                                        <FaRegBookmark />
-                                    )
-                                }
-                            </button>
-                        </div>
+						
+						{ 
+							authToken && (
+								<div id="book-card__action" className="flex items-end dark:text-gray-200">
+									<button onClick={handleBookmark} className="p-2 rounded-lg dark:hover:text-black hover:bg-gray-100 transition-all">
+										{
+											markId ? (
+												<FaBookmark />
+											) : (
+												<FaRegBookmark />
+											)
+										}
+									</button>
+								</div>
+							)
+						}
                     </div >
                 </div>
             </section >

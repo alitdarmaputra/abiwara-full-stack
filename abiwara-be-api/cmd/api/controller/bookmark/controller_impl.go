@@ -32,8 +32,8 @@ func (controller *BookmarkControllerImpl) Create(ctx *gin.Context) {
 	err = ctx.ShouldBindJSON(&bookmarkCreateRequest)
 	utils.PanicIfError(err)
 
-	controller.BookmarkService.Create(ctx, bookmarkCreateRequest, claims.Id)
-	response.JsonBasicResponse(ctx, http.StatusCreated, "Created")
+	bookmarkResponse := controller.BookmarkService.Create(ctx, bookmarkCreateRequest, claims.Id)
+	response.JsonBasicData(ctx, http.StatusCreated, "Created", bookmarkResponse)
 }
 
 func (controller *BookmarkControllerImpl) Delete(ctx *gin.Context) {

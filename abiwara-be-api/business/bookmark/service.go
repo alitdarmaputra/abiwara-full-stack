@@ -9,7 +9,7 @@ import (
 )
 
 type BookmarkService interface {
-	Create(ctx context.Context, request request.BookmarkCreateRequest, userId string)
+	Create(ctx context.Context, request request.BookmarkCreateRequest, userId string) response.BookmarkResponse
 	Delete(ctx context.Context, bookmarkId uint)
 	FindAll(ctx context.Context,
 		page int,

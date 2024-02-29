@@ -34,6 +34,7 @@ import { ThemeProvider } from "./context/theme";
 import BookBulkCreate from "./pages/Book/BulkCreate";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/Profile/Edit";
+import Bookmark from "./pages/Bookmark";
 
 const router = createBrowserRouter([
 	{
@@ -63,6 +64,9 @@ const router = createBrowserRouter([
 			}, {
 				path: "/me/edit",
 				element: <RouteGuard><RouteWithTitle title="Edit Profile"><EditProfile /></RouteWithTitle></RouteGuard>
+			}, {
+				path: "bookmark",
+				element: <RouteGuard><RouteWithTitle title="Bookmark"><Bookmark /></RouteWithTitle></RouteGuard>
 			}
 		]
 	}, {

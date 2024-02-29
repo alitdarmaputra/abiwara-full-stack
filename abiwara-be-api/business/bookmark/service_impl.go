@@ -26,7 +26,7 @@ func (service *BookmarkServiceImpl) Create(
 	ctx context.Context,
 	request request.BookmarkCreateRequest,
 	userId string,
-) {
+) response.BookmarkResponse {
 	bookmark := bookmark_repository.Bookmark{
 		BookId: request.BookId,
 		UserId: userId,
@@ -36,6 +36,8 @@ func (service *BookmarkServiceImpl) Create(
 
 	_, err := service.BookmarkRepository.Save(ctx, tx, bookmark)
 	utils.PanicIfError(err)
+
+	return response.ToBookmarkResponse(bookmark)
 }
 
 func (service *BookmarkServiceImpl) Delete(

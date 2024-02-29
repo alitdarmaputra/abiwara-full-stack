@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { ScrollRestoration, useParams } from "react-router-dom";
 import httpRequest from "../../config/http-request";
 import { BsFillPencilFill } from "react-icons/bs";
 import { Link } from "react-router-dom";

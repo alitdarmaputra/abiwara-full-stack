@@ -1,9 +1,8 @@
-import { FaBookmark, FaRegBookmark, FaStar, FaStarHalf } from "react-icons/fa";
+import { FaStar, FaStarHalf } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { stringToColor } from "../utils/color";
 
 export default function BookCard({ book }) {
-
     const Stars = ({ rating }) => {
         let ratingElements = [];
         while (ratingElements.length < 5) {
@@ -71,18 +70,6 @@ export default function BookCard({ book }) {
                 <p className="hidden md:block mb-6">Ketersediaan</p>
                 <h1 className="hidden md:block mb-6 text-5xl font-bold roboto-bold">{book.remain}</h1>
                 <Link to={`/catalogue/${book.id}`} className="px-2 py-2.5 md:w-[94px] mb-4 text-xs text-center rounded-md text-black border-2 border-black hover:bg-black hover:text-white poppins-regular dark:text-gray-200 dark:border-[#2D3748] dark:hover:bg-white dark:hover:text-black transition-all">Tampilkan Detail</Link>
-            </div>
-
-            <div id="book-card__action" className="hidden items-end">
-                <button className="hover:bg-gray-100 p-2 rounded-lg transition-all dark:hover:bg-[#2D3748]">
-                    {
-                        false ? (
-                            <FaBookmark />
-                        ) : (
-                            <FaRegBookmark />
-                        )
-                    }
-                </button>
             </div>
         </div >
     )

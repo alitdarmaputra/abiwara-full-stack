@@ -110,14 +110,20 @@ export default function Navbar() {
                 authToken && user && (
                     <div id="profile-menu" className={`${openProfile ? "opacity-1 translate-y-0" : "opacity-0 translate-y-10 h-0 overflow-hidden"} fixed top-16 lg:right-8 overflow-hidden w-screen lg:w-auto p-2.5 transition-all z-10`}>
                         <div id="profile__wrapper" className="flex flex-col rounded-md p-2 text-start shadow-md bg-white border border-gray-200 dark:bg-[#161B26] dark:border-none dark:text-gray-200">
-                            <div className="flex flex-col text-start py-2 px-2 rounded-md hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">
+							<div onClick={() => {
+								navigate("/me");
+								setOpenProfile(false);
+							}}className="flex flex-col text-start py-2 px-2 rounded-md hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">
                                 <p className="w-full pr-16">{ user?.name }</p>
                                 <p className="text-sm w-full pr-16 text-slate-500">{ user?.role === 1 ? "admin" : user?.role === 2 ? "operator" : "anggota" }</p>
                             </div>
                             <hr className="my-2"></hr>
                             <div id="profile__navigation" className="flex flex-col">
                                 <Link to="/dashboard" className="rounded-md py-2.5 pl-2 pr-16 hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">Dashboard</Link>
-                                <div className="hidden rounded-md py-2.5 pl-2 pr-16 hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">Bookmark</div>
+								<div onClick={() => {
+									navigate("/bookmark");
+									setOpenProfile(false);
+								}} className="rounded-md py-2.5 pl-2 pr-16 hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">Bookmark</div>
                             </div>
                             <hr className="my-2"></hr>
                             <button onClick={handleLogout} className="rounded-md py-2.5 text-start pl-2 pr-16 hover:bg-blue-100 hover:text-blue-900 hover:underline hover:cursor-pointer">Keluar</button>
