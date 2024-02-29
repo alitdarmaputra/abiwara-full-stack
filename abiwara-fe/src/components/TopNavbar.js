@@ -31,7 +31,7 @@ export default function TopNavbar() {
 					</div>
                     <div onClick={handleDisplayModal} className="hover:cursor-pointer profile__container flex items-center">
                         <div className="profile__image w-8 h-8 rounded-full md:mr-5 bg-cover" style={{
-							backgroundImage: `url("${user?.profile_img}")`
+							backgroundImage: `url("${user?.img.image_url}")`
                         }}></div>
                         <div className="profile__name_role mr-5">
                             <h3 className="font-bold md:inline hidden text-xs">{user?.name}</h3>

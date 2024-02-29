@@ -3,7 +3,7 @@ import { RiFilePaper2Line } from "react-icons/ri";
 import { MdOutlineScience, MdOutlineTempleHindu, MdPeopleOutline } from "react-icons/md";
 import { PiBrain } from "react-icons/pi";
 import { IoIosArrowDropdown } from "react-icons/io";
-import BookList, { BookListScroll } from "../../components/BookList";
+import { BookListScroll } from "../../components/BookList";
 import Carousel from "../../components/Carousel";
 import { useEffect, useRef, useState } from "react";
 import { IoEarthOutline } from "react-icons/io5";
@@ -16,7 +16,6 @@ export default function Home() {
 	const [latestBooks, setLatestBooks] = useState([]);
 	const [topBooks, setTopBooks] = useState([]);
     const [isLoading, setLoading] = useState(true);
-	const books = [];
 	const searchRef = useRef();
 	const navigate = useNavigate();	
 

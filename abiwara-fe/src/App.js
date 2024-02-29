@@ -19,7 +19,6 @@ import ResetPassword from "./pages/Reset/ResetPassword";
 import { RouteGuard } from "./components/RouteGuard";
 import VisitorCreate from "./pages/Visitor/Create";
 import Visitor from "./pages/Visitor";
-import { UpdateProfile } from "./pages/UpdateProfile";
 import DashboardLayout from "./layouts/DashboardLayout";
 import { UserProvider } from "./context/user";
 import RootLayout from "./layouts/RootLayout";
@@ -33,6 +32,8 @@ import RouteWithTitle from "./components/RouteWithTitle";
 import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "./context/theme";
 import BookBulkCreate from "./pages/Book/BulkCreate";
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/Profile/Edit";
 
 const router = createBrowserRouter([
 	{
@@ -56,6 +57,12 @@ const router = createBrowserRouter([
 			}, {
 				path: "/help/borrow-step",
 				element: <RouteWithTitle title="Alur Peminjaman"><BorrowStep /></RouteWithTitle> 
+			}, {
+				path: "/me",
+				element: <RouteGuard><RouteWithTitle title="Profile Pengguna"><Profile /></RouteWithTitle></RouteGuard>
+			}, {
+				path: "/me/edit",
+				element: <RouteGuard><RouteWithTitle title="Edit Profile"><EditProfile /></RouteWithTitle></RouteGuard>
 			}
 		]
 	}, {
@@ -99,10 +106,7 @@ const router = createBrowserRouter([
 			}, { 
 				path: "/borrow/create",
 				element: <RouteWithTitle title="Tambah Pinjaman"><BorrowerCreate /></RouteWithTitle> 
-			}, { 
-				path: "/update-profile",
-				element: <RouteWithTitle title="Edit Profile"><UpdateProfile /></RouteWithTitle> 
-			},
+			}
 		]
 	}, {
 		path: "/login",

@@ -90,7 +90,7 @@ export default function Navbar() {
                     authToken ? (
                         <div id="navbar__profile" className="w-11 h-11 lg:ml-56  flex justify-center items-center bg-blue-200/[.0] hover:bg-blue-200/[.3] rounded-full hover:cursor-pointer" onClick={() => setOpenProfile(!openProfile)}>
                             <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-								<img className="object-cover w-full h-full" src={user?.profile_img} alt="user-profile"/>
+								<img className="object-cover w-full h-full" src={user?.img.image_url} alt="user-profile"/>
 							</div>
                         </div>
                     ) : (
