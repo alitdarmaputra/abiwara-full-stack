@@ -106,7 +106,6 @@ func (repository *BookRepositoryImpl) FindAll(
 		Offset(offset)
 
 	if search == "" {
-		fmt.Println(sort, order)
 		query = query.Order(fmt.Sprintf("%s %s", sort, order))
 	}
 
