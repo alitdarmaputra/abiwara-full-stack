@@ -1,12 +1,17 @@
 package response
 
-import user_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/user"
+import (
+	"time"
+
+	user_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/user"
+)
 
 type UserResponse struct {
-	Id         string `json:"id"`
-	Name       string `json:"name"`
-	Class      string `json:"class"`
-	ProfileImg string `json:"profile_img"`
+	Id        string              `json:"id"`
+	Name      string              `json:"name"`
+	Class     string              `json:"class"`
+	CreatedAt time.Time           `json:"created_at"`
+	Img       ImageUploadResponse `json:"img"`
 }
 
 func ToUserResponse(user user_repository.User) UserResponse {
@@ -15,10 +20,11 @@ func ToUserResponse(user user_repository.User) UserResponse {
 	}
 
 	return UserResponse{
-		Id:         user.ID,
-		Name:       user.Name,
-		Class:      user.Class,
-		ProfileImg: user.Img.Url,
+		Id:        user.ID,
+		Name:      user.Name,
+		Class:     user.Class,
+		Img:       ToImageUploadResponse(user.Img),
+		CreatedAt: user.CreatedAt,
 	}
 }
 

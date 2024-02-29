@@ -56,7 +56,7 @@ func (repository *UserRepositoryImpl) FindById(
 	userId string,
 ) (User, error) {
 	var user User
-	result := tx.First(&user, "id = ? AND is_verified = ?", userId, true)
+	result := tx.Joins("Img").First(&user, "users.id = ? AND is_verified = ?", userId, true)
 	return user, database.WrapError(result.Error)
 }
 
