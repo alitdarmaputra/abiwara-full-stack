@@ -1,5 +1,4 @@
 import SearchBox from "../../components/SearchBox";
-import { ScrollRestoration } from "react-router-dom";
 
 export default function Information() {
 	return (
@@ -27,7 +26,6 @@ export default function Information() {
 					<p className="mb-2 text-gray-700 dark:text-gray-400">Buka : 13.30 WITA</p>
 				</div>
 			</section>
-			<ScrollRestoration />
 		</div>
 	)
 }

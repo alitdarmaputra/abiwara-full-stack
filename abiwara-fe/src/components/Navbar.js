@@ -65,6 +65,8 @@ export default function Navbar() {
             if (authToken) {
                 const profileMenu = document.getElementById("profile-menu");
                 const profileBtn = document.getElementById("navbar__profile")
+				
+				if (!profileMenu) return;
 
                 if (!profileMenu.contains(e.target) && !profileBtn.contains(e.target))
                     setOpenProfile(false);

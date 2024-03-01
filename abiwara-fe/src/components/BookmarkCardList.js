@@ -4,9 +4,9 @@ export default function BookmarkCardList({ bookmarks }) {
     return (
         <>
             {
-                bookmarks && bookmarks.map(bookmarks => {
+                bookmarks && bookmarks.map(bookmark => {
                     return (
-                        <BookCard book={bookmarks.book} />
+                        <BookCard key={bookmark.id} book={bookmark.book} />
                     )
                 })
             }

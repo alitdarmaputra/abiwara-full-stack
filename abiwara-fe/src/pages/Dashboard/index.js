@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import httpRequest from "../../config/http-request";
 import {
     Chart as ChartJS,
@@ -18,15 +18,19 @@ import { BsPerson } from "react-icons/bs";
 import ParrotCaptain from '../../assets/parrot-captain.svg';
 import axiosInstance from "../../config";
 import { UserContext } from "../../context/user";
+import Stars from "../../components/Star";
+import { formatDate } from "../../utils/formatter";
 
 export default function Dashboard() {
     const [isLoading, setLoading] = useState(true);
     const [visitorData, setVisitorData] = useState({});
 	const { user } = useContext(UserContext);
+	const [borrowers, setBorrowers] = useState([]);
     const [totalMember, setTotalMember] = useState();
     const [totalBorrower, setTotalBorrower] = useState();
 	const navigate = useNavigate();
-
+	const [book, setBook] = useState();
+	
     const labels = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
     ChartJS.register(
@@ -76,7 +80,13 @@ export default function Dashboard() {
                     const borrowerRes = await axiosInstance.get(`${httpRequest.api.baseUrl}/total-borrower`);
                     var totalBorrower = borrowerRes?.data?.data?.total;
                     setTotalBorrower(totalBorrower)
-                }
+				} else {
+					const topBookRes = await axiosInstance.get(`${httpRequest.api.baseUrl}/book?sort=rating&&order=desc`)
+					setBook(topBookRes.data.data[0]);
+
+					const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/borrower`);
+					setBorrowers(res.data.data)
+				}
                 setLoading(false);
             } catch (err) {
             }
@@ -117,7 +127,6 @@ export default function Dashboard() {
                                 <Bar options={options} data={visitorData}></Bar>
                             </div>
                             <div className="right__container grow md:ml-5">
-
                                 <div className="total_borrower__container p-5 rounded-lg w-full bg-blue-700 text-white mb-5">
                                     <h1 className="font-bold w-full mb-8 text-md text-xl">Total Peminjaman</h1>
                                     <div className="total_borrower flex">
@@ -147,14 +156,83 @@ export default function Dashboard() {
                             </div>
                         </>
                     ) : (
-                        <>
-                            <img className="md:mb-0 mb-5 w-80" src={ParrotCaptain} alt="Parrot Captain"></img>
-                            <div className="text__container w-full md:w-7/12 grow p-8 rounded-lg h-fit dark:text-gray-200">
-                                <h3 className="text-5xl font-bold mb-5">Hai <span className="text-blue-700">Crew</span>!</h3>
-                                <p className="text-xl">Siap memulai petualangan tak terlupakan dalam dunia buku yang penuh keajaiban? Ayayy, kita jelajahi lautan halaman bersama-sama!</p>
-                                <div className="py-3 px-5 bg-blue-700 rounded-lg shadow-lg text-white mt-5 w-fit font-bold hover:cursor-pointer active:bg-blue-900" onClick={() => navigate("/book")}>Jelajahi Buku</div>
-                            </div>
-                        </>)
+                        <div>
+							<div className="bg-[#1D4ED8] rounded-lg p-10 flex mt-20 relative">
+								<img className="md:mb-0 mb-5 w-36 md:w-80 absolute bottom-0 right-0 -scale-x-100" src={ParrotCaptain} alt="Parrot Captain"></img>
+								<div className="text__container text-white w-full md:w-7/12 grow pr-20 md:pr-80 rounded-lg h-fit dark:text-gray-200">
+									<h3 className="text-2xl font-bold mb-5">Hai Crew !</h3>
+									<p className="roboto">Siap memulai petualangan tak terlupakan dalam dunia buku yang penuh keajaiban? Ayayy, kita jelajahi lautan halaman bersama-sama!</p>
+									<div className="py-3 px-5 bg-white text-black rounded-lg mt-10 w-fit font-bold hover:cursor-pointer" onClick={() => navigate("/book")}>Jelajahi Buku</div>
+								</div>
+							</div>
+							<div className="flex md:flex-row flex-col gap-5">
+								<div className="mt-5 rounded-lg bg-white dark:bg-[#2D3748] p-8 w-full">
+									<div className="mb-5 flex flex-col md:flex-row justify-between items-start">
+										<div>
+											<h3 className="roboto-bold text-2xl mb-2 dark:text-white">Daftar Pinjaman</h3>
+											<p className="text-sm text-gray-400">Menampilkan pinjaman terakhir yang kamu lakukan</p>
+										</div>
+										<Link to="/borrow" className="md:px-5 py-2 mt-2 md:mt-0 rounded-md font-semibold md:text-white text-left text-sm md:bg-[#473BF0] text-[#473BF0] md:hover:bg-[#392ed3] poppins-semibold transition-all">Lihat Semua</Link>
+									</div>
+
+									<div className="table__container shadow-sm dark:text-white w-full overflow-x-scroll sm:rounded-md mb-9 text-sm">
+										<table className="w-full">
+											<thead className="text-slate-500 font-bold">
+												<tr className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
+													<th className="pl-5 py-5 text-center">JUDUL</th>
+													<th>PENGEMBALIAN</th>
+													<th className="w-30">STATUS</th>
+												</tr>
+											</thead>
+											<tbody>
+												{
+													borrowers.length < 1 ?
+														<tr><td colSpan="7" className="text-center py-6">Tidak ada pinjaman yang ditemukan</td></tr>
+														: borrowers.map(borrower => {
+															return (
+																<tr key={borrower.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
+																	<td>{borrower.title}</td>
+																	<td className="text-center">{formatDate(borrower.due_date)}</td>
+																	{
+																		borrower.status ? (
+																			<td className="text-center"><span className="bg-green-400 px-3 py-1 font-bold text-white rounded-md">SELESAI</span></td>
+																		) : new Date().setHours(0, 0, 0, 0) <= new Date(borrower.due_date).setHours(0, 0, 0, 0) ? (
+																			<td className="text-center"><span className="bg-yellow-400 px-3 py-1 font-bold text-white rounded-md">PINJAMAN</span></td>
+																		) : (
+																			<td className="text-center"><span className="bg-red-400 px-3 py-1 font-bold text-white rounded-md">LEWAT</span></td>
+																		)
+																	}
+																</tr>
+															)
+														})
+												}
+											</tbody>
+										</table>
+									</div>
+								</div>
+
+								<div className="mt-5 rounded-lg bg-white dark:bg-[#2D3748] p-8">
+									<h3 className="roboto-bold text-2xl mb-5 dark:text-white">Buku Terbaik</h3>
+										{
+											book && (
+												<div>
+													<h3 className="text-sm mb-2 text-gray-400 roboto-bold">{book.title}</h3>
+													<div className="flex mb-3 items-center">
+														<Stars rating={book.rating}/>
+														<p className="ml-2 text-gray-400">{book.rating}</p>
+													</div>
+													<div className="mb-5 w-[140px] h-[224px] md:w-[170px] md:h-[272px]">
+														<img className="rounded-md object-cover w-full h-full" alt="book cover" src={book.img.image_url} />
+													</div>
+													<Link to={`/catalogue/${book.id}`} className="mt-2 md:mt-0 rounded-md font-semibold text-sm text-blue-400 hover:underline transition-all">Lihat Detail</Link>
+												</div>
+											) 
+										}
+								</div>
+
+							</div>
+                        </div>
+					)
                 }
             </div>
         </div>

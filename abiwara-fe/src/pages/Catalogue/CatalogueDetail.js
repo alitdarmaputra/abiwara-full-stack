@@ -1,7 +1,7 @@
 import SearchBox from "../../components/SearchBox";
 import { FaBookmark, FaRegBookmark  } from "react-icons/fa";
 import { stringToColor } from "../../utils/color";
-import { ScrollRestoration, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../config";
@@ -59,7 +59,7 @@ export default function CatalogueDetail() {
 		}
 
 		getBookDetail();
-	}, [id, markId])
+	}, [id, markId, authToken])
 
     if (isLoading) {
         return (
@@ -184,7 +184,6 @@ export default function CatalogueDetail() {
                     </div >
                 </div>
             </section >
-			<ScrollRestoration />
 			<section id="book-recommendation" className="flex items-center flex-col bg-white pb-10 px-4 md:px-0 dark:bg-[#1A202C] transition-all">
 				{
 					(recommendations.length > 0) && (

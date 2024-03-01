@@ -18,7 +18,7 @@ export default function Footer() {
 	}
 
     return (
-        <div id="footer" className="flex items-center flex-col bg-white pt-24 pb-10 px-5 md:px-0 dark:bg-[#1A202C]">
+        <div className="flex items-center flex-col bg-white pt-24 pb-10 px-5 md:px-0 dark:bg-[#1A202C]">
             <div id="footer__wrapper" className="max-w-6xl mb-10 text-sm w-full flex flex-col lg:flex-row justify-between">
                 <div id="footer__about" className="mb-10 md:mb-0 md:max-w-64">
                     <div className="flex justify-center md:justify-start gap-2 items-center text-2xl text-black mb-10 md:mb-4">

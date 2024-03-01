@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FaAngleDown, FaFilter, FaStar } from "react-icons/fa";
-import { ScrollRestoration, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import BookCardList from "../../components/BookCardList";
 import Pagination from "../../components/Pagination";
 import SearchBox from "../../components/SearchBox";
@@ -138,6 +138,7 @@ export default function Catalogue() {
                 setBooks(res.data.data);
                 setMeta(res.data.meta);
 				setLoading(false);
+				window.scrollTo(0, 0);
 			} catch(err) {
 				console.log(err);
 			}
@@ -227,7 +228,6 @@ export default function Catalogue() {
                     </div>
                 </div>
             </section >
-			<ScrollRestoration />
         </div >
     )
 }

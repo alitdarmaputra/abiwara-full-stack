@@ -1,4 +1,4 @@
-import { Link, ScrollRestoration } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Collapse from "../../components/Collapse";
 import SearchBox from "../../components/SearchBox";
 
@@ -25,13 +25,12 @@ export default function Information() {
 					{
 						items.map(item => {
 							return (
-								<Collapse className="mb-6" label={item.label} children={item.children} />
+								<Collapse key={new Date().getTime()} className="mb-6" label={item.label} children={item.children} />
 							)
 						})
 					}
 				</div>
 			</section>
-			<ScrollRestoration />
 		</div>
 	)
 }

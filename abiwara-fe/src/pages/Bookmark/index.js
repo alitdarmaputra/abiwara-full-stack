@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { ScrollRestoration } from "react-router-dom";
 import BookmarkCardList from "../../components/BookmarkCardList";
 import Pagination from "../../components/Pagination";
 import axiosInstance from "../../config";
@@ -31,7 +30,7 @@ export default function Bookmark() {
 			}	
 		}
 		getUserData();
-	}, [])
+	}, [setAuthToken])
 
     if (isLoading) {
         return (
@@ -67,7 +66,6 @@ export default function Bookmark() {
                     </div>
                 </div>
             </section >
-			<ScrollRestoration />
 		</div>
 	)
 

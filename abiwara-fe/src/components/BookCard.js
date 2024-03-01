@@ -4,7 +4,7 @@ import Stars from "./Star";
 
 export default function BookCard({ book }) {
     return (
-        <div id="book-card" className="mb-6 md:pr-4 flex flex-col md:flex-row rounded-md border-2 border-[#F4F7FA] dark:border-[#2D3748] dark:text-gray-200">
+        <div id="book-card" key={book.id} className="mb-6 md:pr-4 flex flex-col md:flex-row rounded-md border-2 border-[#F4F7FA] dark:border-[#2D3748] dark:text-gray-200">
             <div id="book-card__img" className="flex justify-center items-center bg-[#F4F7FA] p-4 rounded-t-md md:rounded-l-md dark:bg-[#2D3748]">
                 <div className="w-[154px] h-[246px]">
                     <img className="object-cover w-full h-full" alt="book cover" src={book.img.image_url} />
@@ -46,7 +46,7 @@ export default function BookCard({ book }) {
 
                     <div id="book-card__rating" className="flex items-center">
                         <div className="flex gap-0.5 text-yellow-500 mr-2">
-                            <Stars id={book.id} rating={book.rating} />
+                            <Stars rating={book.rating} />
                         </div>
                         <p>{book.rating}</p>
                     </div>

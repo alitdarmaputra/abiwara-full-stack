@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { IoEarthOutline } from "react-icons/io5";
 import axiosInstance from "../../config";
 import httpRequest from "../../config/http-request";
-import { Link, ScrollRestoration, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Home() {
     const [openCategories, setOpenCategories] = useState(false);
@@ -27,7 +27,7 @@ export default function Home() {
 	const handleSearch = (e) => {
 		e.preventDefault();
 		let searchValue = searchRef.current.value;
-		if (searchValue != "")
+		if (searchValue !== "")
 			navigate(`/catalogue?search=${searchValue}`);
 		else
 			navigate(`/catalogue`);
@@ -112,7 +112,6 @@ export default function Home() {
                         <BookListScroll books={topBooks} />
                     </div>
                 </section>
-				<ScrollRestoration />	
                 <section id="categories" className="flex items-center flex-col py-20 px-4 md:px-0 bg-[#F7FAFC] dark:bg-[#161b26] dark:text-gray-200">
                     <h2 className="text-xl roboto-black">Pilih kategori yang menarik bagi anda</h2>
                     <div id="categories__wrapper" className="mt-14 max-w-[570px] flex flex-col md:flex-row flex-wrap justify-between gap-y-8">

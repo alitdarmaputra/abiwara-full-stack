@@ -95,13 +95,13 @@ export default function SideNavbar() {
                 <div className="navbar__menus">
                     {
                         menus.map(menu => {
-                            if (!menu.roles.includes(token.role)) return <></>;
+                            if (!menu.roles.includes(token.role)) return <div key={menu.id}></div>;
 
                             return (
                                 <div key={menu.id} className="dark:text-gray-200">
                                     {
                                         !menu.submenus ? (
-                                            <NavLink className={({ isActive, isPending }) => {
+                                            <NavLink key={menu.id} className={({ isActive, isPending }) => {
                                                 return isPending ? "pending" : isActive ? "hover:underline navbar__menu h-14 mb-2 flex items-center pl-10 border-l-4 border-blue-700 hover:cursor-pointer text-blue-700 dark:text-blue-400" : "hover:underline navbar__menu h-14 mb-2 flex items-center pl-10 hover:cursor-pointer text-slate-500 dark:text-gray-200"
                                             }} to={menu.url} onClick={() => handleSubmenu(menu)} >
                                                 <div className="mr-3 text-xl">

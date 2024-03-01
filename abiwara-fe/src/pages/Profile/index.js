@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { FaCakeCandles } from "react-icons/fa6";
-import { Link, ScrollRestoration } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axiosInstance from "../../config";
 import httpRequest from "../../config/http-request";
 import { useAuth } from "../../context/auth";
@@ -26,7 +26,7 @@ export default function Profile() {
 			}	
 		}
 		getUserData();
-	}, [])
+	}, [setUser, token.role])
 	
 
     if (isLoading) {
@@ -57,7 +57,6 @@ export default function Profile() {
 					<Link to="/me/edit" className="text-xs roboto rounded-lg border border-gray-500 px-4 py-2 hover:cursor-pointer hover:bg-black hover:text-white transition-all ease-in dark:text-white dark:hover:bg-gray-100 dark:hover:text-black">Edit Profile</Link>
 				</div>
 			</section>
-			<ScrollRestoration />
 		</div>
 	)
 }

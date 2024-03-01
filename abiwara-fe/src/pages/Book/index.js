@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsCloudDownloadFill, BsFillTrashFill } from "react-icons/bs";
 import httpRequest from "../../config/http-request";
-import { Link, ScrollRestoration, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { AiFillEye } from "react-icons/ai";
 import { useAuth } from "../../context/auth";
 import Modal from "../../components/Modal";
@@ -216,7 +216,6 @@ export default function Book() {
                 <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 dark:text-gray-200">
 					<Pagination stringUrl={window.location.href} currPage={meta.page} totalPage={meta.total_page} n={3} />
 				</div>
-				<ScrollRestoration />
             </div>
         </>
     )
