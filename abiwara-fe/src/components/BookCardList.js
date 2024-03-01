@@ -6,7 +6,7 @@ export default function BookCardList({ books }) {
             {
                 books && books.map(book => {
                     return (
-                        <BookCard book={book} />
+                        <BookCard key={book.id} book={book} />
                     )
                 })
             }

@@ -7,7 +7,7 @@ export default function BookList({ books }) {
     return (
         <div className="flex gap-6 flex-wrap justify-between">
             {books.map((book) => (
-                <Book book={book} />
+                <Book key={book.id} book={book} />
             ))}
         </div>
     )

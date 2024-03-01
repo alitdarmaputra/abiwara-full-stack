@@ -1,23 +1,7 @@
-import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import Stars from "./Star";
 
 export default function Book({ book }) {
-
-    const Stars = ({ rating }) => {
-        let ratingElements = [];
-        while (ratingElements.length < 5) {
-            if (rating >= 1)
-                ratingElements.push(<FaStar className="text-yellow-500" />);
-            else if (rating > 0)
-                ratingElements.push(<FaStarHalfAlt className="text-yellow-500" />);
-            else
-                ratingElements.push(<FaStar className="text-gray-100 dark:text-gray-500" />);
-
-            rating--;
-        }
-        return ratingElements;
-    }
-
     return (
         <Link to={`/catalogue/${book.id}`} id="book" key={book.id} className="md:hover:shadow-lg transition-all hover:cursor-pointer w-48 md:w-52">
             <div id="book__img" className="flex justify-center pt-4 bg-[#F4F7FA] rounded-t-lg dark:bg-[#2D3748]">
@@ -32,7 +16,7 @@ export default function Book({ book }) {
 				</div>
                 <div id="book__rating" className="flex items-center">
                     <div className="flex gap-0.5 text-yellow-500 mr-2">
-                        <Stars rating={book.rating} />
+                        <Stars id={book.id} rating={book.rating} />
                     </div>
                     <p className="text-xs">{book.rating}</p>
                 </div>

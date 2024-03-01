@@ -1,16 +1,17 @@
 import SearchBox from "../../components/SearchBox";
-import { FaBookmark, FaRegBookmark, FaStar, FaStarHalf } from "react-icons/fa";
+import { FaBookmark, FaRegBookmark  } from "react-icons/fa";
 import { stringToColor } from "../../utils/color";
 import { ScrollRestoration, useParams } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../config";
 import httpRequest from "../../config/http-request";
 import { formatDate } from "../../utils/formatter";
 import BookList from "../../components/BookList";
 import { useAuth } from "../../context/auth";
-import { notifyError, notifySuccess } from "../../utils/toast";
+import { notifySuccess } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
+import Stars from "../../components/Star";
 
 export default function CatalogueDetail() {
 	const [isLoading, setLoading] = useState(true);
@@ -20,21 +21,6 @@ export default function CatalogueDetail() {
 	const { authToken } = useAuth();
 	const [markId, setMarkId] = useState();
 
-    const Stars = ({ rating }) => {
-        let ratingElements = [];
-        while (ratingElements.length < 5) {
-            if (rating >= 1)
-                ratingElements.push(<FaStar className="text-yellow-500 w-[20px] h-[20px]" />);
-            else if (rating > 0)
-                ratingElements.push(<FaStarHalf className="text-yellow-500 w-[20px] h-[20px]" />);
-            else
-                ratingElements.push(<FaStar className="text-gray-100 w-[20px] h-[20px] dark:text-gray-500" />);
-
-            rating--;
-        }
-        return ratingElements;
-    }
-	
 	const handleBookmark = async () => {
 		try {
 			// Delete bookmark if marked
@@ -62,8 +48,10 @@ export default function CatalogueDetail() {
 
 				const recommendationRes = await axiosInstance.get(`${httpRequest.api.baseUrl}/book-recommendation/${id}`);
 				setRecommendations(recommendationRes.data.data);
-
-				axiosInstance.get(`${httpRequest.api.baseUrl}/bookmark/${id}`).then((res) => setMarkId(res.data.data.id)).catch(() => setMarkId());
+				
+				if (authToken) {
+					axiosInstance.get(`${httpRequest.api.baseUrl}/bookmark/${id}`).then((res) => setMarkId(res.data.data.id)).catch(() => setMarkId());
+				}
 				setLoading(false);
 			} catch(err) {
 				console.log(err);
@@ -108,6 +96,13 @@ export default function CatalogueDetail() {
                                 </p>
                                 <h3 className="mb-2 text-4xl roboto-bold">{bookDetail.title}</h3>
                                 <p className="mb-4 text-sm opacity-70">{`Oleh ${bookDetail.author || "-"}`}</p>
+
+                                <div id="book-card__rating" className="flex items-center">
+                                    <div className="flex gap-0.5 text-yellow-500 mr-2">
+                                        <Stars rating={bookDetail.rating} />
+                                    </div>
+                                    <p>{bookDetail.rating}</p>
+                                </div>
 
                                 <p className="mb-10">
 									{bookDetail.summary}
@@ -168,12 +163,6 @@ export default function CatalogueDetail() {
                                     Tersedia
                                 </div>
 
-                                <div id="book-card__rating" className="flex items-center">
-                                    <div className="flex gap-0.5 text-yellow-500 mr-2">
-                                        <Stars rating={bookDetail.rating} />
-                                    </div>
-                                    <p>{bookDetail.rating}</p>
-                                </div>
                             </div>
                         </div>
 						

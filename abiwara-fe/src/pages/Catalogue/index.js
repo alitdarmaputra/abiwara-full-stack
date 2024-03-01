@@ -88,11 +88,10 @@ export default function Catalogue() {
 		return arr.includes(target);
 	}
 	
-	const checkSort = (target) => {
+	const checkSort = () => {
 		const url = new URL(window.location.href);
 		const sort = url.searchParams.get("sort");
-		console.log(sort)
-		return target === sort;
+		return sort;
 	}
 
 	const handleRating = () => {
@@ -178,8 +177,8 @@ export default function Catalogue() {
                         {categories.map((category, index) => {
                             return (
                                 <div key={index} className="mb-2 flex items-center">
-                                    <input checked={checkFilter(category.value)} type="checkbox" value={category.value} id={`category`} className="h-[20px] w-[20px] accent-black hover:cursor-pointer"/>
-                                    <label for={`category${index}`} className="ml-2">{category.label}</label>
+                                    <input defaultChecked={checkFilter(category.value)} type="checkbox" value={category.value} id={`category`} className="h-[20px] w-[20px] accent-black hover:cursor-pointer"/>
+                                    <label htmlFor={`category${index}`} className="ml-2">{category.label}</label>
                                 </div>
                             )
                         })}
@@ -187,13 +186,13 @@ export default function Catalogue() {
                         <p className="mt-4 mb-2">Rating</p>
                         <div className="mb-2 flex items-center">
                             <input onChange={handleRating} ref={ratingRef} type="checkbox" id="rating" name="rating" className="h-[21px] w-[21px] accent-black caret-black" />
-                            <label for="rating" className="ml-2 flex items-center gap-1"><FaStar className="text-yellow-500" /> 4 ke atas</label>
+                            <label htmlFor="rating" className="ml-2 flex items-center gap-1"><FaStar className="text-yellow-500" /> 4 ke atas</label>
                         </div>
 
                         <p className="mt-4 mb-2">Ketersediaan</p>
                         <div className="mb-2 flex items-center">
                             <input onChange={e => handleExist(e)} ref={existRef} type="checkbox" id="exist" name="exist" className="h-[21px] w-[21px] accent-black caret-black" />
-                            <label for="exist" className="ml-2 flex items-center gap-1">ada</label>
+                            <label htmlFor="exist" className="ml-2 flex items-center gap-1">ada</label>
                         </div>
                     </form>
 
@@ -201,12 +200,12 @@ export default function Catalogue() {
                         <div id="content__meta" className="flex-col md:flex-row flex mb-4 justify-between items-start md:items-center dark:text-gray-200">
                             <p className="mb-4 md:mb-auto">{`Menampilkan ${books.length} buku dari total ${meta.total} buku`}</p>
                             <form className="flex md:ml-2 items-center">
-                                <label for="sort" className="font-bold roboto-bold mr-2">Urutkan :</label>
+                                <label htmlFor="sort" className="font-bold roboto-bold mr-2">Urutkan :</label>
                                 <div className="flex border p-2 items-center">
-                                    <select onChange={handleSort} ref={sortRef} name="sort" id="sort" className="ml-2 appearance-none bg-transparent rounded-md bg-none hover:cursor-pointer">
-                                        <option selected={checkSort("")} value="title">Paling Sesuai</option>
-                                        <option selected={checkSort("updated_at")} value="updated_at">Terbaru</option>
-                                        <option selected={checkSort("rating")} value="rating">Rating Tertinggi</option>
+                                    <select defaultValue={checkSort()} onChange={handleSort} ref={sortRef} name="sort" id="sort" className="ml-2 appearance-none bg-transparent rounded-md bg-none hover:cursor-pointer">
+                                        <option value="title">Paling Sesuai</option>
+                                        <option value="updated_at">Terbaru</option>
+                                        <option value="rating">Rating Tertinggi</option>
                                     </select>
                                     <FaAngleDown />
                                 </div>

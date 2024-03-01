@@ -34,7 +34,7 @@ export default function Pagination({ stringUrl, currPage, totalPage, n = 3, clas
         if (currPage <= bin) {
             for (let i = bin - n + 1; i <= bin && i <= totalPage - 1; i++) {
                 pages.push(
-                    <Link to={getPagePath(url, i)} className={`w-[33px] h-[33px] border border-[#D0D0D0] flex items-center justify-center rounded-md ${currPage === i && "bg-[#473BF0] text-white"} dark:border-[#2D3748] dark:text-gray-200`}>
+                    <Link key={i} to={getPagePath(url, i)} className={`w-[33px] h-[33px] border border-[#D0D0D0] flex items-center justify-center rounded-md ${currPage === i && "bg-[#473BF0] text-white"} dark:border-[#2D3748] dark:text-gray-200`}>
                         {i}
                     </Link>
                 )

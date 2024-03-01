@@ -1,23 +1,8 @@
-import { FaStar, FaStarHalf } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { stringToColor } from "../utils/color";
+import Stars from "./Star";
 
 export default function BookCard({ book }) {
-    const Stars = ({ rating }) => {
-        let ratingElements = [];
-        while (ratingElements.length < 5) {
-            if (rating >= 1)
-                ratingElements.push(<FaStar className="text-yellow-500 w-[20px] h-[20px]" />);
-            else if (rating > 0)
-                ratingElements.push(<FaStarHalf className="text-yellow-500 w-[20px] h-[20px]" />);
-            else
-                ratingElements.push(<FaStar className="text-gray-100 w-[20px] h-[20px]" />);
-
-            rating--;
-        }
-        return ratingElements;
-    }
-
     return (
         <div id="book-card" className="mb-6 md:pr-4 flex flex-col md:flex-row rounded-md border-2 border-[#F4F7FA] dark:border-[#2D3748] dark:text-gray-200">
             <div id="book-card__img" className="flex justify-center items-center bg-[#F4F7FA] p-4 rounded-t-md md:rounded-l-md dark:bg-[#2D3748]">
@@ -35,31 +20,33 @@ export default function BookCard({ book }) {
                     <p className="mb-4 text-sm opacity-70">{`Oleh ${book.author}`}</p>
 
                     <table className="opacity-70 mb-4">
-                        <tr>
-                            <td>Penerbit</td>
-                            <td className="w-10 text-center"> : </td>
-                            <td>{book.publisher ? book.publisher : "-"}</td>
-                        </tr>
-                        <tr>
-                            <td>Tahun Terbit</td>
-                            <td className="w-10 text-center"> : </td>
-                            <td>{book.year ? book.year : "-"}</td>
-                        </tr>
-                        <tr>
-                            <td>No Inventaris</td>
-                            <td className="w-10 text-center"> : </td>
-                            <td>{book.inventory_number ? book.inventory_number : "-"}</td>
-                        </tr>
-                        <tr className="md:hidden">
-                            <td>Ketersediaan</td>
-                            <td className="w-10 text-center"> : </td>
-                            <td>{book.remain ? book.remain : "0"}</td>
-                        </tr>
+						<tbody>
+							<tr>
+								<td>Penerbit</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{book.publisher ? book.publisher : "-"}</td>
+							</tr>
+							<tr>
+								<td>Tahun Terbit</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{book.year ? book.year : "-"}</td>
+							</tr>
+							<tr>
+								<td>No Inventaris</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{book.inventory_number ? book.inventory_number : "-"}</td>
+							</tr>
+							<tr className="md:hidden">
+								<td>Ketersediaan</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{book.remain ? book.remain : "0"}</td>
+							</tr>
+						</tbody>
                     </table>
 
                     <div id="book-card__rating" className="flex items-center">
                         <div className="flex gap-0.5 text-yellow-500 mr-2">
-                            <Stars rating={book.rating} />
+                            <Stars id={book.id} rating={book.rating} />
                         </div>
                         <p>{book.rating}</p>
                     </div>

@@ -36,11 +36,13 @@ export default function Navbar() {
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
 
         const vh = window.innerHeight;
-        if (scrollTop > vh / 5) {
-            setTransparantNavbar(false);
-        } else {
-            setTransparantNavbar(true);
-        }
+		setTimeout(() => {
+			if (scrollTop > vh / 5) {
+				setTransparantNavbar(false);
+			} else {
+				setTransparantNavbar(true);
+			}
+        }, 300);
     }
 	
 	function handleLogout(e) {
