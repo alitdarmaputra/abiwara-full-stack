@@ -18,7 +18,7 @@ export default function Book({ book }) {
                     <div className="flex gap-0.5 text-yellow-500 mr-2">
                         <Stars id={book.id} rating={book.rating} />
                     </div>
-                    <p className="text-xs">{book.rating}</p>
+                    <p className="text-sm">{book.rating}</p>
                 </div>
             </div>
         </Link>

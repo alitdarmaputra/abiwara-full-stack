@@ -6,12 +6,20 @@ import { notifyError } from '../../utils/toast';
 import Success from '../../assets/success.gif';
 import { useParams } from 'react-router-dom';
 import { ReactComponent as Logo } from "../../assets/logo.svg";
+import { AiFillCheckCircle } from 'react-icons/ai';
 
 export default function ResetPassword() {
     const newPassword = useRef()
     const confirmPassword = useRef()
 	const [theme] = useState(localStorage.getItem('theme'));
     const { token } = useParams()
+
+    const [isLen, setLen] = useState(false);
+    const [isCase, setCase] = useState(false);
+    const [isChar, setChar] = useState(false);
+
+    const casePattern = /^(?=.*[a-z])(?=.*[A-Z]).+$/;
+    const charPattern = /[!@#$%^&*(),.?":{}|<>]/
 
     const [isSuccess, setSuccess] = useState(false)
     const [isLoading, setLoading] = useState(false)
@@ -25,12 +33,17 @@ export default function ResetPassword() {
 
         const data = {
             token: token,
-            new_password: newPassword.current.value
+            new_password: newPassword.current.value,
         }
 
         if (data.new_password === "") {
             notifyError("Password Baru tidak boleh kosong");
             return;
+        }
+
+        if (data.new_password.length <= 8 || !casePattern.test(data.new_password) || !charPattern.test(data.new_password)) {
+            notifyError("Password tidak sesuai")
+            return
         }
 
         try {
@@ -87,7 +100,38 @@ export default function ResetPassword() {
                     <form className="mt-6 " action="">
                         <div className="new_password_form">
                             <label className="font-bold text-sm" htmlFor="new_password_input">Password Baru <span className="text-red-500">*</span></label>
-                            <input ref={newPassword} id="new_password_input" placeholder="Password baru" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2 dark:bg-[#2D3748]" type="password"></input>
+							<input onChange={() => {
+								if (newPassword.current.value.length >= 8) {
+									setLen(true);
+								} else {
+									setLen(false);
+								}
+
+								if (casePattern.test(newPassword.current.value)) {
+									setCase(true);
+								} else {
+									setCase(false);
+								}
+
+								if (charPattern.test(newPassword.current.value)) {
+									setChar(true);
+								} else {
+									setChar(false);
+								}
+							}} ref={newPassword} id="new_password_input" placeholder="Password baru" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2 dark:bg-[#2D3748]" type="password"></input>
+
+                            <div className={`len_validation__container flex items-center mt-5 w-full ${isLen ? "text-green-500" : "text-slate-400"}`}>
+                                <AiFillCheckCircle className='text-xl'></AiFillCheckCircle>
+                                <p className='ml-2'>Memiliki panjang lebih dari 8 karakter</p>
+                            </div>
+                            <div className={`case_validation__container flex items-center mt-2 w-full ${isCase ? "text-green-500" : "text-slate-400"}`}>
+                                <AiFillCheckCircle className='text-xl'></AiFillCheckCircle>
+                                <p className='ml-2'>Terdiri dari huruf besar dan kecil</p>
+                            </div>
+                            <div className={`case_validation__container flex items-center mt-2 w-full ${isChar ? "text-green-500" : "text-slate-400"}`}>
+                                <AiFillCheckCircle className='text-xl'></AiFillCheckCircle>
+                                <p className='ml-2'>Terdiri dari kombinasi huruf, angka, dan simbol</p>
+                            </div>
                         </div>
                         <div className="mt-5 confirm_password_form">
                             <label className="font-bold text-sm" htmlFor="konfirmasi_password">Konfirmasi Password <span className="text-red-500">*</span></label>

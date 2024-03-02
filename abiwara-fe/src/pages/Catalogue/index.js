@@ -220,10 +220,10 @@ export default function Catalogue() {
 							</button>
                         </div>
 						<div className={`${showSort ? "" : "h-0"} mb-3 w-full overflow-hidden rounded-none transition-all`}>
-							<p className="text-sm mb-3">Urutkan Berdasarkan</p>
+							<p className="text-sm mb-3 text-gray-700 dark:text-gray-400">Urutkan Berdasarkan</p>
 							<div className="flex gap-2 mb-4">
 								<select defaultValue={checkSort()} onChange={handleSort} ref={sortRef} id="sort" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-									<option value="updated_at">Tanggal</option>
+									<option value="created_at">Tanggal</option>
 									<option value="title">Judul Buku</option>
 									<option value="id">No</option>
 									<option value="author">Penulis</option>

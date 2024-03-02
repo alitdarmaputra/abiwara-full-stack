@@ -18,8 +18,8 @@ export default function Login() {
 	const location = useLocation();
     const redirectPath = location.state?.path || '/';
 
-	const email = useRef('')
-    const password = useRef('')
+	const email = useRef()
+    const password = useRef()
 
     const handleLogin = async e => {
         e.preventDefault()

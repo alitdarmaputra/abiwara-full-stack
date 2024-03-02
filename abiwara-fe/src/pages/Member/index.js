@@ -23,7 +23,6 @@ export default function Member() {
 	const { user } = useContext(UserContext);
 	const filterRef = useRef();
 	const navigate = useNavigate();
-	const [showFilter, setShowFilter] = useState(false);
 
     const deleteUser = id => {
         return async () => {
@@ -157,7 +156,7 @@ export default function Member() {
                                     <tr><td colSpan="4" className="text-center py-6">Tidak ada anggota yang ditemukan</td></tr>
                                     : members.map(member => {
                                         return (
-                                            <tr className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
+                                            <tr key={member.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
                                                 <td className="py-5 pl-5 w-96">{member.name}</td>
                                                 <td className="text-center">{member.class}</td>
 												{

@@ -178,21 +178,21 @@ export default function Dashboard() {
 									<div className="table__container shadow-sm dark:text-white w-full overflow-x-scroll sm:rounded-md mb-9 text-sm">
 										<table className="w-full">
 											<thead className="text-slate-500 font-bold">
-												<tr className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
+												<tr className="border-b text-left dark:border-gray-500">
 													<th className="pl-5 py-5 text-center">JUDUL</th>
-													<th>PENGEMBALIAN</th>
-													<th className="w-30">STATUS</th>
+													<th className="text-center">PENGEMBALIAN</th>
+													<th className="w-30 text-center">STATUS</th>
 												</tr>
 											</thead>
 											<tbody>
 												{
 													borrowers.length < 1 ?
-														<tr><td colSpan="7" className="text-center py-6">Tidak ada pinjaman yang ditemukan</td></tr>
+														<tr><td colSpan="3" className="text-center py-6">Tidak ada pinjaman yang ditemukan</td></tr>
 														: borrowers.map(borrower => {
 															return (
 																<tr key={borrower.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
-																	<td>{borrower.title}</td>
-																	<td className="text-center">{formatDate(borrower.due_date)}</td>
+																	<td className="pl-5 py-5">{borrower.title}</td>
+																	<td className="text-center">{formatDate(borrower.return_date)}</td>
 																	{
 																		borrower.status ? (
 																			<td className="text-center"><span className="bg-green-400 px-3 py-1 font-bold text-white rounded-md">SELESAI</span></td>
