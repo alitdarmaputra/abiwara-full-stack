@@ -10,7 +10,7 @@ import { ReactComponent as Logo } from "../../assets/logo.svg";
 export default function ResetPassword() {
     const newPassword = useRef()
     const confirmPassword = useRef()
-	const [theme, _] = useState(localStorage.getItem('theme'));
+	const [theme] = useState(localStorage.getItem('theme'));
     const { token } = useParams()
 
     const [isSuccess, setSuccess] = useState(false)
@@ -42,7 +42,7 @@ export default function ResetPassword() {
                 setLoading(false);
             }
         } catch (err) {
-			if (err.response?.status == HttpStatusCode.Unauthorized) {
+			if (err.response?.status === HttpStatusCode.Unauthorized) {
 				notifyError("Token sudah tidak valid");
 			} else {
 				notifyError("Reset password gagal");

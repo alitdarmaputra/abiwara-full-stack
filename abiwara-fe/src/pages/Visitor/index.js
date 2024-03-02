@@ -1,23 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import httpRequest from "../../config/http-request";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { formatDateTime } from "../../utils/formatter";
 import { useAuth } from "../../context/auth";
 import axiosInstance from "../../config";
 import Pagination from "../../components/Pagination";
+import { FaFilter } from "react-icons/fa";
+import Datepicker from "react-tailwindcss-datepicker";
 
 export default function Visitor() {
     const [visitors, setVisitors] = useState([]);
     const [isLoading, setLoading] = useState(true);
     const [searchParams] = useSearchParams();
     const [meta, setMeta] = useState({});
-    const { setAuthToken } = useAuth()
+    const { setAuthToken } = useAuth();
+	const [showFilter, setShowFilter] = useState(false);
+	const [date, setDate] = useState({
+        startDate: new Date(),
+        endDate: new Date().setMonth(11)
+    });
+	const navigate = useNavigate();	
+
+    const handleFilter = newDate => {
+		const url = new URL(window.location.href)
+		if (newDate.startDate) {
+			url.searchParams.set("start_date", newDate.startDate);	
+		} else {
+			url.searchParams.delete("start_date");	
+		}
+
+		if (newDate.endDate) {
+			url.searchParams.set("end_date", newDate.startDate);	
+		} else {
+			url.searchParams.delete("end_date");	
+		}
+        setDate(newDate);
+		navigate(`${url.pathname}?${url.searchParams.toString()}`);
+    };
 
     useEffect(() => {
         async function getVisitors() {
-            let page = searchParams.get("page") ? searchParams.get("page") : 1;
-            const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/visitor?page=${page}`);
+			const url = new URL(window.location.href);
+
+            const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/visitor?${url.searchParams.toString()}`);
             if (res.status === 200) {
                 setVisitors(res.data.data);
                 setMeta(res.data.meta);
@@ -56,13 +82,16 @@ export default function Visitor() {
 
     return (
         <div className="flex-grow w-full">
-            <div className="visitor__container bg-white dark:bg-[#2D3748] rounded-lg dark:text-gray-200">
+            <div className="visitor__container mb-10 bg-white dark:bg-[#2D3748] rounded-lg dark:text-gray-200">
                 <div className="table_head__container flex justify-between p-5 box-border items-center">
-                    <div className="flex w-72 h-full">
+                    <div className="flex h-full">
                         <input id="keyword__input" placeholder="Ketik nama pengunjung" onInput={handleSearch} className="font-sans focus:outline-none border-l-2 border-y-2 w-full h-5 rounded-l-full p-5 dark:bg-transparent dark:border-gray-500" type="text"></input>
                         <div className='bg-white border-y-2 border-r-2 rounded-r-full pr-3 flex items-center text-slate-300 dark:bg-gray-700 dark:border-gray-500'>
                             <AiOutlineSearch size="20px" />
                         </div>
+						<button onClick={() => setShowFilter(!showFilter)} className="ml-2 px-4 font-bold text-gray-400 rounded-md flex justify-center items-center">
+                            <FaFilter />
+						</button>
                     </div>
 
                     <Link className="h-10 px-4 bg-blue-700 font-bold text-white shadow-md rounded-md flex justify-center items-center" to="/visitor/create">
@@ -70,22 +99,30 @@ export default function Visitor() {
                     </Link>
                 </div>
 
-                <div className="table__container shadow-sm w-full overflow-x-scroll sm:rounded-md mb-9 text-sm">
+				<div className={`${showFilter? "" : "h-0 overflow-hidden"} w-full px-5 rounded-none transition-all`}>
+					<p className="roboto-bold mb-3 text-sm text-gray-400">Filter Tanggal</p>
+					<div className="border rounded-lg dark:border-none">
+						<Datepicker useRange={false} separator="sampai" popoverDirection="down" value={date} onChange={handleFilter} />
+					</div>
+				</div>
+                <div className="table__container overflow-x-auto shadow-sm w-full sm:rounded-md mb-9 text-sm">
                     <table className="w-full">
                         <thead className="text-slate-500 font-bold">
                             <tr className="border-b dark:border-b dark:border-b-gray-500">
-                                <th className="px-10 py-5 w-96">Nama</th>
-                                <th>Kelas</th>
-                                <th className="px-10 md:px-2 w-18">Waktu</th>
+                                <th className="p-5">NO</th>
+                                <th className="min-w-52 p-5">NAME</th>
+                                <th className="min-w-20">KELAS</th>
+                                <th className="min-w-52 p-5">WAKTU</th>
                             </tr>
                         </thead>
                         <tbody>
                             {
                                 visitors.length < 1 ?
-                                    <tr><td colSpan="5" className="text-center py-6">Tidak ada kunjungan pada hari ini.</td></tr>
+                                    <tr><td colSpan="4" className="text-center py-6">Tidak ada kunjungan yang ditemukan.</td></tr>
                                     : visitors.map(visitor => {
                                         return (
                                             <tr key={visitor.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
+                                                <td className="box-border p-5 text-center">{visitor.id}</td>
                                                 <td className="py-5 box-border pl-5">{visitor.name}</td>
                                                 <td className="text-center px-4">{visitor.class}</td>
                                                 <td className="text-center">{formatDateTime(visitor.visit_time)}</td>
@@ -95,6 +132,7 @@ export default function Visitor() {
                             }
                         </tbody>
                     </table>
+					<p className="px-5 py-2 mb-4 md:mb-auto">{`Menampilkan ${visitors.length} kunjungan dari total ${meta.total} kunjungan`}</p>
                 </div>
 
                 <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 dark:text-gray-200">

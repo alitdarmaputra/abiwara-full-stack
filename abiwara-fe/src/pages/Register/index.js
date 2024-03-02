@@ -10,7 +10,7 @@ import { AiFillCheckCircle } from 'react-icons/ai';
 export default function Register() {
     const [isHide, setHide] = useState(true);
     const [isLoading, setLoading] = useState(false);
-	const [theme, _] = useState(localStorage.getItem("theme"));
+	const [theme] = useState(localStorage.getItem("theme"));
     const navigate = useNavigate()
     const [isLen, setLen] = useState(false);
     const [isCase, setCase] = useState(false);

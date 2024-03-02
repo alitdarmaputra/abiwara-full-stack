@@ -9,7 +9,7 @@ import axiosInstance from '../../config';
 
 export default function BorrowerCreate() {
     const [book, setBook] = useState();
-    const [member, setMember] = useState();
+    const [user, setUser] = useState();
 	const { setAuthToken } = useAuth();
     const [isLoading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -19,13 +19,13 @@ export default function BorrowerCreate() {
 
         const due_date_input = document.querySelector("#due_date_input");
 
-        if (!due_date_input.value || !member || !book) {
+        if (!due_date_input.value || !user || !book) {
             notifyError("Pastikan semua field sudah terisi")
             return
         }
 
         const payload = {
-            member_id: member,
+            user_id: user,
             book_id: book,
             due_date: new Date(due_date_input.value).toISOString(),
         }
@@ -92,7 +92,7 @@ export default function BorrowerCreate() {
                             loadOptions={loadMember}
                             placeholder="Pilih anggota"
                             noOptionsMessage={() => "Anggota tidak ditemukan"}
-                            onChange={choice => setMember(choice.value)}
+                            onChange={choice => setUser(choice.value)}
                         >
                         </AsyncSelect>
                     </div>

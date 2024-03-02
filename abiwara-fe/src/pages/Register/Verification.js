@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import SuccessSentEmail from "../../assets/success_sent_email.gif"
 
 export default function Verification() {
-	const [theme, _] = useState(localStorage.getItem('theme'));
+	const [theme] = useState(localStorage.getItem('theme'));
 
     useEffect(() => {
         if (theme === "dark") {

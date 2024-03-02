@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import httpRequest from "../../config/http-request";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { formatDate } from "../../utils/formatter";
 import Modal from "../../components/Modal";
@@ -9,9 +9,11 @@ import axiosInstance from "../../config";
 import { UserContext } from "../../context/user";
 import Pagination from "../../components/Pagination";
 import { notifyError } from "../../utils/toast";
+import { FaFilter } from "react-icons/fa";
 
 export default function Borrower() {
     const [borrowers, setBorrowers] = useState({});
+	const [showFilter, setShowFilter] = useState(false);
     const [isLoading, setLoading] = useState(true);
     const [searchParams] = useSearchParams();
     const [meta, setMeta] = useState({});
@@ -21,6 +23,8 @@ export default function Borrower() {
     const { setAuthToken } = useAuth();
 	const { user } = useContext(UserContext);
     const [isUpdate, setUpdate] = useState();
+	const filterRef = useRef();
+	const navigate = useNavigate();
 
     const updateRating = async (borrower_id, book_id, rating) => {
         try {
@@ -34,12 +38,30 @@ export default function Borrower() {
             console.log(err);
         }
     }
+	
+	const checkFilter = () => {
+		const url = new URL(window.location.href);
+		const filter = url.searchParams.get("status");
+		return filter;
+	}
+
+    const handleFilter = () => {
+		let status = filterRef.current.value;
+		const url = new URL(window.location.href)
+
+		if (filterRef.value === "")
+			url.searchParams.delete("status")
+		else
+			url.searchParams.set("status", status)
+
+		navigate(`${url.pathname}?${url.searchParams.toString()}`);
+    };
 
     useEffect(() => {
         async function getBorrowers() {
-            let page = searchParams.get("page") ? searchParams.get("page") : 1;
 			try {
-				const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/borrower?page=${page}`);
+				const url = new URL(window.location.href);
+				const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/borrower?${url.searchParams.toString()}`);
                 setBorrowers(res.data.data)
                 setMeta(res.data.meta)
                 setLoading(false)
@@ -103,11 +125,14 @@ export default function Borrower() {
 
             <div className="borrower__container bg-white dark:bg-[#2D3748] dark:text-gray-200 rounded-lg mb-10">
                 <div className="table_head__container flex justify-between p-5 box-border items-center">
-                    <div className="flex w-72 h-full">
+                    <div className="flex h-full">
                         <input id="keyword__input" placeholder="Ketik nama atau judul buku" onInput={handleSearch} className="font-sans focus:outline-none border-l-2 border-y-2 w-full h-5 rounded-l-full p-5 dark:bg-transparent dark:border-gray-500" type="text"></input>
                         <div className='bg-white border-y-2 border-r-2 rounded-r-full pr-3 flex items-center text-slate-300 dark:bg-gray-700 dark:border-gray-500'>
                             <AiOutlineSearch size="20px" />
                         </div>
+						<button onClick={() => setShowFilter(!showFilter)} className="ml-2 px-4 font-bold text-gray-400 rounded-md flex justify-center items-center">
+                            <FaFilter />
+						</button>
                     </div>
 
                     {user.role === 1 && (
@@ -117,25 +142,34 @@ export default function Borrower() {
                     )}
                 </div>
 
+				<div className={`${showFilter? "" : "h-0 overflow-hidden"} w-full px-5 rounded-none transition-all`}>
+					<p className="roboto-bold text-sm mb-3 text-gray-400">Filter Status</p>
+					<select defaultValue={checkFilter()} onChange={handleFilter} ref={filterRef} id="filter" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+						<option value="">Semua</option>
+						<option value="0">Pinjaman</option>
+						<option value="1">Selesai</option>
+					</select>
+				</div>
+
                 <div className="table__container shadow-sm w-full overflow-x-scroll sm:rounded-md mb-9 text-sm">
                     <table className="w-full">
                         <thead className="text-slate-500 font-bold">
-                            <tr className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
-                                <th className="pl-5 py-5 text-center">NOMOR</th>
-                                <th className="text-center">NAMA</th>
+                            <tr className="border-b text-left dark:border-gray-500">
+                                <th className="pl-5 py-5 text-center">NO</th>
+                                <th className="min-w-52 text-center">NAMA</th>
                                 <th className="text-center">KELAS</th>
-                                <th className="px-10 md:px-2">JUDUL</th>
-                                <th>PENGEMBALIAN</th>
-                                <th className="w-30">STATUS</th>
+                                <th className="px-10 min-w-52 md:px-2 text-center">JUDUL</th>
+                                <th className="text-center">PENGEMBALIAN</th>
+                                <th className="min-w-30 text-center">STATUS</th>
                                 {
                                     user.role === 1 && (
-                                        <th className="px-10 w-30">AKSI</th>
+                                        <th className="px-10 min-w-30 text-center">AKSI</th>
                                     )
                                 }
 
                                 {
                                     user.role === 3 && (
-                                        <th className="px-10 w-30">RATING</th>
+                                        <th className="px-10 min-w-30 text-center">RATING</th>
                                     )
                                 }
                             </tr>
@@ -147,11 +181,17 @@ export default function Borrower() {
                                     : borrowers.map(borrower => {
                                         return (
                                             <tr key={borrower.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
-                                                <td className="py-5 text-center box-border pl-5">{borrower.id}</td>
+                                                <td className="pl-5 py-5 text-center box-border">{borrower.id}</td>
                                                 <td>{borrower.name}</td>
                                                 <td className="text-center">{borrower.class}</td>
                                                 <td>{borrower.title}</td>
-                                                <td className="text-center">{formatDate(borrower.due_date)}</td>
+												{
+													borrower.status ? (
+														<td className="text-center">{formatDate(borrower.return_date)}</td>
+													) : (
+														<td className="text-center">{formatDate(borrower.due_date)}</td>
+													)
+												}
                                                 {
                                                     borrower.status ? (
                                                         <td className="text-center"><span className="bg-green-400 px-3 py-1 font-bold text-white rounded-md">SELESAI</span></td>
@@ -210,8 +250,8 @@ export default function Borrower() {
                                                             Selesaikan
                                                         </td>
                                                     ) : (
-                                                        <>
-                                                        </>
+                                                        <td>
+                                                        </td>
                                                     )
                                                 }
                                                 {
@@ -243,6 +283,7 @@ export default function Borrower() {
                             }
                         </tbody>
                     </table>
+					<p className="px-5 py-2 mb-4 md:mb-auto">{`Menampilkan ${borrowers.length} pinjaman dari total ${meta.total} pinjaman`}</p>
                 </div>
 
                 <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 dark:text-gray-200">

@@ -10,7 +10,7 @@ export default function ForgetPassword() {
     const email = useRef()
     const [isSuccess, setSuccess] = useState(false)
     const [isLoading, setLoading] = useState(false)
-	const [theme, _] = useState(localStorage.getItem('theme'));
+	const [theme ] = useState(localStorage.getItem('theme'));
 
     const handleRequestToken = async e => {
         e.preventDefault();

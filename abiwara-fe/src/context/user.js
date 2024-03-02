@@ -28,7 +28,7 @@ export const UserProvider = ({ children  }) => {
 			}	
 		}
 		getUserData();
-	}, [authToken])
+	}, [authToken, token?.role])
 	
     if (isLoading) {
         return (

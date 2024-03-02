@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsCloudDownloadFill, BsFillTrashFill } from "react-icons/bs";
 import httpRequest from "../../config/http-request";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { AiFillEye } from "react-icons/ai";
 import { useAuth } from "../../context/auth";
 import Modal from "../../components/Modal";
@@ -10,9 +10,11 @@ import axiosInstance from "../../config";
 import { UserContext } from "../../context/user";
 import Pagination from "../../components/Pagination";
 import { notifyError } from "../../utils/toast";
+import { FaSortAmountDown } from "react-icons/fa";
 
 export default function Book() {
     const [books, setBooks] = useState({});
+	const [showSort, setShowSort] = useState(false);
     const [bookDetail, setBookDetail] = useState();
     const [isLoading, setLoading] = useState(true);
     const [searchParams] = useSearchParams();
@@ -20,13 +22,49 @@ export default function Book() {
     const [active, setActive] = useState(false);
     const [action, setAction] = useState();
     const { setAuthToken } = useAuth();
+	const sortRef = useRef();
+	const orderRef = useRef();
 	const { user } = useContext(UserContext);
+	const navigate = useNavigate();
+
+	const handleSort = () => {
+		let sort = sortRef.current.value;
+		const url = new URL(window.location.href)
+		url.searchParams.delete("page");
+		
+		url.searchParams.set("sort", sort);	
+
+		navigate(`${url.pathname}?${url.searchParams.toString()}`);
+	}
+
+	const checkSort = () => {
+		const url = new URL(window.location.href);
+		const sort = url.searchParams.get("sort");
+		return sort;
+	}
+
+	const handleOrder = () => {
+		let order = orderRef.current.value;
+		const url = new URL(window.location.href)
+		url.searchParams.delete("page");
+		
+		url.searchParams.set("order", order);	
+
+		navigate(`${url.pathname}?${url.searchParams.toString()}`);
+	}
+
+	const checkOrder = () => {
+		const url = new URL(window.location.href);
+		const order = url.searchParams.get("order");
+		return order;
+	}
 
     useEffect(() => {
         async function getBooks() {
 			try {
-				let page = searchParams.get("page") ? searchParams.get("page") : 1;
-				const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book?page=${page}`);
+				const url = new URL(window.location.href);
+
+				const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book?${url.searchParams.toString()}`);
                 setBooks(res.data.data)
                 setMeta(res.data.meta)
                 setLoading(false)
@@ -120,11 +158,14 @@ export default function Book() {
 
             <div className="book__container bg-white dark:bg-[#2D3748] rounded-lg mb-10 dark:text-gray-200">
                 <div className="table_head__container flex justify-between p-5 box-border items-center">
-                    <div className="flex w-72 h-full">
+                    <div className="flex h-full">
                         <input id="keyword__input" placeholder="Ketik judul atau pengarang" onInput={handleSearch} className="font-sans focus:outline-none border-l-2 border-y-2 w-full h-5 rounded-l-full p-5 dark:bg-transparent dark:border-gray-500" type="text"></input>
                         <div className='bg-white border-y-2 border-r-2 rounded-r-full pr-3 flex items-center text-slate-300 dark:bg-gray-700 dark:border-gray-500'>
                             <AiOutlineSearch size="20px" />
                         </div>
+						<button onClick={() => setShowSort(!showSort)} className="ml-2 px-4 font-bold text-gray-400 rounded-md flex justify-center items-center">
+							<FaSortAmountDown></FaSortAmountDown>
+						</button>
                     </div>
 
                     {user.role === 1 && (
@@ -139,12 +180,29 @@ export default function Book() {
                     )}
                 </div>
 
-                <div className="table__container shadow-sm w-full overflow-x-auto sm:rounded-md mb-9 text-sm">
+				<div className={`${showSort ? "" : "h-0"} w-full px-5 overflow-hidden rounded-none transition-all`}>
+					<p className="roboto-bold mb-3 text-gray-400">Urutkan Berdasarkan</p>
+					<div className="flex gap-2">
+						<select defaultValue={checkSort()} onChange={handleSort} ref={sortRef} id="sort" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+							<option value="updated_at">Tanggal</option>
+							<option value="title">Judul Buku</option>
+							<option value="id">No</option>
+							<option value="author">Penulis</option>
+						</select>
+						<select defaultValue={checkOrder()} onChange={handleOrder} ref={orderRef} id="order" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+							<option value="desc">Z-A</option>
+							<option value="asc">A-Z</option>
+						</select>
+					</div>
+				</div>
+
+                <div className="table__container relative shadow-sm w-full overflow-x-auto sm:rounded-md mb-9 text-sm">
                     <table id="table" className="w-full text-sm">
                         <thead className="text-slate-500 font-bold">
                             <tr className="border-b dark:border-b dark:border-b-gray-500">
-								<th className="p-5 box-border">JUDUL BUKU</th>
-                                <th className="min-w-20 p-5 box-border">PENYUSUN</th>
+								<th className="p-5 box-border">NO</th>
+								<th className="p-5">JUDUL BUKU</th>
+                                <th className="min-w-20 p-5 box-border">PENULIS</th>
                                 <th className="min-w-20 p-5 box-border">TAHUN</th>
                                 <th className="min-w-20 p-5 box-border">KATEGORI</th>
                                 <th className="min-w-10 p-5 box-border">SISA</th>
@@ -154,10 +212,11 @@ export default function Book() {
                         <tbody>
                             {
                                 books.length < 1 ?
-                                    <tr><td colSpan="6" className="text-center py-6">Tidak ada buku yang ditemukan</td></tr>
+                                    <tr><td colSpan="7" className="text-center py-6">Tidak ada buku yang ditemukan</td></tr>
                                     : books.map(book => {
                                         return (
                                             <tr key={book.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
+                                                <td className="box-border p-5 text-center">{book.id}</td>
                                                 <td className="box-border p-5 text-wrap">{book.title}</td>
 												<td className="box-border p-5">{book.author}</td>
 												<td className="box-border text-center p-5">{book.year}</td>
@@ -191,7 +250,7 @@ export default function Book() {
 																						<td>{book.year}</td>
 																					</tr>
 																					<tr>
-																						<td>Penyusun</td>
+																						<td>Penulis</td>
 																						<td className="w-10 text-center"> : </td>
 																						<td>{book.author}</td>
 																					</tr>
@@ -211,6 +270,7 @@ export default function Book() {
                             }
                         </tbody>
                     </table>
+					<p className="px-5 py-2 mb-4 md:mb-auto">{`Menampilkan ${books.length} buku dari total ${meta.total} buku`}</p>
                 </div>
 
                 <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 dark:text-gray-200">

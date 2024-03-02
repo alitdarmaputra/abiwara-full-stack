@@ -117,9 +117,9 @@ export default function CatalogueDetail() {
 											<td>{bookDetail.inventory_number}</td>
 										</tr>
 										<tr>
-											<td>Call Number Klasifikasi</td>
+											<td>Nomor Panggil</td>
 											<td className="w-10 text-center"> : </td>
-											<td>{bookDetail.category.id}</td>
+											<td>{bookDetail.category.id} {bookDetail.call_number_author} {bookDetail.call_number_title}</td>
 										</tr>
 										<tr>
 											<td>Tanggal Masuk</td>
@@ -127,7 +127,7 @@ export default function CatalogueDetail() {
 											<td>{bookDetail.entry_date && formatDate(bookDetail.entry_date)}</td>
 										</tr>
 										<tr>
-											<td>Penyusun</td>
+											<td>Penulis</td>
 											<td className="w-10 text-center"> : </td>
 											<td>{bookDetail.author}</td>
 										</tr>

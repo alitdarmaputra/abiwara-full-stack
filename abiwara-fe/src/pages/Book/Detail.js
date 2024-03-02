@@ -91,7 +91,7 @@ export default function BookDetail() {
 								<td>{bookDetail.entry_date && formatDate(bookDetail.entry_date)}</td>
 							</tr>
 							<tr>
-								<td>Penyusun</td>
+								<td>Penulis</td>
 								<td className="w-10 text-center"> : </td>
 								<td>{bookDetail.author}</td>
 							</tr>
@@ -116,17 +116,17 @@ export default function BookDetail() {
 								<td>{bookDetail.remain}</td>
 							</tr>
 							<tr>
-								<td>Call Number Klasifikasi</td>
+								<td>Klasifikasi</td>
 								<td className="w-10 text-center"> : </td>
 								<td>{bookDetail.category?.id}</td>
 							</tr>
 							<tr>
-								<td>Call Number Pengarang</td>
+								<td>Nomor Panggil Penulis</td>
 								<td className="w-10 text-center"> : </td>
 								<td>{bookDetail.call_number_author}</td>
 							</tr>
 							<tr>
-								<td>Call Number Klasifikasi Judul</td>
+								<td>Nomor Panggil Judul Buku</td>
 								<td className="w-10 text-center"> : </td>
 								<td>{bookDetail.call_number_title}</td>
 							</tr>

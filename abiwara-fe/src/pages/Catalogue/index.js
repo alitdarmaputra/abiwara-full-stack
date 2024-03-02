@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FaAngleDown, FaFilter, FaStar } from "react-icons/fa";
+import { FaFilter, FaSortAmountDown, FaStar } from "react-icons/fa";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import BookCardList from "../../components/BookCardList";
 import Pagination from "../../components/Pagination";
@@ -15,8 +15,10 @@ export default function Catalogue() {
 	const [isLoading, setLoading] = useState(true);
 	const navigate = useNavigate();
 	const sortRef = useRef();
+	const orderRef = useRef();
 	const ratingRef = useRef();
 	const existRef = useRef();
+	const [showSort, setShowSort] = useState(false);
 
     const categories = [{
         label: "Karya Umum",
@@ -55,14 +57,27 @@ export default function Catalogue() {
 		const url = new URL(window.location.href)
 		url.searchParams.delete("page");
 		
-		if (sort !== "title")
-			url.searchParams.set("sort", sort);	
-		else
-			url.searchParams.delete("sort");
+		url.searchParams.set("sort", sort);	
 
 		navigate(`${url.pathname}?${url.searchParams.toString()}`);
 	}
 	
+	const handleOrder = () => {
+		let order = orderRef.current.value;
+		const url = new URL(window.location.href)
+		url.searchParams.delete("page");
+		
+		url.searchParams.set("order", order);	
+
+		navigate(`${url.pathname}?${url.searchParams.toString()}`);
+	}
+
+	const checkOrder = () => {
+		const url = new URL(window.location.href);
+		const order = url.searchParams.get("order");
+		return order;
+	}
+
 	const handleExist = () => {
 		const url = new URL(window.location.href)
 		url.searchParams.delete("page");
@@ -198,33 +213,41 @@ export default function Catalogue() {
                     </form>
 
                     <div id="book-list__content" className="w-full">
-                        <div id="content__meta" className="flex-col md:flex-row flex mb-4 justify-between items-start md:items-center dark:text-gray-200">
-                            <p className="mb-4 md:mb-auto">{`Menampilkan ${books.length} buku dari total ${meta.total} buku`}</p>
-                            <form className="flex md:ml-2 items-center">
-                                <label htmlFor="sort" className="font-bold roboto-bold mr-2">Urutkan :</label>
-                                <div className="flex border p-2 items-center">
-                                    <select defaultValue={checkSort()} onChange={handleSort} ref={sortRef} name="sort" id="sort" className="ml-2 appearance-none bg-transparent rounded-md bg-none hover:cursor-pointer">
-                                        <option value="title">Paling Sesuai</option>
-                                        <option value="updated_at">Terbaru</option>
-                                        <option value="rating">Rating Tertinggi</option>
-                                    </select>
-                                    <FaAngleDown />
-                                </div>
-                            </form>
+                        <div id="content__meta" className="flex justify-between dark:text-gray-200">
+							<p className="mb-4 md:mb-auto">{`Menampilkan ${books.length} buku dari total ${meta.total} buku`}</p>
+							<button onClick={() => setShowSort(!showSort)} className="bg-[#F4F7FA] dark:bg-[#2D3748] p-2 float-end font-bold text-gray-400 rounded-md flex justify-center items-center">
+								<FaSortAmountDown></FaSortAmountDown>
+							</button>
                         </div>
-							{
-								books.length > 0 ? (
-									<>
-										<Pagination className="mb-10" stringUrl={window.location.href} currPage={meta.page} totalPage={meta.total_page} n={3} />
-											<div id="content__books">
-												<BookCardList books={books} />
-											</div>
-										<Pagination stringUrl={window.location.href} currPage={meta.page} totalPage={meta.total_page} n={3} />
-									</>
-								) : (
-									<h2 className="dark:text-gray-500 text-xl">Tidak ada buku yang ditemukan</h2>
-								)
-							}
+						<div className={`${showSort ? "" : "h-0"} mb-3 w-full overflow-hidden rounded-none transition-all`}>
+							<p className="text-sm mb-3">Urutkan Berdasarkan</p>
+							<div className="flex gap-2 mb-4">
+								<select defaultValue={checkSort()} onChange={handleSort} ref={sortRef} id="sort" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+									<option value="updated_at">Tanggal</option>
+									<option value="title">Judul Buku</option>
+									<option value="id">No</option>
+									<option value="author">Penulis</option>
+									<option value="rating">Rating</option>
+								</select>
+								<select defaultValue={checkOrder()} onChange={handleOrder} ref={orderRef} id="order" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+									<option value="desc">Z-A</option>
+									<option value="asc">A-Z</option>
+								</select>
+							</div>
+						</div>
+						{
+							books.length > 0 ? (
+								<>
+									<Pagination className="mb-10" stringUrl={window.location.href} currPage={meta.page} totalPage={meta.total_page} n={3} />
+										<div id="content__books">
+											<BookCardList books={books} />
+										</div>
+									<Pagination stringUrl={window.location.href} currPage={meta.page} totalPage={meta.total_page} n={3} />
+								</>
+							) : (
+								<h2 className="dark:text-gray-500 text-xl">Tidak ada buku yang ditemukan</h2>
+							)
+						}
                     </div>
                 </div>
             </section >

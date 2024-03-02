@@ -12,7 +12,7 @@ export default function ProcessVerification() {
     const navigate = useNavigate()
     const { token } = useParams()
 
-	const [theme, _] = useState(localStorage.getItem('theme'));
+	const [theme] = useState(localStorage.getItem('theme'));
 
     useEffect(() => {
         if (theme === "dark") {

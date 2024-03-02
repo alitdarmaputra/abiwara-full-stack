@@ -8,7 +8,6 @@ import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../config";
 import { useAuth } from "../../context/auth";
 import { FaTrash } from "react-icons/fa";
-import getFirstCharacters from "../../utils/shortener";
 
 export default function BookCreate() {
     const [category, setCategory] = useState("");
@@ -34,8 +33,10 @@ export default function BookCreate() {
         const entry_date_input = document.querySelector("#entry_date_input");
 		const source_input = document.querySelector("#source_input")
         const summary_input = document.querySelector("#summary_input");
+		const call_author_input = document.querySelector("#call_author_input");
+		const call_title_input = document.querySelector("#call_title_input");
 
-        if (title_input.value === "" || inventory_input.value === "" || quantity_input.value === "" || category === "") {
+        if (title_input.value === "" || inventory_input.value === "" || quantity_input.value === "" || category === "" || call_title_input.value === "") {
             notifyError("Pastikan semua field sudah terisi")
             return
         }
@@ -59,10 +60,10 @@ export default function BookCreate() {
 			cover_img: coverImg.id,
 			inventory_number: inventory_input.value,
 			title: title_input.value,
-			call_number_title: getFirstCharacters(title_input.value),
+			call_number_title: call_title_input.value,
             price: parseInt(price_input.value.replace("Rp. ", "").replace(/\./, "")),
             author: author_input.value,
-            call_number_author: getFirstCharacters(author_input.value),
+			call_number_author: call_author_input.value,
             publisher: publisher_input.value,
 			year: parseInt(year_input.value),
 			city: city_input.value,
@@ -175,7 +176,7 @@ export default function BookCreate() {
                     </div>
 
                     <div className="author_form mb-3">
-                        <label className="font-bold text-sm" htmlFor="author_input">Penyusun</label>
+                        <label className="font-bold text-sm" htmlFor="author_input">Penulis</label>
                         <input id="author_input" placeholder="Ketik penyusun" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
@@ -220,6 +221,16 @@ export default function BookCreate() {
                     <div className="source_form mb-3">
                         <label className="font-bold text-sm" htmlFor="page_input">Asal</label>
                         <input id="source_input" placeholder="Ketik asal dana" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
+                    </div>
+
+                    <div className="call_author_form mb-3">
+                        <label className="font-bold text-sm" htmlFor="call_author_input">Nomor Panggil Penulis</label>
+                        <input id="call_author_input" placeholder="Ketik nomor panggil pengarang" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
+                    </div>
+
+                    <div className="call_title_form mb-3">
+                        <label className="font-bold text-sm" htmlFor="call_title_input">Nomor Panggil Judul Buku <span className="text-red-500">*</span></label>
+                        <input id="call_title_input" placeholder="Ketik nomor panggil judul buku" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="summary_form mb-3">

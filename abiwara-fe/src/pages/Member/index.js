@@ -1,24 +1,70 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import httpRequest from "../../config/http-request";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axiosInstance from "../../config";
 import { useAuth } from "../../context/auth";
 import { notifyError } from "../../utils/toast";
 import Pagination from "../../components/Pagination";
+import { UserContext } from "../../context/user";
+import Modal from "../../components/Modal";
+import { BsFillTrashFill } from "react-icons/bs";
+import { FaFilter } from "react-icons/fa";
 
 export default function Member() {
     const [members, setMembers] = useState({});
+    const [active, setActive] = useState(false);
+    const [action, setAction] = useState();
+    const [userDetail, setUserDetail] = useState();
     const [isLoading, setLoading] = useState(true);
     const [searchParams] = useSearchParams();
     const [meta, setMeta] = useState({});
 	const { setAuthToken } = useAuth();
+	const { user } = useContext(UserContext);
+	const filterRef = useRef();
+	const navigate = useNavigate();
+	const [showFilter, setShowFilter] = useState(false);
+
+    const deleteUser = id => {
+        return async () => {
+			try{
+				await axiosInstance.delete(`${httpRequest.api.baseUrl}/member/${id}`);
+				setActive(false);
+			} catch(err) {
+				if (err.response.data.code === 401) {
+					notifyError("Sesi telah selesai");
+					setAuthToken();
+				} else {
+					notifyError("Server error");
+					console.log(err);
+				}
+			}
+        }
+	}
+
+	const checkFilter = () => {
+		const url = new URL(window.location.href);
+		const filter = url.searchParams.get("status");
+		return filter;
+	}
+
+    const handleFilter = () => {
+		let status = filterRef.current.value;
+		const url = new URL(window.location.href)
+
+		if (filterRef.value === "")
+			url.searchParams.delete("status")
+		else
+			url.searchParams.set("status", status)
+
+		navigate(`${url.pathname}?${url.searchParams.toString()}`);
+    };
 
     useEffect(() => {
         async function getMembers() {
-            let page = searchParams.get("page") ? searchParams.get("page") : 1;
 			try {
-				const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/member?page=${page}`);
+				const url = new URL(window.location.href);
+				const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/member?${url.searchParams.toString()}`);
                 setMembers(res.data.data)
                 setMeta(res.data.meta)
                 setLoading(false)
@@ -33,7 +79,7 @@ export default function Member() {
 			}
         }
         getMembers()
-    }, [searchParams, setAuthToken])
+    }, [searchParams, setAuthToken, active])
 
     const handleSearch = async e => {
         e.preventDefault()
@@ -67,41 +113,107 @@ export default function Member() {
 
     return (
         <div className="flex-grow w-full">
+            <Modal active={active} setActive={setActive} title="Nonaktif Anggota" children={userDetail} action={action}></Modal>
+
             <div className="member__container bg-white dark:bg-[#2D3748] dark:text-gray-200 rounded-lg">
                 <div className="table_head__container flex justify-between p-5 box-border items-center">
-                    <div className="flex w-72 h-full">
-                        <input id="keyword__input" placeholder="Ketik nama" onInput={handleSearch} className="font-sans focus:outline-none border-l-2 border-y-2 w-full h-5 rounded-l-full p-5 dark:bg-transparent dark:border-gray-500" type="text"></input>
-                        <div className='bg-white border-y-2 border-r-2 rounded-r-full pr-3 flex items-center text-slate-300 dark:bg-gray-700 dark:border-gray-500'>
-                            <AiOutlineSearch size="20px" />
-                        </div>
+                    <div className="flex h-full w-full justify-between">
+						<div className="flex">
+							<input id="keyword__input" placeholder="Ketik nama" onInput={handleSearch} className="font-sans focus:outline-none border-l-2 border-y-2 w-full h-5 rounded-l-full p-5 dark:bg-transparent dark:border-gray-500" type="text"></input>
+							<div className='bg-white border-y-2 border-r-2 rounded-r-full pr-3 flex items-center text-slate-300 dark:bg-gray-700 dark:border-gray-500'>
+								<AiOutlineSearch size="20px" />
+							</div>
+						</div>
+						<div className={`px-5 flex items-center gap-2 rounded-none transition-all`}>
+							<FaFilter />
+							<select defaultValue={checkFilter()} onChange={handleFilter} ref={filterRef} id="filter" className="h-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+								<option value="">Semua</option>
+								<option value="1">Aktif</option>
+								<option value="0">Belum Aktif</option>
+								<option value="2">Tidak Aktif</option>
+							</select>
+						</div>
                     </div>
                 </div>
+
 
                 <div className="table__container shadow-sm w-full overflow-x-scroll sm:rounded-md mb-9 text-sm">
                     <table className="w-full">
                         <thead className="text-slate-500 font-bold">
                             <tr className="border-b dark:border-b dark:border-b-gray-500">
-                                <th>NAMA</th>
-                                <th className="py-5">KELAS</th>
-                                <th className="py-5">STATUS</th>
+                                <th className="min-w-52">NAMA</th>
+                                <th className="py-5 min-w-36">KELAS</th>
+                                <th className="py-5 min-w-52">STATUS</th>
+								{
+									user.role === 1 && (
+										<th className="min-w-30 p-5 box-border">AKSI</th>
+									)
+								}
                             </tr>
                         </thead>
                         <tbody>
                             {
                                 members && members?.length < 1 ?
-                                    <tr><td colSpan="5" className="text-center py-6">Tidak ada anggota yang ditemukan</td></tr>
+                                    <tr><td colSpan="4" className="text-center py-6">Tidak ada anggota yang ditemukan</td></tr>
                                     : members.map(member => {
                                         return (
                                             <tr className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
                                                 <td className="py-5 pl-5 w-96">{member.name}</td>
                                                 <td className="text-center">{member.class}</td>
-                                                <td className="text-center"><span className="bg-green-400 px-3 py-1 font-bold text-white rounded-md">AKTIF</span></td>
+												{
+													member.is_verified && !member.deleted_at && (
+														<td className="text-center"><span className="bg-green-400 px-3 py-1 font-bold text-white rounded-md">AKTIF</span></td>
+													)
+												}
+
+												{
+													!member.is_verified && !member.deleted_at && (
+														<td className="text-center"><span className="bg-yellow-500 px-3 py-1 font-bold text-white rounded-md">BELUM AKTIF</span></td>
+													)
+												}
+
+												{
+													member.deleted_at && (
+														<td className="text-center"><span className="bg-red-400 px-3 py-1 font-bold text-white rounded-md">TIDAK AKTIF</span></td>
+													)
+												}
+                                                <td className="box-border p-5 flex justify-center">
+													{
+														(user.role === 1 && !member.deleted_at && member.is_verified) && (
+															<BsFillTrashFill className="hover:cursor-pointer" onClick={() => {
+																setActive(true);
+																setUserDetail(() => {
+																	return (
+																		<>
+																			<p className="font-md mt-3">Apakah anda yakin ingin menonaktifkan anggota berikut:</p>
+
+																			<table className="font-sans mt-3">
+																				<tr>
+																					<td>Nama</td>
+																					<td className="w-10 text-center"> : </td>
+																					<td>{member.name}</td>
+																				</tr>
+																				<tr>
+																					<td>Kelas</td>
+																					<td className="w-10 text-center"> : </td>
+																					<td>{member.class}</td>
+																				</tr>
+																			</table>
+																		</>
+																	)
+																})
+																setAction(() => deleteUser(member.id))
+															}}></BsFillTrashFill>
+														)
+													}
+												</td>
                                             </tr>
                                         )
                                     })
                             }
                         </tbody>
                     </table>
+					<p className="px-5 py-2 mb-4 md:mb-auto">{`Menampilkan ${members.length} anggota dari total ${meta.total} anggota`}</p>
                 </div>
 
                 <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 dark:text-gray-200">

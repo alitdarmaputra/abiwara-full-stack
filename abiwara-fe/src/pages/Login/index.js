@@ -12,7 +12,7 @@ import axios from 'axios';
 export default function Login() {
     const [isHide, setHide] = useState(true);
     const auth = useAuth()
-	const [theme, _] = useState(localStorage.getItem('theme'));
+	const [theme] = useState(localStorage.getItem('theme'));
 	
 	// get redirect path if user is redirected after authenticated 
 	const location = useLocation();
