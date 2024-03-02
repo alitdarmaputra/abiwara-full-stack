@@ -120,7 +120,7 @@ func (controller *BookControllerImpl) FindAll(ctx *gin.Context) {
 
 	sortQuery, ok := ctx.GetQuery("sort")
 	if ok {
-		if sortQuery == "updated_at" || sortQuery == "rating" || sortQuery == "title" || sortQuery == "author" || sortQuery == "id" {
+		if sortQuery == "updated_at" || sortQuery == "rating" || sortQuery == "title" || sortQuery == "author" || sortQuery == "id" || sortQuery == "created_at" {
 			if sortQuery == "id" {
 				sort = "ID"
 			} else {
