@@ -63,6 +63,29 @@ func (controller *VisitorControllerImpl) FindAll(ctx *gin.Context) {
 		utils.PanicIfError(err)
 	}
 
+	const dateFormat = "2006-01-02"
+	var startDate, endDate *time.Time
+
+	queryStartDate, ok := ctx.GetQuery("start_date")
+	if ok {
+		date, err := time.Parse(dateFormat, queryStartDate)
+		if err != nil {
+			response.JsonBasicResponse(ctx, http.StatusBadRequest, "Bad Request")
+			return
+		}
+		startDate = &date
+	}
+
+	queryEndDate, ok := ctx.GetQuery("end_date")
+	if ok {
+		date, err := time.Parse(dateFormat, queryEndDate)
+		if err != nil {
+			response.JsonBasicResponse(ctx, http.StatusBadRequest, "Bad Request")
+			return
+		}
+		endDate = &date
+	}
+
 	claims, err := controller.Middleware.ExtractJWTUser(ctx)
 	utils.PanicIfError(err)
 
@@ -73,6 +96,8 @@ func (controller *VisitorControllerImpl) FindAll(ctx *gin.Context) {
 		querySearch,
 		uint(claims.RoleId),
 		claims.Id,
+		startDate,
+		endDate,
 	)
 	response.JsonPageData(ctx, http.StatusOK, "OK", visitorResponses, meta)
 }

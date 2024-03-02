@@ -139,15 +139,15 @@ func (service *UserServiceImpl) Update(
 }
 
 func (service *UserServiceImpl) Delete(ctx context.Context, userId string, currUser string) {
-	if userId != currUser {
-		panic(business.NewUnauthorizedError("Unauthorized user"))
-	}
-
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
 
 	user, err := service.UserRepository.FindById(ctx, tx, userId)
 	utils.PanicIfError(err)
+
+	if user.Role.Name != constant.MEMBER {
+		panic(business.NewUnauthorizedError("Can not delete non member user"))
+	}
 
 	err = service.UserRepository.Delete(ctx, tx, user.ID)
 	utils.PanicIfError(err)
@@ -170,13 +170,14 @@ func (service *UserServiceImpl) FindAll(
 	ctx context.Context,
 	page, perPage int,
 	querySearch string,
+	status string,
 ) ([]response.UserResponse, common_response.Meta) {
 	offset := utils.CountOffset(page, perPage)
 
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
 
-	users, count := service.UserRepository.FindAll(ctx, tx, offset, perPage, querySearch)
+	users, count := service.UserRepository.FindAll(ctx, tx, offset, perPage, querySearch, status)
 
 	meta := common_response.Meta{
 		Page:      page,

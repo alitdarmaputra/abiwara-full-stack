@@ -31,6 +31,8 @@ func (repository *VisitorRepositoryImpl) FindAll(
 	offset, limit int,
 	search string,
 	param Visitor,
+	startDate,
+	endDate *time.Time,
 ) ([]Visitor, int) {
 	var visitors []Visitor
 	query := tx.Model(&[]Visitor{})
@@ -42,24 +44,21 @@ func (repository *VisitorRepositoryImpl) FindAll(
 		query = query.Where("name LIKE ?", search)
 	}
 
-	startDate := time.Date(
-		time.Now().Year(),
-		time.Now().Month(),
-		time.Now().Day(),
-		0,
-		0,
-		0,
-		0,
-		time.Local,
-	)
-	endDate := startDate.Add(24 * time.Hour)
+	if startDate != nil {
+		start := startDate.Truncate(24 * time.Hour)
+		query = query.Where(
+			"visit_time >= ?",
+			start.Format(constant.DDMMYYYYhhmmss),
+		)
+	}
 
-	// Filter query for curr day
-	query = query.Where(
-		"visit_time >= ? AND visit_time < ?",
-		startDate.Format(constant.DDMMYYYYhhmmss),
-		endDate.Format(constant.DDMMYYYYhhmmss),
-	)
+	if endDate != nil {
+		end := endDate.Add(24 * time.Hour).Truncate(24 * time.Hour)
+		query = query.Where(
+			"visit_time < ?",
+			end.Format(constant.DDMMYYYYhhmmss),
+		)
+	}
 
 	totalResult := query.Find(&[]Visitor{})
 	query.Limit(limit).Offset(offset).Order("created_at desc").Find(&visitors)

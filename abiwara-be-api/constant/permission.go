@@ -19,5 +19,6 @@ const (
 	PermissionShowBorrower   = "permission-show-borrower"
 
 	// Member
-	PermissionShowMember = "permission-show-member"
+	PermissionShowMember   = "permission-show-member"
+	PermissionDeleteMember = "permission-delete-member"
 )

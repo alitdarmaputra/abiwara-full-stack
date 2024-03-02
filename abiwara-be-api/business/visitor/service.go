@@ -17,6 +17,7 @@ type VisitorService interface {
 		querySearch string,
 		roleId uint,
 		userId string,
+		startDate, endDate *time.Time,
 	) ([]response.VisitorResponse, common_response.Meta)
 	GetTotal(
 		ctx context.Context,

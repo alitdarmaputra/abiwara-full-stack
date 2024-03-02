@@ -19,6 +19,10 @@ func UserRouter(
 		middleware.PermissionMiddleware(constant.PermissionShowMember),
 		userController.FindAll)
 
+	v1JWTAuth.DELETE("/member/:id",
+		middleware.PermissionMiddleware(constant.PermissionDeleteMember),
+		userController.Delete)
+
 	v1JWTAuth.GET(
 		"/total-member",
 		middleware.PermissionMiddleware(constant.PermissionShowMember),

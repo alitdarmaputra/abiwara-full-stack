@@ -72,6 +72,13 @@ func (controller *BorrowerControllerImpl) FindAll(ctx *gin.Context) {
 	claims, err := controller.Middleware.ExtractJWTUser(ctx)
 	utils.PanicIfError(err)
 
+	var status *string
+	queryStatus, ok := ctx.GetQuery("status")
+
+	if ok {
+		status = &queryStatus
+	}
+
 	borrowerResponses, meta := controller.BorrowerService.FindAll(
 		ctx,
 		page,
@@ -79,6 +86,7 @@ func (controller *BorrowerControllerImpl) FindAll(ctx *gin.Context) {
 		querySearch,
 		uint(claims.RoleId),
 		claims.Id,
+		status,
 	)
 	response.JsonPageData(ctx, http.StatusOK, "OK", borrowerResponses, meta)
 }

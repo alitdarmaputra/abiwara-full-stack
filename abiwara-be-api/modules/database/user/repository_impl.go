@@ -46,7 +46,7 @@ func (repository *UserRepositoryImpl) Delete(
 	tx *gorm.DB,
 	userId string,
 ) error {
-	result := tx.Delete(&User{}, userId)
+	result := tx.Delete(&User{}, "id = ?", userId)
 	return database.WrapError(result.Error)
 }
 
@@ -56,7 +56,7 @@ func (repository *UserRepositoryImpl) FindById(
 	userId string,
 ) (User, error) {
 	var user User
-	result := tx.Joins("Img").First(&user, "users.id = ? AND is_verified = ?", userId, true)
+	result := tx.Joins("Img").Joins("Role").First(&user, "users.id = ? AND is_verified = 1", userId)
 	return user, database.WrapError(result.Error)
 }
 
@@ -86,16 +86,29 @@ func (repository *UserRepositoryImpl) FindAll(
 	tx *gorm.DB,
 	offset, limit int,
 	search string,
+	status string,
 ) ([]User, int) {
 	var users []User = []User{}
-	var query *gorm.DB = tx
+	var query *gorm.DB = tx.Unscoped()
 
 	if search != "" {
 		search = "%" + search + "%"
 		query = query.Where("name LIKE ?", search)
 	}
 
-	query = query.Where("role_id = ? AND is_verified = 1", 3)
+	query = query.Where("role_id = ?", 3)
+
+	if status == "0" {
+		query.Where("status = 0")
+	}
+
+	if status == "1" {
+		query.Where("status = 1")
+	}
+
+	if status == "2" {
+		query.Where("deleted_at is not null")
+	}
 
 	totalResult := query
 	totalResult = totalResult.Find(&[]User{})

@@ -37,6 +37,7 @@ func (repository *BorrowerRepositoryImpl) FindAll(
 	offset, limit int,
 	search string,
 	param Borrower,
+	status *string,
 ) ([]Borrower, int) {
 	var borrowers []Borrower
 
@@ -59,6 +60,10 @@ func (repository *BorrowerRepositoryImpl) FindAll(
 
 		query = query.
 			Where("book_id IN (?) OR user_id IN (?)", subqueryBook, subqueryUser)
+	}
+
+	if status != nil {
+		query = query.Where("status = ?", *status)
 	}
 
 	totalResult := query

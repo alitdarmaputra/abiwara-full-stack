@@ -120,8 +120,12 @@ func (controller *BookControllerImpl) FindAll(ctx *gin.Context) {
 
 	sortQuery, ok := ctx.GetQuery("sort")
 	if ok {
-		if sortQuery == "updated_at" || sortQuery == "rating" {
-			sort = sortQuery
+		if sortQuery == "updated_at" || sortQuery == "rating" || sortQuery == "title" || sortQuery == "author" || sortQuery == "id" {
+			if sortQuery == "id" {
+				sort = "ID"
+			} else {
+				sort = sortQuery
+			}
 		}
 	}
 
@@ -217,14 +221,14 @@ func (controller *BookControllerImpl) BulkCreateFile(ctx *gin.Context) {
 	data = append(data, []string{
 		"Tanggal Masuk",
 		"No Inventaris",
-		"Penyusun",
+		"Penulis",
 		"Judul Buku",
 		"Penerbit",
 		"Kota Terbit",
 		"Tahun Terbit",
-		"Call Number Klasifikasi",
-		"Call Number Penyusun",
-		"Call Number Klasifikasi Judul",
+		"Klasifikasi",
+		"Nomor Panggil Penulis",
+		"Nomor Panggil Judul Buku",
 		"Asal",
 		"Eks",
 		"Status",
@@ -233,7 +237,7 @@ func (controller *BookControllerImpl) BulkCreateFile(ctx *gin.Context) {
 	data = append(data, []string{
 		"31-01-2006",
 		"No Inventaris",
-		"Penyusun",
+		"Penulis",
 		"Judul Buku",
 		"Penerbit",
 		"Kota Terbit",

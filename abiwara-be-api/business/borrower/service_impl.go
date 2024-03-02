@@ -80,6 +80,7 @@ func (service *BorrowerServiceImpl) FindAll(
 	querySearch string,
 	roleId uint,
 	userId string,
+	status *string,
 ) ([]response.BorrowerResponse, common_response.Meta) {
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
@@ -96,10 +97,11 @@ func (service *BorrowerServiceImpl) FindAll(
 			perPage,
 			querySearch,
 			param,
+			status,
 		)
 	} else {
 		param.UserId = userId
-		borrowers, total = service.BorrowerRepository.FindAll(ctx, tx, utils.CountOffset(page, perPage), perPage, querySearch, param)
+		borrowers, total = service.BorrowerRepository.FindAll(ctx, tx, utils.CountOffset(page, perPage), perPage, querySearch, param, status)
 	}
 
 	return response.ToBorrowerResponses(borrowers), common_response.Meta{

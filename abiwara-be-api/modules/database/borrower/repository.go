@@ -15,6 +15,7 @@ type BorrowerRepository interface {
 		offset, limit int,
 		search string,
 		param Borrower,
+		status *string,
 	) ([]Borrower, int)
 	FindById(ctx context.Context, tx *gorm.DB, borrowerId uint) (Borrower, error)
 	GetTotal(ctx context.Context, tx *gorm.DB) int64

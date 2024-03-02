@@ -71,6 +71,8 @@ func (service *VisitorServiceImpl) FindAll(
 	querySearch string,
 	roleId uint,
 	userId string,
+	startDate,
+	endDate *time.Time,
 ) ([]response.VisitorResponse, common_response.Meta) {
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
@@ -87,10 +89,12 @@ func (service *VisitorServiceImpl) FindAll(
 			perPage,
 			querySearch,
 			param,
+			startDate,
+			endDate,
 		)
 	} else {
 		param.UserId = userId
-		visitors, total = service.VisitorRepository.FindAll(ctx, tx, utils.CountOffset(page, perPage), perPage, querySearch, param)
+		visitors, total = service.VisitorRepository.FindAll(ctx, tx, utils.CountOffset(page, perPage), perPage, querySearch, param, startDate, endDate)
 	}
 
 	return response.ToVisitorResponses(visitors), common_response.Meta{

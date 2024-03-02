@@ -33,6 +33,8 @@ func (s Seed) PermissionSeed() {
 			Name: constant.PermissionShowBorrower,
 		}, {
 			Name: constant.PermissionShowMember,
+		}, {
+			Name: constant.PermissionDeleteMember,
 		},
 	}
 

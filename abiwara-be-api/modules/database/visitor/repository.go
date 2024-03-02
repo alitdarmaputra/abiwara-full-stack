@@ -15,6 +15,8 @@ type VisitorRepository interface {
 		offset, limit int,
 		search string,
 		param Visitor,
+		startDate,
+		endDate *time.Time,
 	) ([]Visitor, int)
 	FindOne(ctx context.Context, tx *gorm.DB, param Visitor) (Visitor, error)
 	GetTotal(ctx context.Context, tx *gorm.DB, startDate, endDate time.Time) []TotalVisitor

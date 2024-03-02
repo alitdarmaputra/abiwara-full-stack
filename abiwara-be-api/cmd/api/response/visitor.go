@@ -7,6 +7,7 @@ import (
 )
 
 type VisitorResponse struct {
+	Id          uint      `json:"id"`
 	Name        string    `json:"name"`
 	Class       string    `json:"class"`
 	PIC         string    `json:"pic"`
@@ -16,6 +17,7 @@ type VisitorResponse struct {
 
 func ToVisitorResponse(visitor visitor_repository.Visitor) VisitorResponse {
 	return VisitorResponse{
+		Id:          visitor.ID,
 		Name:        visitor.Name,
 		Class:       visitor.Class,
 		PIC:         visitor.PIC,

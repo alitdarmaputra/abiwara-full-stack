@@ -84,7 +84,9 @@ func (controller *UserControllerImpl) FindAll(ctx *gin.Context) {
 		utils.PanicIfError(err)
 	}
 
-	userResponses, meta := controller.UserService.FindAll(ctx, page, perPage, querySearch)
+	status, _ := ctx.GetQuery("status")
+
+	userResponses, meta := controller.UserService.FindAll(ctx, page, perPage, querySearch, status)
 	response.JsonPageData(ctx, http.StatusOK, "OK", userResponses, meta)
 }
 

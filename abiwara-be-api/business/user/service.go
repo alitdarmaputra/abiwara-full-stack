@@ -23,6 +23,7 @@ type UserService interface {
 		page int,
 		perPage int,
 		querySearch string,
+		status string,
 	) ([]response.UserResponse, common_response.Meta)
 	Login(ctx context.Context, request request.UserLoginRequest) *Token
 	SetJWTConfig(secret string, expired time.Duration)
