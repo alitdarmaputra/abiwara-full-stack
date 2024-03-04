@@ -7,8 +7,9 @@ services:
       - '5000:5000'
     env_file:
       - ./.env
+    network_mode: host
   api:
-    image: alitdarmaputra/abiwarabe_image:latest
+    image: alitdarmaputra/abiwara_be_image:latest
     container_name: abiwarabe_container
     ports:
       - '4002:4002'
@@ -16,8 +17,9 @@ services:
       - recommender
     env_file:
       - ./.env
+    network_mode: host
   backoffice:
-    image: alitdarmaputra/abiwarafe_image:latest
+    image: alitdarmaputra/abiwara_fe_image:latest
     container_name: abiwarafe_container
     ports:
       - '3000:3000'
@@ -25,6 +27,7 @@ services:
       - api
     env_file:
       - ./.env
+    network_mode: host
   nginx:
     image: nginx:1.15-alpine
     container_name: nginx_container
