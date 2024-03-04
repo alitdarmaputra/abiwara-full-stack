@@ -161,6 +161,11 @@ func (controller *UserControllerImpl) UpdateRole(ctx *gin.Context) {
 	err = ctx.ShouldBindJSON(&userRoleUpdateRequest)
 	utils.PanicIfError(err)
 
+	if userRoleUpdateRequest.RoleId == 1 {
+		response.JsonErrorResponse(ctx, http.StatusUnauthorized, "Unauthorized", "Can not update to admin role")
+		return
+	}
+
 	controller.UserService.UpdateRole(ctx, userRoleUpdateRequest, param.Id)
 	response.JsonBasicResponse(ctx, http.StatusOK, "OK")
 }
