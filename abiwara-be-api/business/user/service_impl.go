@@ -353,3 +353,16 @@ func (service *UserServiceImpl) GetTotal(ctx context.Context) response.TotalUser
 	res.Total = service.UserRepository.GetTotal(ctx, tx)
 	return res
 }
+
+func (service *UserServiceImpl) UpdateRole(ctx context.Context, request request.UserRoleUpdateRequest, userId string) {
+	tx := service.DB.Begin()
+	defer utils.CommitOrRollBack(tx)
+
+	user, err := service.UserRepository.FindById(ctx, tx, userId)
+	utils.PanicIfError(err)
+
+	user.Role.ID = request.RoleId
+
+	user, err = service.UserRepository.Update(ctx, tx, user)
+	utils.PanicIfError(err)
+}

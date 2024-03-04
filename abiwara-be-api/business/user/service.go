@@ -32,4 +32,9 @@ type UserService interface {
 	SendResetToken(ctx context.Context, request request.ResetTokenRequest)
 	RedeemToken(ctx context.Context, request request.RedeemTokenRequest)
 	GetTotal(ctx context.Context) response.TotalUserResponse
+	UpdateRole(
+		ctx context.Context,
+		request request.UserRoleUpdateRequest,
+		userId string,
+	)
 }

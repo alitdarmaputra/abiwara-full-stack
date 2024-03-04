@@ -96,7 +96,7 @@ func (repository *UserRepositoryImpl) FindAll(
 		query = query.Where("name LIKE ?", search)
 	}
 
-	query = query.Where("role_id = ?", 3)
+	query = query.Where("role_id != ?", 1)
 
 	if status == "0" {
 		query.Where("status = 0")

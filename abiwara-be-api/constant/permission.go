@@ -21,4 +21,5 @@ const (
 	// Member
 	PermissionShowMember   = "permission-show-member"
 	PermissionDeleteMember = "permission-delete-member"
+	PermissionEditMember   = "permission-edit-member"
 )

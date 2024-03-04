@@ -23,6 +23,10 @@ func UserRouter(
 		middleware.PermissionMiddleware(constant.PermissionDeleteMember),
 		userController.Delete)
 
+	v1JWTAuth.PATCH("/member/:id",
+		middleware.PermissionMiddleware(constant.PermissionEditMember),
+		userController.UpdateRole)
+
 	v1JWTAuth.GET(
 		"/total-member",
 		middleware.PermissionMiddleware(constant.PermissionShowMember),

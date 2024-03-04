@@ -14,4 +14,5 @@ type UserController interface {
 	ResetPassword(ctx *gin.Context)
 	ReedemResetToken(ctx *gin.Context)
 	GetTotal(ctx *gin.Context)
+	UpdateRole(ctx *gin.Context)
 }

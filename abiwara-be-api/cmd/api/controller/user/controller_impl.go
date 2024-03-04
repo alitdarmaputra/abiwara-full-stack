@@ -150,3 +150,17 @@ func (controller *UserControllerImpl) GetTotal(ctx *gin.Context) {
 	res := controller.UserService.GetTotal(ctx)
 	response.JsonBasicData(ctx, http.StatusOK, "OK", res)
 }
+
+func (controller *UserControllerImpl) UpdateRole(ctx *gin.Context) {
+	param := request.StringPathParam{}
+
+	err := ctx.ShouldBindUri(&param)
+	utils.PanicIfError(err)
+
+	userRoleUpdateRequest := request.UserRoleUpdateRequest{}
+	err = ctx.ShouldBindJSON(&userRoleUpdateRequest)
+	utils.PanicIfError(err)
+
+	controller.UserService.UpdateRole(ctx, userRoleUpdateRequest, param.Id)
+	response.JsonBasicResponse(ctx, http.StatusOK, "OK")
+}

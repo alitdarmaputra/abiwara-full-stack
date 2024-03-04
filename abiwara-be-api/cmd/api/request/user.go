@@ -14,6 +14,10 @@ type UserUpdateRequest struct {
 	ProfileImg *string `json:"profile_img"`
 }
 
+type UserRoleUpdateRequest struct {
+	RoleId uint `json:"role_id" binding:"required"`
+}
+
 type UserLoginRequest struct {
 	Email    string `json:"email"    binding:"required,email"`
 	Password string `json:"password" binding:"required"`
