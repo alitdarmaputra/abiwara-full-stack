@@ -23,6 +23,7 @@ export default function Member() {
 	const { user } = useContext(UserContext);
 	const filterRef = useRef();
 	const navigate = useNavigate();
+	const [roleLoading, setRoleLoading] = useState(false);
 
     const deleteUser = id => {
         return async () => {
@@ -45,6 +46,26 @@ export default function Member() {
 		const url = new URL(window.location.href);
 		const filter = url.searchParams.get("status");
 		return filter;
+	}
+	
+	const updateRole = async (userId, roleId) => {
+		try{
+			const payload = {
+				role_id: parseInt(roleId) 
+			}
+			setRoleLoading(true);
+			await axiosInstance.patch(`${httpRequest.api.baseUrl}/member/${userId}`, payload);
+			setRoleLoading(false);
+		} catch(err) {
+			setRoleLoading(false);
+			if (err.response.data.code === 401) {
+				notifyError("Sesi telah selesai");
+				setAuthToken();
+			} else {
+				notifyError("Server error");
+				console.log(err);
+			}
+		}
 	}
 
     const handleFilter = () => {
@@ -112,7 +133,7 @@ export default function Member() {
 
     return (
         <div className="flex-grow w-full">
-            <Modal active={active} setActive={setActive} title="Nonaktif Anggota" children={userDetail} action={action}></Modal>
+            <Modal active={active} setActive={setActive} title="Nonaktif Pengguna" children={userDetail} action={action}></Modal>
 
             <div className="member__container bg-white dark:bg-[#2D3748] dark:text-gray-200 rounded-lg">
                 <div className="table_head__container flex justify-between p-5 box-border items-center">
@@ -143,6 +164,7 @@ export default function Member() {
                                 <th className="min-w-52">NAMA</th>
                                 <th className="py-5 min-w-36">KELAS</th>
                                 <th className="py-5 min-w-52">STATUS</th>
+                                <th className="py-5 min-w-52">ROLE</th>
 								{
 									user.role === 1 && (
 										<th className="min-w-30 p-5 box-border">AKSI</th>
@@ -153,7 +175,7 @@ export default function Member() {
                         <tbody>
                             {
                                 members && members?.length < 1 ?
-                                    <tr><td colSpan="4" className="text-center py-6">Tidak ada anggota yang ditemukan</td></tr>
+                                    <tr><td colSpan="4" className="text-center py-6">Tidak ada pengguna yang ditemukan</td></tr>
                                     : members.map(member => {
                                         return (
                                             <tr key={member.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
@@ -176,6 +198,16 @@ export default function Member() {
 														<td className="text-center"><span className="bg-red-400 px-3 py-1 font-bold text-white rounded-md">TIDAK AKTIF</span></td>
 													)
 												}
+
+												<td className="text-center">
+													<div className="flex justify-center">
+														<select disabled={roleLoading} defaultValue={member.role_id} onChange={(e) => updateRole(member.id, e.target.value)} id="filter" className="h-full w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+															<option value={2}>Operator</option>
+															<option value={3}>Anggota</option>
+														</select>
+													</div>
+												</td>
+
                                                 <td className="box-border p-5 flex justify-center">
 													{
 														(user.role === 1 && !member.deleted_at && member.is_verified) && (
@@ -184,7 +216,7 @@ export default function Member() {
 																setUserDetail(() => {
 																	return (
 																		<>
-																			<p className="font-md mt-3">Apakah anda yakin ingin menonaktifkan anggota berikut:</p>
+																			<p className="font-md mt-3">Apakah anda yakin ingin menonaktifkan pengguna berikut:</p>
 
 																			<table className="font-sans mt-3">
 																				<tr>
@@ -212,7 +244,7 @@ export default function Member() {
                             }
                         </tbody>
                     </table>
-					<p className="px-5 py-2 mb-4 md:mb-auto">{`Menampilkan ${members.length} anggota dari total ${meta.total} anggota`}</p>
+					<p className="px-5 py-2 mb-4 md:mb-auto">{`Menampilkan ${members.length} pengguna dari total ${meta.total} pengguna`}</p>
                 </div>
 
                 <div className="pagination__container flex w-full justify-center text-slate-800 pb-5 dark:text-gray-200">
