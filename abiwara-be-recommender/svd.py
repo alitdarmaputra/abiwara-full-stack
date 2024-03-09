@@ -65,6 +65,8 @@ class SVD():
         return self
   
     def estimate(self, u, i):
+        # Estimate rating or user with inner id u
+        # and item with inner id i
         known_user = self.trainset.knows_user(u)
         known_item = self.trainset.knows_item(i)
 
