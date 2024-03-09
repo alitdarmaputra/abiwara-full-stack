@@ -15,7 +15,7 @@ def cosine_similarity(u, v):
     return cosine_similarity
 
 # Load model
-with gzip.open("svd_model.h5", 'rb') as f:
+with gzip.open("svd_model.pkl.gz", 'rb') as f:
     p = pickle.Unpickler(f)
     model = p.load()
 
