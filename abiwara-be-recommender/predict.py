@@ -2,7 +2,17 @@ import pandas as pd
 import numpy as np
 import pickle
 import gzip
-from scipy.spatial.distance import cosine as cosine_distance
+
+def cosine_similarity(u, v):
+    norm_u = np.linalg.norm(u)
+    norm_v = np.linalg.norm(v)
+
+    # Handle zero-vector cases to avoid division by zero
+    if norm_u == 0 or norm_v == 0:
+        return 0
+    
+    cosine_similarity = np.dot(u, v) / (norm_u * norm_v)
+    return cosine_similarity
 
 # Load model
 with gzip.open("svd_model.h5", 'rb') as f:
@@ -30,7 +40,7 @@ def get_recs(book_id, model=model) -> pd.DataFrame:
         other_book_vector = get_vector(other_raw_id, model)
         
         # Get the second book vector, and calculate distance
-        similarity_score = cosine_distance(other_book_vector, book_vector)
+        similarity_score = cosine_similarity(other_book_vector, book_vector)
         
         if book_id != other_raw_id:
             similarity_table.append((similarity_score, other_raw_id))
@@ -38,4 +48,4 @@ def get_recs(book_id, model=model) -> pd.DataFrame:
     # sort books by ascending similarity
     recs = pd.DataFrame(sorted(similarity_table), columns=["vector_cosine_distance", "book_id"])
 
-    return recs.head(25)
+    return recs.tail(25)[::-1]
