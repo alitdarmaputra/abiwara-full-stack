@@ -149,6 +149,6 @@ func (repository *BookRepositoryImpl) BulkCreate(
 	tx *gorm.DB,
 	books []Book,
 ) error {
-	result := tx.Debug().CreateInBatches(&books, len(books))
+	result := tx.CreateInBatches(&books, len(books))
 	return result.Error
 }

@@ -133,8 +133,9 @@ func (service *UserServiceImpl) Update(
 	user.Name = request.Name
 	user.Class = request.Class
 	user.ProfileImg = request.ProfileImg
+	user.AbsenceNumber = request.AbsenceNumber
 
-	user, err = service.UserRepository.Update(ctx, tx, user)
+	user, err = service.UserRepository.SaveOrUpdate(ctx, tx, user)
 	utils.PanicIfError(err)
 }
 

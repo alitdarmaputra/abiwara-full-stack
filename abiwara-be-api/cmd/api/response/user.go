@@ -7,14 +7,15 @@ import (
 )
 
 type UserResponse struct {
-	Id         string              `json:"id"`
-	Name       string              `json:"name"`
-	Class      string              `json:"class"`
-	IsVerified bool                `json:"is_verified"`
-	CreatedAt  time.Time           `json:"created_at"`
-	DeletedAt  *time.Time          `json:"deleted_at"`
-	RoleId     uint                `json:"role_id"`
-	Img        ImageUploadResponse `json:"img"`
+	Id            string              `json:"id"`
+	Name          string              `json:"name"`
+	Class         string              `json:"class"`
+	IsVerified    bool                `json:"is_verified"`
+	CreatedAt     time.Time           `json:"created_at"`
+	DeletedAt     *time.Time          `json:"deleted_at"`
+	RoleId        uint                `json:"role_id"`
+	AbsenceNumber *int8               `json:"absence_number"`
+	Img           ImageUploadResponse `json:"img"`
 }
 
 func ToUserResponse(user user_repository.User) UserResponse {
@@ -29,14 +30,15 @@ func ToUserResponse(user user_repository.User) UserResponse {
 	}
 
 	return UserResponse{
-		Id:         user.ID,
-		Name:       user.Name,
-		Class:      user.Class,
-		IsVerified: user.IsVerified,
-		Img:        ToImageUploadResponse(user.Img),
-		RoleId:     user.RoleId,
-		CreatedAt:  user.CreatedAt,
-		DeletedAt:  deletedAt,
+		Id:            user.ID,
+		Name:          user.Name,
+		Class:         user.Class,
+		AbsenceNumber: user.AbsenceNumber,
+		IsVerified:    user.IsVerified,
+		Img:           ToImageUploadResponse(user.Img),
+		RoleId:        user.RoleId,
+		CreatedAt:     user.CreatedAt,
+		DeletedAt:     deletedAt,
 	}
 }
 

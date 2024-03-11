@@ -9,9 +9,10 @@ type UserCreateRequest struct {
 }
 
 type UserUpdateRequest struct {
-	Name       string  `json:"name"        binding:"required"`
-	Class      string  `json:"class"       binding:"required"`
-	ProfileImg *string `json:"profile_img"`
+	Name          string  `json:"name"        binding:"required"`
+	Class         string  `json:"class"       binding:"required"`
+	AbsenceNumber *int8   `json:"absence_number"`
+	ProfileImg    *string `json:"profile_img"`
 }
 
 type UserRoleUpdateRequest struct {
