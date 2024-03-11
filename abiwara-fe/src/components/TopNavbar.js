@@ -46,7 +46,7 @@ export default function TopNavbar() {
                 </div>
                 <hr className="mb-3"></hr>
                 <button onClick={handleLogout} className="hover:text-blue-900 text-left p-2 hover:bg-blue-100 rounded-md w-full mb-5">
-                    Logout
+                   Keluar 
                 </button>
             </div>
         </>
