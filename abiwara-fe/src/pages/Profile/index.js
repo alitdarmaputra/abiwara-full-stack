@@ -50,7 +50,7 @@ export default function Profile() {
 							<img className="object-cover w-full h-full" src={user?.img.image_url} alt="user-profile"/>
 						</div>
 					</div>
-					<h1 className="text-xl font-bold roboto-bold mt-10 mb-2 dark:text-gray-200">{user.name} | {user.class}</h1>
+					<h1 className="text-xl font-bold roboto-bold mt-10 mb-2 dark:text-gray-200">{user.name} | {user.class} {user.absence_number}</h1>
 					<h3 className="mb-4 text-gray-500">{user?.role === 1 ? "Admin" : user?.role === 2 ? "Operator" : "Anggota"}</h3>
 
 					<h3 className="text-gray-500 flex mb-10 gap-2 justify-center items-center"><FaCakeCandles />Bergabung pada {joinedDate.getDate()}-{joinedDate.getMonth()}-{joinedDate.getFullYear()}</h3>

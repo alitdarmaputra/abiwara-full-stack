@@ -21,18 +21,25 @@ export default function EditProfile() {
 
         const name_input = document.querySelector("#name_input");
 		const class_input = document.querySelector("#class_input");
+		const absence_input = document.querySelector("#absence_input");
 
         if (name_input.value === "" || class_input.value === "") {
             notifyError("Pastikan semua field sudah terisi")
             return
         }
+		
+		if (absence_input.value !== "" && isNaN(absence_input.value)) {
+            notifyError("Format nomor absen tidak sesuai");
+            return
+		}
 
         const payload = {
 			profile_img: profileImg.id || null,
 			name: name_input.value,
+			absence_number: parseInt(absence_input.value),
 			class: class_input.value,
         }
-
+	
         try {
 			setLoading(true);
             await axiosInstance.put(`${httpRequest.api.baseUrl}/user/me`, payload);
@@ -131,6 +138,10 @@ export default function EditProfile() {
                         <div className="name_form mt-5">
                             <label className="font-bold text-sm" htmlFor="name_input">Nama Lengkap <span className="text-red-500">*</span></label>
                             <input defaultValue={user.name} id="name_input" placeholder="Nama lengkap" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none bg-gray-100 dark:bg-[#2D3748] mt-2 w-full h-10 rounded-md p-2" type="text"></input>
+                        </div>
+                        <div className="absence_form mt-5">
+                            <label className="font-bold text-sm" htmlFor="absence_input">Nomor Absen</label>
+                            <input defaultValue={user.absence_number} id="absence_input" placeholder="Nomor absen" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none bg-gray-100 dark:bg-[#2D3748] mt-2 w-full h-10 rounded-md p-2" type="text"></input>
                         </div>
                         <div className="class_form mt-5">
                             <label className="font-bold text-sm" htmlFor="class_input">Kelas <span className="text-red-500">*</span></label>
