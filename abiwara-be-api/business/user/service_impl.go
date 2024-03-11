@@ -201,6 +201,10 @@ func (service *UserServiceImpl) Login(
 		panic(business.NewUnauthorizedError("Incorrect email and password entered"))
 	}
 
+	if !user.IsVerified {
+		panic(business.NewUnauthorizedError("Incorrect email and password entered"))
+	}
+
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password)); err != nil {
 		panic(business.NewUnauthorizedError("Incorrect email and password entered"))
 	}
