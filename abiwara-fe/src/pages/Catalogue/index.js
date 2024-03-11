@@ -215,7 +215,7 @@ export default function Catalogue() {
                     <div id="book-list__content" className="w-full">
                         <div id="content__meta" className="flex justify-between dark:text-gray-200">
 							<p className="mb-4 md:mb-auto">{`Menampilkan ${books.length} buku dari total ${meta.total} buku`}</p>
-							<button onClick={() => setShowSort(!showSort)} className="bg-[#F4F7FA] dark:bg-[#2D3748] p-2 float-end font-bold text-gray-400 rounded-md flex justify-center items-center">
+							<button onClick={() => setShowSort(!showSort)} className="bg-gray-200 dark:bg-[#2D3748] p-2 float-end font-bold text-gray-400 rounded-md flex justify-center items-center">
 								<FaSortAmountDown></FaSortAmountDown>
 							</button>
                         </div>
