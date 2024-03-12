@@ -139,7 +139,16 @@ func (repository *BookRepositoryImpl) FindIn(
 	bookIds []uint,
 ) []Book {
 	var books []Book = []Book{}
-	tx.Where("(id) IN ?", bookIds).Find(&books)
+
+	var idStr string
+	for i, id := range bookIds {
+		if i > 0 {
+			idStr += ","
+		}
+		idStr += fmt.Sprintf("%v", id)
+	}
+
+	tx.Where("(id) IN ?", bookIds).Order("FIELD(id, " + idStr + ")").Find(&books)
 
 	return books
 }
