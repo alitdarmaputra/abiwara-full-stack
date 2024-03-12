@@ -192,7 +192,7 @@ export default function CatalogueDetail() {
                     </div >
                 </div>
             </section >
-			<section id="book-recommendation" className="flex items-center flex-col bg-white pb-10 px-4 md:px-0 dark:bg-[#1A202C] transition-all">
+			<section id="book-recommendation" className="flex items-center flex-col bg-white pt-10 pb-10 px-4 md:px-0 dark:bg-[#1A202C] transition-all">
 				{
 					(recommendations.length > 0) && (
 						<div className="max-w-6xl mb-10 w-full">
