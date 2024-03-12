@@ -148,7 +148,9 @@ func (repository *BookRepositoryImpl) FindIn(
 		idStr += fmt.Sprintf("%v", id)
 	}
 
-	tx.Where("(id) IN ?", bookIds).Order("FIELD(id, " + idStr + ")").Find(&books)
+	if len(bookIds) > 0 {
+		tx.Where("(id) IN ?", bookIds).Order("FIELD(id, " + idStr + ")").Find(&books)
+	}
 
 	return books
 }
