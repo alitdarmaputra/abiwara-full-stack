@@ -158,10 +158,18 @@ export default function CatalogueDetail() {
 										</tr>
 									</tbody>
                                 </table>
-
-                                <div className="px-5 py-1 mb-5 text-center rounded-md inline-block bg-green-200 dark:bg-green-900">
-                                    Tersedia
-                                </div>
+								
+								{	
+									bookDetail.remain > 0 ? (
+										<div className="px-5 py-1 mb-5 text-center rounded-md inline-block bg-green-200 dark:bg-green-900">
+											Tersedia
+										</div>
+									) : (
+										<div className="px-5 py-1 mb-5 text-center rounded-md inline-block bg-red-200 dark:bg-red-900">
+											Tidak Tersedia	
+										</div>
+									)
+								}	
 
                             </div>
                         </div>
