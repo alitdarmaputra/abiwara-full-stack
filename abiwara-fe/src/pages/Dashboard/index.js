@@ -196,7 +196,7 @@ export default function Dashboard() {
 															return (
 																<tr key={borrower.id} className="border-b text-left hover:bg-slate-50 dark:hover:bg-gray-700 dark:border-gray-500">
 																	<td className="pl-5 py-5">{borrower.title}</td>
-																	<td className="text-center">{formatDate(borrower.return_date)}</td>
+																	<td className="text-center">{formatDate(borrower.due_date)}</td>
 																	{
 																		borrower.status ? (
 																			<td className="text-center"><span className="bg-green-400 px-3 py-1 font-bold text-white rounded-md">SELESAI</span></td>

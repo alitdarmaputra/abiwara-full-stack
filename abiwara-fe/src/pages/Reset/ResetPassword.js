@@ -118,7 +118,7 @@ export default function ResetPassword() {
 								} else {
 									setChar(false);
 								}
-							}} ref={newPassword} id="new_password_input" placeholder="Password baru" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2 dark:bg-[#2D3748]" type="password"></input>
+							}} ref={newPassword} id="new_password_input" placeholder="Password baru" className="bg-gray-100 font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2 dark:bg-[#2D3748]" type="password"></input>
 
                             <div className={`len_validation__container flex items-center mt-5 w-full ${isLen ? "text-green-500" : "text-slate-400"}`}>
                                 <AiFillCheckCircle className='text-xl'></AiFillCheckCircle>
@@ -135,7 +135,7 @@ export default function ResetPassword() {
                         </div>
                         <div className="mt-5 confirm_password_form">
                             <label className="font-bold text-sm" htmlFor="konfirmasi_password">Konfirmasi Password <span className="text-red-500">*</span></label>
-                            <input ref={confirmPassword} id="konfirmasi_password" placeholder="Konfirmasi password" className="font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2 dark:bg-[#2D3748]" type="password"></input>
+                            <input ref={confirmPassword} id="konfirmasi_password" placeholder="Konfirmasi password" className="bg-gray-100 font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2 dark:bg-[#2D3748]" type="password"></input>
                         </div>
 
                         {isLoading ?
