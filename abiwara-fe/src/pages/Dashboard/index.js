@@ -32,7 +32,7 @@ export default function Dashboard() {
 	const [book, setBook] = useState();
 	
 	let strRating = '0';
-	if (book.rating > 0)
+	if (book && book.rating > 0)
 		strRating = book.rating?.toFixed(1);
 
     const labels = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
