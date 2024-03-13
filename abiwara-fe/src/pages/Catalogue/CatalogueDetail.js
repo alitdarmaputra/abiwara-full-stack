@@ -21,6 +21,10 @@ export default function CatalogueDetail() {
 	const { authToken } = useAuth();
 	const [markId, setMarkId] = useState();
 
+	let strRating = '0';
+	if (bookDetail.rating > 0)
+		strRating = bookDetail.rating?.toFixed(1);
+
 	const handleBookmark = async () => {
 		try {
 			// Delete bookmark if marked
@@ -101,7 +105,7 @@ export default function CatalogueDetail() {
                                     <div className="flex gap-0.5 text-yellow-500 mr-2">
                                         <Stars rating={bookDetail.rating} />
                                     </div>
-                                    <p>{bookDetail.rating}</p>
+                                    <p>{strRating}</p>
                                 </div>
 
                                 <p className="mb-10">

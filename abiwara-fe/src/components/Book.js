@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import Stars from "./Star";
 
 export default function Book({ book }) {
+	let strRating = '0';
+	if (book.rating > 0)
+		strRating = book.rating?.toFixed(1);
+
     return (
         <Link to={`/catalogue/${book.id}`} id="book" key={book.id} className="md:hover:shadow-lg transition-all hover:cursor-pointer w-48 md:w-52">
             <div id="book__img" className="flex justify-center pt-4 bg-[#F4F7FA] rounded-t-lg dark:bg-[#2D3748]">
@@ -18,7 +22,7 @@ export default function Book({ book }) {
                     <div className="flex gap-0.5 text-yellow-500 mr-2">
                         <Stars id={book.id} rating={book.rating} />
                     </div>
-                    <p className="text-sm">{book.rating}</p>
+                    <p className="text-sm">{strRating}</p>
                 </div>
             </div>
         </Link>

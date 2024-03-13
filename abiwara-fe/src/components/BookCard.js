@@ -3,6 +3,10 @@ import { stringToColor } from "../utils/color";
 import Stars from "./Star";
 
 export default function BookCard({ book }) {
+	let strRating = '0';
+	if (book.rating > 0)
+		strRating = book.rating?.toFixed(1);
+
     return (
         <div id="book-card" key={book.id} className="mb-6 md:pr-4 flex flex-col md:flex-row rounded-md border-2 border-[#F4F7FA] dark:border-[#2D3748] dark:text-gray-200">
             <div id="book-card__img" className="flex justify-center items-center bg-[#F4F7FA] p-4 rounded-t-md md:rounded-l-md dark:bg-[#2D3748]">
@@ -48,7 +52,7 @@ export default function BookCard({ book }) {
                         <div className="flex gap-0.5 text-yellow-500 mr-2">
                             <Stars rating={book.rating} />
                         </div>
-                        <p>{book.rating}</p>
+                        <p>{strRating}</p>
                     </div>
                 </div>
             </div>

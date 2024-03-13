@@ -31,6 +31,10 @@ export default function Dashboard() {
 	const navigate = useNavigate();
 	const [book, setBook] = useState();
 	
+	let strRating = '0';
+	if (book.rating > 0)
+		strRating = book.rating?.toFixed(1);
+
     const labels = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
     ChartJS.register(
@@ -219,7 +223,7 @@ export default function Dashboard() {
 													<h3 className="text-sm mb-2 text-gray-400 roboto-bold">{book.title}</h3>
 													<div className="flex mb-3 items-center">
 														<Stars rating={book.rating}/>
-														<p className="ml-2 text-gray-400">{book.rating}</p>
+														<p className="ml-2 text-gray-400">{strRating}</p>
 													</div>
 													<div className="mb-5 w-[140px] h-[224px] md:w-[170px] md:h-[272px]">
 														<img className="rounded-md object-cover w-full h-full" alt="book cover" src={book.img.image_url} />
