@@ -74,7 +74,7 @@ export default function ForgetPassword() {
                     <form className="mt-6">
                         <div className="email_form">
                             <label className="font-bold text-sm" htmlFor="email_input">Email <span className="text-red-500">*</span></label>
-                            <input ref={email} id="email_input" placeholder="Email" className="dark:bg-[#2D3748] font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2" type="email"></input>
+                            <input ref={email} id="email_input" placeholder="Email" className="dark:bg-[#2D3748] bg-gray-100 font-sans focus:outline-none focus:shadow-md focus:shadow-blue-200 dark:focus:shadow-none mt-2 w-full h-10 rounded-md p-2" type="email"></input>
                         </div>
                         {isLoading ?
                             <button disabled type="button" className="mt-10 w-full h-10 bg-blue-700 text-white font-bold rounded-lg hover:bg-blue-900">
