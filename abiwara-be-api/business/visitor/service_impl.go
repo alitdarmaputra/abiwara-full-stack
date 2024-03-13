@@ -40,29 +40,17 @@ func (service *VisitorServiceImpl) Create(
 		panic(business.NewBadRequestError("Invalid check in time"))
 	}
 
-	param := visitor_repository.Visitor{}
-	param.Name = request.Name
+	visitor := visitor_repository.Visitor{}
+	visitor.VisitTime = time.Now()
+	visitor.Name = request.Name
+	visitor.Class = request.Class
+	visitor.PIC = request.PIC
+	visitor.Description = request.Description
+	visitor.UserId = userId
 
-	visitor, err := service.VisitorRepository.FindOne(ctx, tx, param)
-	if err != nil {
-		// Create if user still not check in at the same day
-		_, ok := err.(*business.NotFoundError)
+	visitor, err := service.VisitorRepository.Save(ctx, tx, visitor)
+	utils.PanicIfError(err)
 
-		if ok {
-			visitor = visitor_repository.Visitor{}
-			visitor.VisitTime = time.Now()
-			visitor.Name = request.Name
-			visitor.Class = request.Class
-			visitor.PIC = request.PIC
-			visitor.Description = request.Description
-			visitor.UserId = userId
-
-			visitor, err = service.VisitorRepository.Save(ctx, tx, visitor)
-			utils.PanicIfError(err)
-		} else {
-			panic(err)
-		}
-	}
 }
 
 func (service *VisitorServiceImpl) FindAll(
