@@ -1,7 +1,7 @@
 import numpy as np
 
 class SVD():
-    def __init__(self, n_factors=100, n_epochs=20, init_mean=0,
+    def __init__(self, n_factors=100, n_epochs=30, init_mean=0,
                  init_std_dev=.1, lr=.005,
                  reg=.02, verbose=False):
         

@@ -1,4 +1,4 @@
-ID,NAMA,EMAIL,NOMOR ABSEN,KELAS
+id,name,email,absence_number,class
 51e49f25-397d-43a1-a807-005933626d2e,LUH MADE SERI NINGSIH,dendiwabawa@gmail.com,13,9E
 25d1508a-f07f-4f5e-8fac-68baeba802de,NI MADE AYU JUNI ASIH,ayujuniasihnimade@gmail.com,20,9A
 77861dd0-f767-43df-b0c0-313fcc03f9f1,NI PUTU LILA MEIKA PUTRI,meikaputri86@gmail.com,27,9A
