@@ -135,7 +135,7 @@ export default function Borrower() {
 						</button>
                     </div>
 
-                    {user.role === 1 && (
+                    {(user.role === 1 || user.role === 2) && (
                         <Link className="h-10 px-4 bg-blue-700 font-bold text-white shadow-md rounded-md flex justify-center items-center" to="/borrow/create">
                             + <span className="hidden md:block pl-2">Buat pinjaman</span>
                         </Link>
@@ -162,7 +162,7 @@ export default function Borrower() {
                                 <th className="text-center">PENGEMBALIAN</th>
                                 <th className="min-w-30 text-center">STATUS</th>
                                 {
-                                    user.role === 1 && (
+                                    (user.role === 1 || user.role === 2) && (
                                         <th className="px-10 min-w-30 text-center">AKSI</th>
                                     )
                                 }

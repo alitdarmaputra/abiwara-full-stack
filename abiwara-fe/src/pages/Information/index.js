@@ -23,7 +23,7 @@ export default function Information() {
 					<h2 className="mt-4 mb-4 text-xl font-bold roboto-bold dark:text-gray-200">Jam Buka</h2>
 					<h3 className="mb-2 font-bold roboto-bol text-gray-700 dark:text-gray-200">Senin-Sabtu</h3>
 					<p className="mb-2 text-gray-700 dark:text-gray-400">Buka : 08.00 WITA</p>
-					<p className="mb-2 text-gray-700 dark:text-gray-400">Buka : 13.30 WITA</p>
+					<p className="mb-2 text-gray-700 dark:text-gray-400">Buka : 13.00 WITA</p>
 				</div>
 			</section>
 		</div>
