@@ -16,7 +16,6 @@ func UserRouter(
 	v1JWTAuth.PUT("/user/me", userController.Update)
 
 	v1JWTAuth.GET("/member",
-		middleware.PermissionMiddleware(constant.PermissionShowMember),
 		userController.FindAll)
 
 	v1JWTAuth.DELETE("/member/:id",
@@ -29,7 +28,6 @@ func UserRouter(
 
 	v1JWTAuth.GET(
 		"/total-member",
-		middleware.PermissionMiddleware(constant.PermissionShowMember),
 		userController.GetTotal,
 	)
 }
