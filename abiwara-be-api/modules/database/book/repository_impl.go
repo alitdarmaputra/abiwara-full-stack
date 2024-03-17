@@ -74,7 +74,7 @@ func (repository *BookRepositoryImpl) FindAll(
 	}
 
 	if best {
-		firstGroup = firstGroup.Where("rating >= 4")
+		firstGroup = firstGroup.Where("rating >= 3")
 	}
 
 	if exist {
