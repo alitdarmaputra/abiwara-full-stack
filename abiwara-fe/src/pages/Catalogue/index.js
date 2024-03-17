@@ -202,7 +202,7 @@ export default function Catalogue() {
                         <p className="mt-4 mb-2">Rating</p>
                         <div className="mb-2 flex items-center">
                             <input onChange={handleRating} ref={ratingRef} type="checkbox" id="rating" name="rating" className="h-[21px] w-[21px] accent-black caret-black" />
-                            <label htmlFor="rating" className="ml-2 flex items-center gap-1"><FaStar className="text-yellow-500" /> 4 ke atas</label>
+                            <label htmlFor="rating" className="ml-2 flex items-center gap-1"><FaStar className="text-yellow-500" /> 3 ke atas</label>
                         </div>
 
                         <p className="mt-4 mb-2">Ketersediaan</p>
