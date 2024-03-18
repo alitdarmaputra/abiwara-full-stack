@@ -73,7 +73,14 @@ export default function EditProfile() {
 			setLoadingImg(false);
 			setProfileImg(res.data?.data);
 		} catch(err) {
-			notifyError("File tidak sesuai");
+			if (err.response.data.code === 413) {
+				notifyError("Ukuran file terlalu besar");
+			} else if (err.response.data.code === 400 ) {
+				notifyError("Format file tidak didukung");
+			} else {
+				notifyError("Server error");
+				console.log(err);
+			}
 			setLoadingImg(false);
 		}
 	}
