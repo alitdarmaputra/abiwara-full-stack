@@ -149,7 +149,7 @@ func (repository *BookRepositoryImpl) FindIn(
 	}
 
 	if len(bookIds) > 0 {
-		tx.Where("(id) IN ?", bookIds).Order("FIELD(id, " + idStr + ")").Find(&books)
+		tx.Preload("Img").Where("(id) IN ?", bookIds).Order("FIELD(id, " + idStr + ")").Find(&books)
 	}
 
 	return books
