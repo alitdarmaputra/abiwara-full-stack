@@ -214,7 +214,7 @@ func (service *BookServiceImpl) GetFile(ctx context.Context) [][]string {
 
 		var cover string = ""
 		if book.CoverImg != nil {
-			cover = *book.CoverImg
+			cover = book.Img.Url
 		}
 
 		data = append(
