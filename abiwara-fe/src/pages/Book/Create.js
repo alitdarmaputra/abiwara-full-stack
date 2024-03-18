@@ -177,7 +177,7 @@ export default function BookCreate() {
 
                     <div className="author_form mb-3">
                         <label className="font-bold text-sm" htmlFor="author_input">Penulis</label>
-                        <input id="author_input" placeholder="Ketik penyusun" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
+                        <input id="author_input" placeholder="Ketik penulis" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="publisher_form mb-3">

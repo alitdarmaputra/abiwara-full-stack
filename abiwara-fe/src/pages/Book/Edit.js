@@ -211,8 +211,8 @@ export default function BookEdit() {
                     </div>
 
                     <div className="author_form mb-3">
-                        <label className="font-bold text-sm" htmlFor="authors_input">Penyusun</label>
-                        <input defaultValue={book.author} id="author_input" placeholder="ketik penyusun" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
+                        <label className="font-bold text-sm" htmlFor="authors_input">Penulis</label>
+                        <input defaultValue={book.author} id="author_input" placeholder="ketik penulis" className="font-sans focus:outline-black border-2 mt-2 w-full h-10 rounded-md p-2 dark:bg-transparent dark:border-gray-500" type="text"></input>
                     </div>
 
                     <div className="publisher_form mb-3">
