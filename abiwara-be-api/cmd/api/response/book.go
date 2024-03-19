@@ -7,15 +7,17 @@ import (
 )
 
 type BookResponse struct {
-	ID       uint                `json:"id"`
-	Title    string              `json:"title"`
-	Author   string              `json:"author"`
-	Year     *int                `json:"year"`
-	Rating   float64             `json:"rating"`
-	Remain   int                 `json:"remain"`
-	Quantity int                 `json:"quantity"`
-	Category CategoryResponse    `json:"category"`
-	Img      ImageUploadResponse `json:"img"`
+	ID              uint                `json:"id"`
+	Title           string              `json:"title"`
+	Author          string              `json:"author"`
+	Year            *int                `json:"year"`
+	Rating          float64             `json:"rating"`
+	Remain          int                 `json:"remain"`
+	Quantity        int                 `json:"quantity"`
+	Publisher       string              `json:"publisher"`
+	InventoryNumber string              `json:"inventory_number"`
+	Category        CategoryResponse    `json:"category"`
+	Img             ImageUploadResponse `json:"img"`
 }
 
 type DetailBookResponse struct {
@@ -47,15 +49,17 @@ func ToBookResponse(book book_repository.Book) BookResponse {
 	}
 
 	return BookResponse{
-		ID:       book.ID,
-		Title:    book.Title,
-		Author:   book.Author,
-		Year:     book.Year,
-		Remain:   book.Remain,
-		Quantity: book.Quantity,
-		Rating:   book.Rating,
-		Category: ToCategoryResponse(book.Category),
-		Img:      ToImageUploadResponse(book.Img),
+		ID:              book.ID,
+		Title:           book.Title,
+		Author:          book.Author,
+		Year:            book.Year,
+		Remain:          book.Remain,
+		Quantity:        book.Quantity,
+		Rating:          book.Rating,
+		Publisher:       book.Publisher,
+		InventoryNumber: book.InventoryNumber,
+		Category:        ToCategoryResponse(book.Category),
+		Img:             ToImageUploadResponse(book.Img),
 	}
 }
 

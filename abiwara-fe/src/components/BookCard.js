@@ -26,6 +26,11 @@ export default function BookCard({ book }) {
                     <table className="opacity-70 mb-4">
 						<tbody>
 							<tr>
+								<td>No Inventaris</td>
+								<td className="w-10 text-center"> : </td>
+								<td>{book.inventory_number ? book.inventory_number : "-"}</td>
+							</tr>
+							<tr>
 								<td>Penerbit</td>
 								<td className="w-10 text-center"> : </td>
 								<td>{book.publisher ? book.publisher : "-"}</td>
@@ -34,11 +39,6 @@ export default function BookCard({ book }) {
 								<td>Tahun Terbit</td>
 								<td className="w-10 text-center"> : </td>
 								<td>{book.year ? book.year : "-"}</td>
-							</tr>
-							<tr>
-								<td>No Inventaris</td>
-								<td className="w-10 text-center"> : </td>
-								<td>{book.inventory_number ? book.inventory_number : "-"}</td>
 							</tr>
 							<tr className="md:hidden">
 								<td>Ketersediaan</td>
