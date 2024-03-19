@@ -53,7 +53,7 @@ func (service *RatingServiceImpl) CreateOrUpdate(
 	borrower, err := service.BorrowerRepository.FindById(ctx, tx, request.BorrowerId)
 	utils.PanicIfError(err)
 
-	borrower.RatingId = rating.ID
+	borrower.RatingId = &rating.ID
 	borrower, err = service.BorrowerRepository.Update(ctx, tx, borrower)
 	utils.PanicIfError(err)
 

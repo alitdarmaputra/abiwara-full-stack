@@ -3,6 +3,7 @@ package borrower_service
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business"
@@ -51,19 +52,21 @@ func (service *BorrowerServiceImpl) Create(
 		panic(business.NewBadRequestError("Tidak ada buku yang tersedia"))
 	}
 
-	rating, err := service.RatingRepository.SaveOrUpdate(ctx, tx, rating_repository.Rating{
-		UserId: request.UserId,
-		BookId: request.BookId,
-		Rating: 0,
-	})
-	utils.PanicIfError(err)
-
 	borrower := borrower_repository.Borrower{}
 	borrower.UserId = request.UserId
 	borrower.BookId = request.BookId
 	borrower.Status = false
 	borrower.DueDate = request.DueDate
-	borrower.RatingId = rating.ID
+
+	rating, err := service.RatingRepository.FindByParam(ctx, tx, request.BookId, request.UserId)
+
+	if err == nil {
+		borrower.RatingId = &rating.ID
+	} else {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			panic(err)
+		}
+	}
 
 	borrower, err = service.BorrowerRepository.Save(ctx, tx, borrower)
 	utils.PanicIfError(err)

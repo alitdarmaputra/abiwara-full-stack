@@ -14,7 +14,7 @@ type Borrower struct {
 	gorm.Model
 	UserId     string       `gorm:"column:user_id"`
 	BookId     uint         `gorm:"column:book_id"`
-	RatingId   uint         `gorm:"column:rating_id"`
+	RatingId   *uint        `gorm:"column:rating_id"`
 	Status     bool         `gorm:"column:status"`
 	ReturnDate sql.NullTime `gorm:"column:return_date"`
 	DueDate    time.Time    `gorm:"column:due_date"`

@@ -32,7 +32,7 @@ func (repository *RatingRepositoryImpl) FindByParam(
 	result := tx.Model(&Rating{}).
 		Where("book_id = ? AND user_id = ?", bookId, userId).
 		First(&rating)
-	return rating, database.WrapError(result.Error)
+	return rating, result.Error
 }
 
 func (repository *RatingRepositoryImpl) FindTotalByBookId(

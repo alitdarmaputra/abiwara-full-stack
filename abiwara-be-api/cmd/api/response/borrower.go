@@ -20,6 +20,12 @@ type BorrowerResponse struct {
 }
 
 func ToBorrowerResponse(borrower borrower_repository.Borrower) BorrowerResponse {
+	rating := 0
+
+	if borrower.RatingId != nil {
+		rating = borrower.Rating.Rating
+	}
+
 	return BorrowerResponse{
 		Id:         borrower.ID,
 		BookId:     borrower.BookId,
@@ -27,7 +33,7 @@ func ToBorrowerResponse(borrower borrower_repository.Borrower) BorrowerResponse 
 		Class:      borrower.User.Class,
 		Title:      borrower.Book.Title,
 		Status:     borrower.Status,
-		Rating:     borrower.Rating.Rating,
+		Rating:     rating,
 		ReturnDate: borrower.ReturnDate.Time,
 		CreatedAt:  borrower.CreatedAt,
 		DueDate:    borrower.DueDate,
