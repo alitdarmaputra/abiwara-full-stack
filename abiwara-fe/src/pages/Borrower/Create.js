@@ -62,7 +62,7 @@ export default function BorrowerCreate() {
     }
 
     const loadBook = async search => {
-        const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book?search=${search}`)
+        const res = await axiosInstance.get(`${httpRequest.api.baseUrl}/book?search=${search}&exist=true`)
         const options = res.data?.data?.map(option => {
             return {
                 value: option.id,
