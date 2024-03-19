@@ -156,8 +156,8 @@ export default function Borrower() {
                         <thead className="text-slate-500 font-bold">
                             <tr className="border-b text-left dark:border-gray-500">
                                 <th className="pl-5 py-5 text-center">NO</th>
-                                <th className="min-w-52 text-center">NAMA</th>
-                                <th className="text-center">KELAS</th>
+                                <th className="px-2 min-w-52 text-center">NAMA</th>
+                                <th className="px-5 text-center">KELAS</th>
                                 <th className="px-10 min-w-52 md:px-2 text-center">JUDUL</th>
                                 <th className="text-center">PENGEMBALIAN</th>
                                 <th className="min-w-30 text-center">STATUS</th>
