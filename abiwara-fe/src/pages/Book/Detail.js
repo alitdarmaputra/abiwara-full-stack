@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import httpRequest from "../../config/http-request";
 import { BsFillPencilFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -17,6 +17,7 @@ export default function BookDetail() {
 	const { user } = useContext(UserContext);
     const { setAuthToken } = useAuth();
 	const [coverImg, setCoverImg] = useState({});
+	const navigate = useNavigate();
 
     useEffect(() => {
         async function getBookDetail() {
@@ -29,6 +30,8 @@ export default function BookDetail() {
 				if (err.response.data.code === 401 ) {
 					notifyError("Sesi telah berakhir");
 					setAuthToken();
+				} else if (err.response.data.code === 404) {
+					navigate("/not-found");
 				} else {
 					notifyError("Server error");
 					console.log(err);
@@ -37,7 +40,7 @@ export default function BookDetail() {
         }
 
         getBookDetail()
-    }, [id, setAuthToken])
+    }, [id, setAuthToken, navigate])
 
     if (isLoading) {
         return (

@@ -1,7 +1,7 @@
 import SearchBox from "../../components/SearchBox";
 import { FaBookmark, FaRegBookmark  } from "react-icons/fa";
 import { stringToColor } from "../../utils/color";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../config";
@@ -20,7 +20,8 @@ export default function CatalogueDetail() {
 	const { id } = useParams();
 	const { authToken } = useAuth();
 	const [markId, setMarkId] = useState();
-
+	const navigate = useNavigate();
+	
 	let strRating = '0';
 	if (bookDetail.rating > 0)
 		strRating = bookDetail.rating?.toFixed(1);
@@ -58,12 +59,14 @@ export default function CatalogueDetail() {
 				}
 				setLoading(false);
 			} catch(err) {
+				if (err.response.data.code === 404) {
+					navigate("/not-found")
+				}
 				console.log(err);
 			}
 		}
-
 		getBookDetail();
-	}, [id, markId, authToken])
+	}, [id, markId, authToken, navigate])
 
     if (isLoading) {
         return (

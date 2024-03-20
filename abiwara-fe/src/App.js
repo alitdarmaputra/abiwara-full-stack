@@ -131,6 +131,9 @@ const router = createBrowserRouter([
 		path: "/reset-password/:token",
 		element: <RouteWithTitle title="Reset Password"><ResetPassword /></RouteWithTitle> 
 	}, {
+		path: "/not-found",
+		element: <RouteWithTitle title="Halaman tidak ditemukan"><Notfound /></RouteWithTitle> 
+	}, {
 		path: "*",
 		element: <RouteWithTitle title="Halaman tidak ditemukan"><Notfound /></RouteWithTitle> 
 	}
