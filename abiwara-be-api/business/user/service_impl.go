@@ -133,6 +133,11 @@ func (service *UserServiceImpl) Update(
 	user.Name = request.Name
 	user.Class = request.Class
 	user.ProfileImg = request.ProfileImg
+
+	if request.ProfileImg != nil {
+		user.Img.ID = *user.ProfileImg
+	}
+
 	user.AbsenceNumber = request.AbsenceNumber
 
 	user, err = service.UserRepository.SaveOrUpdate(ctx, tx, user)
