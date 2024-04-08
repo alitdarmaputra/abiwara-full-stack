@@ -36,4 +36,8 @@ func BookRouter(
 		middleware.PermissionMiddleware(constant.PermissionCreateBook),
 		book.BulkCreateFile,
 	)
+	v1JWTAuth.GET("/user-recommendation",
+		middleware.PermissionMiddleware(constant.PermissionShowBook),
+		book.GetUserRecommendation,
+	)
 }

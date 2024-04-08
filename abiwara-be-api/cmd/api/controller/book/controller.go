@@ -9,7 +9,8 @@ type BookController interface {
 	FindAll(ctx *gin.Context)
 	FindById(ctx *gin.Context)
 	GetFile(ctx *gin.Context)
-	GetRecommendation(ctx *gin.Context)
+	GetBookRecommendation(ctx *gin.Context)
+	GetUserRecommendation(ctx *gin.Context)
 	BulkCreate(ctx *gin.Context)
 	BulkCreateFile(ctx *gin.Context)
 }

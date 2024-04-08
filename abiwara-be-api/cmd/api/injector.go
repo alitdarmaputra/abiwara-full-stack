@@ -91,7 +91,7 @@ func InitializeServer() *http.Server {
 		cfg,
 	)
 	userService.SetJWTConfig(cfg.JWTSecretKey, time.Duration(cfg.JWTExpiredTime)*time.Minute)
-	bookService := book_service.NewBookService(db, recommender, bookRepository)
+	bookService := book_service.NewBookService(db, recommender, bookRepository, ratingRepository)
 	categoryService := category_service.NewCategoryService(categoryRepository, db)
 	visitorService := visitor_service.NewVisitorService(visitorRepository, db)
 	borrowerService := borrower_service.NewBorrowerService(
@@ -104,7 +104,7 @@ func InitializeServer() *http.Server {
 	ratingService := rating_service.NewRatingService(ratingRepository, borrowerRepository, bookRepository, db)
 	imageUploadService := image_upload_service.NewImageUploadService(imageUploader, fileUploadRepository, db)
 
-	bookController := book_controller.NewBookController(bookService)
+	bookController := book_controller.NewBookController(bookService, authMiddleware)
 	userController := user_controller.NewUserController(userService, authMiddleware)
 	categoryController := category_controller.NewCategoryController(categoryService)
 	visitorController := visitor_controller.NewVisitorController(visitorService, authMiddleware)

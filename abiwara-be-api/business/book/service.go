@@ -26,6 +26,7 @@ type BookService interface {
 		sort string,
 	) ([]response.BookResponse, common_response.Meta)
 	GetFile(ctx context.Context) [][]string
-	GetRecommendation(ctx context.Context, bookId uint) []response.BookResponse
+	GetBookRecommendation(ctx context.Context, bookId uint) []response.BookResponse
+	GetUserRecommendation(ctx context.Context, userId string) []response.BookResponse
 	BulkCreate(ctx context.Context, books []book_repository.Book)
 }

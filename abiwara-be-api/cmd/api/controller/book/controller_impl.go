@@ -12,6 +12,7 @@ import (
 
 	book_service "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/business/book"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/common/response"
+	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/middleware"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/request"
 	book_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/book"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/utils"
@@ -20,11 +21,13 @@ import (
 
 type BookControllerImpl struct {
 	BookService book_service.BookService
+	Middleware  middleware.Authetication
 }
 
-func NewBookController(bookService book_service.BookService) BookController {
+func NewBookController(bookService book_service.BookService, middleware middleware.Authetication) BookController {
 	return &BookControllerImpl{
 		BookService: bookService,
+		Middleware:  middleware,
 	}
 }
 
@@ -155,12 +158,20 @@ func (controller *BookControllerImpl) GetFile(ctx *gin.Context) {
 	}
 }
 
-func (controller *BookControllerImpl) GetRecommendation(ctx *gin.Context) {
+func (controller *BookControllerImpl) GetBookRecommendation(ctx *gin.Context) {
 	param := request.PathParam{}
 	err := ctx.ShouldBindUri(&param)
 	utils.PanicIfError(err)
 
-	bookResponses := controller.BookService.GetRecommendation(ctx, param.Id)
+	bookResponses := controller.BookService.GetBookRecommendation(ctx, param.Id)
+	response.JsonBasicData(ctx, http.StatusOK, "OK", bookResponses)
+}
+
+func (controller *BookControllerImpl) GetUserRecommendation(ctx *gin.Context) {
+	claims, err := controller.Middleware.ExtractJWTUser(ctx)
+	utils.PanicIfError(err)
+
+	bookResponses := controller.BookService.GetUserRecommendation(ctx, claims.Id)
 	response.JsonBasicData(ctx, http.StatusOK, "OK", bookResponses)
 }
 

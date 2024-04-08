@@ -10,22 +10,25 @@ import (
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/request"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/response"
 	book_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/book"
+	rating_repository "github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/database/rating"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/modules/recommender"
 	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/utils"
 	"gorm.io/gorm"
 )
 
 type BookServiceImpl struct {
-	BookRepository book_repository.BookRepository
-	DB             *gorm.DB
-	Recommender    recommender.BookRecommender
+	BookRepository   book_repository.BookRepository
+	RatingRepository rating_repository.RatingRepository
+	DB               *gorm.DB
+	Recommender      recommender.BookRecommender
 }
 
-func NewBookService(db *gorm.DB, recommender recommender.BookRecommender, bookRepository book_repository.BookRepository) BookService {
+func NewBookService(db *gorm.DB, recommender recommender.BookRecommender, bookRepository book_repository.BookRepository, ratingRepository rating_repository.RatingRepository) BookService {
 	return &BookServiceImpl{
-		DB:             db,
-		Recommender:    recommender,
-		BookRepository: bookRepository,
+		DB:               db,
+		Recommender:      recommender,
+		BookRepository:   bookRepository,
+		RatingRepository: ratingRepository,
 	}
 }
 
@@ -245,15 +248,33 @@ func (service *BookServiceImpl) GetFile(ctx context.Context) [][]string {
 	return data
 }
 
-func (service *BookServiceImpl) GetRecommendation(ctx context.Context, bookId uint) []response.BookResponse {
+func (service *BookServiceImpl) GetBookRecommendation(ctx context.Context, bookId uint) []response.BookResponse {
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
 
-	recommenders := service.Recommender.Get(ctx, bookId)
+	recommenders := service.Recommender.GetBookRecs(ctx, bookId)
 
 	bookIds := []uint{}
 	for _, recommender := range recommenders {
 		// TODO: Filter by cosine distance
+		bookIds = append(bookIds, recommender.BookId)
+	}
+
+	books := service.BookRepository.FindIn(ctx, tx, bookIds)
+
+	return response.ToBookResponses(books)
+}
+
+func (service *BookServiceImpl) GetUserRecommendation(ctx context.Context, userId string) []response.BookResponse {
+	tx := service.DB.Begin()
+	defer utils.CommitOrRollBack(tx)
+
+	ratedBookIds := service.RatingRepository.FindByUserId(ctx, tx, userId)
+
+	recommenders := service.Recommender.GetUserRecs(ctx, userId, ratedBookIds)
+
+	bookIds := []uint{}
+	for _, recommender := range recommenders {
 		bookIds = append(bookIds, recommender.BookId)
 	}
 

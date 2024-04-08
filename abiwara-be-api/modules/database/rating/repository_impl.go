@@ -50,3 +50,15 @@ func (repository *RatingRepositoryImpl) FindTotalByBookId(
 		Find(&totalRating)
 	return totalRating, database.WrapError(result.Error)
 }
+
+func (repository *RatingRepositoryImpl) FindByUserId(
+	ctx context.Context,
+	tx *gorm.DB,
+	userId string,
+) []uint {
+	bookIds := []uint{}
+	tx.Model(&Rating{}).
+		Select("book_id").
+		Where("user_id = ?", userId).Find(&bookIds)
+	return bookIds
+}
