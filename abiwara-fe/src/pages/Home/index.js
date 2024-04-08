@@ -3,13 +3,14 @@ import { RiFilePaper2Line } from "react-icons/ri";
 import { MdOutlineScience, MdOutlineTempleHindu, MdPeopleOutline } from "react-icons/md";
 import { PiBrain } from "react-icons/pi";
 import { IoIosArrowDropdown } from "react-icons/io";
-import { BookListScroll } from "../../components/BookList";
+import BookList, { BookListScroll } from "../../components/BookList";
 import Carousel from "../../components/Carousel";
 import { useEffect, useRef, useState } from "react";
 import { IoEarthOutline } from "react-icons/io5";
 import axiosInstance from "../../config";
 import httpRequest from "../../config/http-request";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth";
 
 export default function Home() {
     const [openCategories, setOpenCategories] = useState(false);
@@ -18,6 +19,8 @@ export default function Home() {
     const [isLoading, setLoading] = useState(true);
 	const searchRef = useRef();
 	const navigate = useNavigate();	
+	const [recommendations, setRecommendations] = useState([]);
+	const auth = useAuth();
 
 	const generateCategoryLink = categories => {
 		let checkboxUri = encodeURIComponent(JSON.stringify(categories))
@@ -36,6 +39,10 @@ export default function Home() {
 	useEffect(() => {
 		async function getBooks() {
 			try {
+				if (auth.authToken) {
+					const recommendationRes = await axiosInstance.get(`${httpRequest.api.baseUrl}/user-recommendation`);
+					setRecommendations(recommendationRes.data.data);
+				}
 				const latestBookRes = await axiosInstance.get(`${httpRequest.api.baseUrl}/book?sort=created_at&order=desc`)
 				setLatestBooks(latestBookRes.data.data);
 
@@ -95,6 +102,19 @@ export default function Home() {
 
                 <section id="content" className="flex items-center flex-col bg-white py-20 px-4 md:px-0 dark:bg-[#1A202C] transition-all">
                     <div id="content__wrapper" className="max-w-6xl mb-10 w-full">
+						{
+							(recommendations.length > 0) && (
+								<div className="max-w-6xl mb-20 w-full">
+									{/* Recommended Books */}
+									<h2 className="mb-2 text-xl roboto-bold dark:text-gray-200">Rekomendasi untuk anda</h2>
+									<div className="mb-10 flex flex-col md:flex-row justify-between">
+										<p className="text-sm text-gray-400">Berikut merupakan daftar buku yang mungkin anda sukai</p>
+									</div>
+									<BookList books={recommendations} />
+								</div>
+							)
+						}
+
                         {/* Latest Books */}
                         <h2 className="mb-2 text-xl roboto-bold dark:text-gray-200">Koleksi baru ditambahkan</h2>
                         <div className="mb-10 flex flex-col md:flex-row justify-between">
@@ -106,7 +126,7 @@ export default function Home() {
                         {/* Popular Books */}
                         <h2 className="mt-20 mb-2 text-xl roboto-bold dark:text-gray-200">Yang populer di antara koleksi kami</h2>
                         <div className="mb-10 flex flex-col md:flex-row justify-between">
-                            <p className="text-sm text-gray-400">Koleksi-koleksi kami yang dibaca oleh banyak pengunjung perpustakaan. Kami harap Anda menyukainya</p>
+                            <p className="text-sm text-gray-400">Koleksi-koleksi kami yang paling disukai oleh anggota perpustakaan.</p>
                             <Link to="/catalogue?sort=rating" className="md:px-5 py-2 mt-2 md:mt-0 rounded-md font-semibold md:text-white text-left text-sm md:bg-[#473BF0] text-[#473BF0] md:hover:bg-[#392ed3] poppins-semibold transition-all">Lihat Semua</Link>
                         </div>
                         <BookListScroll books={topBooks} />
