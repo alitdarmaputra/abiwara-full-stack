@@ -1,5 +1,5 @@
-from flask import Flask, request, abort
-from predict import get_recs
+from flask import Flask, request, abort, json
+from predict import get_book_recs, get_user_recs 
 from response import Response, ErrorResponse
 import pandas as pd
 import os
@@ -37,15 +37,29 @@ def health_check():
         'status': 'OK'
     }
 
-@app.route('/recommendations/<int:id>')
-def show_recommendation(id):
+@app.route('/book-recommendations/<int:id>')
+def show_book_recommendation(id):
     try:
-        data_df = get_recs(id) 
+        data_df = get_book_recs(id) 
         data_json = data_df.to_dict(orient='records')
         res = Response(200, 'OK', data_json)
         return res.__dict__
     except:
-        errRes = ErrorResponse(404, 'Not found', 'Not enough info about book') 
+        errRes = ErrorResponse(404, 'Not found', 'Not enough info about book')
+        return errRes.__dict__, 404 
+
+@app.route('/user-recommendations/<string:id>', methods=['POST'])
+def show_user_recommendation(id):
+    data = json.loads(request.data)
+    rated_book_ids = data["rated_book_ids"]
+
+    try:
+        data_df = get_user_recs(id, rated_book_ids) 
+        data_json = data_df.to_dict(orient='records')
+        res = Response(200, 'OK', data_json)
+        return res.__dict__
+    except:
+        errRes = ErrorResponse(404, 'Not found', 'Not enough info about user')
         return errRes.__dict__, 404 
 
 @app.errorhandler(404)
