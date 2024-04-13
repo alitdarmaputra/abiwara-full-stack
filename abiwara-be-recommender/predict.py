@@ -21,12 +21,12 @@ with gzip.open("rsvd_model.pkl.gz", 'rb') as f:
     p = pickle.Unpickler(f)
     model = p.load()
 
-def get_vector(raw_id, trained_model=model) -> np.array:
+def get_vector(raw_id, trained_model=model):
     """Returns the latent features of a book in the form of a numpy array"""
     book_row_idx = trained_model.trainset._raw2inner_id_items[raw_id]
     return trained_model.qi[book_row_idx]
 
-def get_book_recs(book_id, model=model) -> pd.DataFrame:
+def get_book_recs(book_id, model=model):
     """Returns the top 25 most similar books to a specified book
     
     This function iterates over every possible book in dataset and calculates
@@ -52,7 +52,7 @@ def get_book_recs(book_id, model=model) -> pd.DataFrame:
 
     return recs.tail(25)[::-1]
 
-def get_user_recs(user_id, rated_book_ids, model=model) -> pd.DataFrame:
+def get_user_recs(user_id, rated_book_ids, page, model=model):
     """Returns the top 25 most rated books to a specified user 
     
     This function iterates over every possible book in dataset and find the rating
@@ -74,6 +74,6 @@ def get_user_recs(user_id, rated_book_ids, model=model) -> pd.DataFrame:
         except:
             continue
     
-    recs = pd.DataFrame({ "book_id": rec_ids, "est": rec_ests })
-    recs = recs[~recs.book_id.isin(rated_book_ids)]
-    return recs.sort_values(by="est", ascending=False).head(25)
+    full_recs = pd.DataFrame({ "book_id": rec_ids, "est": rec_ests })
+    recs = full_recs[~full_recs.book_id.isin(rated_book_ids)]
+    return len(full_recs), recs.sort_values(by="est", ascending=False).iloc[(page-1)*10:(page*10)]

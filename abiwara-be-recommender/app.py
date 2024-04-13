@@ -42,7 +42,7 @@ def show_book_recommendation(id):
     try:
         data_df = get_book_recs(id) 
         data_json = data_df.to_dict(orient='records')
-        res = Response(200, 'OK', data_json)
+        res = Response(200, 'OK', data_json, None)
         return res.__dict__
     except:
         errRes = ErrorResponse(404, 'Not found', 'Not enough info about book')
@@ -52,11 +52,14 @@ def show_book_recommendation(id):
 def show_user_recommendation(id):
     data = json.loads(request.data)
     rated_book_ids = data["rated_book_ids"]
-
+    page = request.args.get("page", default=0, type=int)
     try:
-        data_df = get_user_recs(id, rated_book_ids) 
+        total_recs, data_df = get_user_recs(id, rated_book_ids, page) 
         data_json = data_df.to_dict(orient='records')
-        res = Response(200, 'OK', data_json)
+        res = Response(200, 'OK', data_json, {
+            "page": page, 
+            "total": total_recs
+        })
         return res.__dict__
     except:
         errRes = ErrorResponse(404, 'Not found', 'Not enough info about user')
