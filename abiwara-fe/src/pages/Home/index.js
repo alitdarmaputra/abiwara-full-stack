@@ -9,8 +9,9 @@ import { useEffect, useRef, useState } from "react";
 import { IoEarthOutline } from "react-icons/io5";
 import axiosInstance from "../../config";
 import httpRequest from "../../config/http-request";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/auth";
+import Pagination from "../../components/Pagination";
 
 export default function Home() {
     const [openCategories, setOpenCategories] = useState(false);
@@ -21,6 +22,8 @@ export default function Home() {
 	const navigate = useNavigate();	
 	const [recommendations, setRecommendations] = useState([]);
 	const auth = useAuth();
+    const [meta, setMeta] = useState({});
+    const [searchParams] = useSearchParams();
 
 	const generateCategoryLink = categories => {
 		let checkboxUri = encodeURIComponent(JSON.stringify(categories))
@@ -40,8 +43,10 @@ export default function Home() {
 		async function getBooks() {
 			try {
 				if (auth.authToken) {
-					const recommendationRes = await axiosInstance.get(`${httpRequest.api.baseUrl}/user-recommendation`);
+					const url = new URL(window.location.href);
+					const recommendationRes = await axiosInstance.get(`${httpRequest.api.baseUrl}/user-recommendation?${url.searchParams.toString()}`);
 					setRecommendations(recommendationRes.data.data);
+					setMeta(recommendationRes.data.meta);
 				}
 				const latestBookRes = await axiosInstance.get(`${httpRequest.api.baseUrl}/book?sort=created_at&order=desc`)
 				setLatestBooks(latestBookRes.data.data);
@@ -55,7 +60,7 @@ export default function Home() {
 		}
 
 		getBooks();
-	}, []);
+	}, [searchParams, auth.authToken]);
 
     if (isLoading) {
         return (
@@ -111,6 +116,9 @@ export default function Home() {
 										<p className="text-sm text-gray-400">Berikut merupakan daftar buku yang mungkin anda sukai</p>
 									</div>
 									<BookList books={recommendations} />
+									<div className="pagination__container flex w-full justify-start text-slate-800 pt-5 dark:text-gray-200">
+										<Pagination stringUrl={window.location.href} currPage={meta.page} totalPage={Math.ceil(meta.total/10)} n={3} />
+									</div>
 								</div>
 							)
 						}

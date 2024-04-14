@@ -168,11 +168,21 @@ func (controller *BookControllerImpl) GetBookRecommendation(ctx *gin.Context) {
 }
 
 func (controller *BookControllerImpl) GetUserRecommendation(ctx *gin.Context) {
+	var page int
 	claims, err := controller.Middleware.ExtractJWTUser(ctx)
 	utils.PanicIfError(err)
 
-	bookResponses := controller.BookService.GetUserRecommendation(ctx, claims.Id)
-	response.JsonBasicData(ctx, http.StatusOK, "OK", bookResponses)
+	queryPage, ok := ctx.GetQuery("page")
+
+	if !ok {
+		page = 1
+	} else {
+		page, err = strconv.Atoi(queryPage)
+		utils.PanicIfError(err)
+	}
+
+	bookResponses, meta := controller.BookService.GetUserRecommendation(ctx, claims.Id, page)
+	response.JsonPageData(ctx, http.StatusOK, "OK", bookResponses, meta)
 }
 
 func (controller *BookControllerImpl) BulkCreate(ctx *gin.Context) {

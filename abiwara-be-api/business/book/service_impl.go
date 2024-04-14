@@ -265,13 +265,13 @@ func (service *BookServiceImpl) GetBookRecommendation(ctx context.Context, bookI
 	return response.ToBookResponses(books)
 }
 
-func (service *BookServiceImpl) GetUserRecommendation(ctx context.Context, userId string) []response.BookResponse {
+func (service *BookServiceImpl) GetUserRecommendation(ctx context.Context, userId string, page int) ([]response.BookResponse, common_response.Meta) {
 	tx := service.DB.Begin()
 	defer utils.CommitOrRollBack(tx)
 
 	ratedBookIds := service.RatingRepository.FindByUserId(ctx, tx, userId)
 
-	recommenders := service.Recommender.GetUserRecs(ctx, userId, ratedBookIds)
+	recommenders, total := service.Recommender.GetUserRecs(ctx, userId, ratedBookIds, page)
 
 	bookIds := []uint{}
 	for _, recommender := range recommenders {
@@ -280,7 +280,7 @@ func (service *BookServiceImpl) GetUserRecommendation(ctx context.Context, userI
 
 	books := service.BookRepository.FindIn(ctx, tx, bookIds)
 
-	return response.ToBookResponses(books)
+	return response.ToBookResponses(books), common_response.Meta{Page: page, Total: total}
 }
 
 func (service *BookServiceImpl) BulkCreate(ctx context.Context, books []book_repository.Book) {

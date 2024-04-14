@@ -1,10 +1,14 @@
 package recommender
 
-import "context"
+import (
+	"context"
+
+	"github.com/alitdarmaputra/abiwara-full-stack/abiwara-be-api/cmd/api/common/response"
+)
 
 type BookRecommender interface {
 	GetBookRecs(ctx context.Context, bookId uint) []BookRecommenderDetail
-	GetUserRecs(ctx context.Context, userId string, bookIds []uint) []UserRecommenderDetail
+	GetUserRecs(ctx context.Context, userId string, bookIds []uint, page int) ([]UserRecommenderDetail, int)
 }
 
 type BookRecommenderResp struct {
@@ -15,6 +19,7 @@ type BookRecommenderResp struct {
 type UserRecommenderResp struct {
 	Code int                     `json:"code"`
 	Data []UserRecommenderDetail `json:"data"`
+	Meta response.Meta           `json:"meta"`
 }
 
 type UserRecommenderReq struct {
